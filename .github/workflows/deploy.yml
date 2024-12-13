@@ -2,7 +2,7 @@ name: deploy
 
 env:
   GRAAL_VERSION: "20.3.0.java11"
-  TOOLS_CLI_VERSION: "1.10.1.716" # or "latest"
+  TOOLS_CLI_VERSION: "1.12.0.1488" # or "latest"
 
 # on:
 #   push:
@@ -15,18 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/deps.edn') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.gitlibs
           key: ${{ runner.os }}-deps-${{ hashFiles('**/deps.edn') }}
@@ -39,14 +39,14 @@ jobs:
           echo ::set-output name=version::${GITHUB_REF#refs/tags/}
 
       - name: Install Node.js 9.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 9.x
 
       - name: Setup Clojure (https://github.com/marketplace/actions/setup-clojure)
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: ${{ env.TOOLS_CLI_VERSION }}
+          cli: ${{ env.TOOLS_CLI_VERSION }}
 
       - name: Check clojure version
         run: clojure -Sdescribe
@@ -65,7 +65,7 @@ jobs:
           npm run pkg-java && \
           mv target/closh-zero.jar closh-zero.jar
 
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           path: closh-zero.jar
           name: closh-zero-jar
@@ -76,18 +76,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/deps.edn') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.gitlibs
           key: ${{ runner.os }}-deps-${{ hashFiles('**/deps.edn') }}
@@ -100,14 +100,14 @@ jobs:
           echo ::set-output name=version::${GITHUB_REF#refs/tags/}
 
       - name: Install Node.js 9.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 9.x
 
       - name: Setup Clojure (https://github.com/marketplace/actions/setup-clojure)
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: ${{ env.TOOLS_CLI_VERSION }}
+          cli: ${{ env.TOOLS_CLI_VERSION }}
 
       - name: Check clojure version
         run: clojure -Sdescribe
@@ -126,7 +126,7 @@ jobs:
           scripts/compile-sci-uberjar && \
           mv target/closh-zero-sci.jar closh-zero-sci.jar
 
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           path: closh-zero-sci.jar
           name: closh-zero-sci-jar
@@ -143,7 +143,7 @@ jobs:
 
       # === used for running tests, maybe extract into separate job
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: /Users/runner/hostedtoolcache/GraalVM
           key: ${{ runner.os }}-graal-${{ env.GRAAL_VERSION }}
@@ -153,19 +153,19 @@ jobs:
       - name: Setup Clojure (https://github.com/marketplace/actions/setup-clojure)
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: ${{ env.TOOLS_CLI_VERSION }}
+          cli: ${{ env.TOOLS_CLI_VERSION }}
 
       - name: Check clojure version
         run: clojure -Sdescribe
 
       - name: Git checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       # ===
 
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v4
         with:
           name: closh-zero-sci-jar
           path: .
@@ -184,7 +184,7 @@ jobs:
       - name: Build macOS native image
         run: scripts/compile-native-image closh-zero-sci.jar
 
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           path: closh-zero-sci
           name: closh-zero-sci-macos
@@ -208,7 +208,7 @@ jobs:
 
       # === used for running tests, maybe extract into separate job
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: /opt/hostedtoolcache/GraalVM
           key: ${{ runner.os }}-graal-${{ env.GRAAL_VERSION }}
@@ -218,19 +218,19 @@ jobs:
       - name: Setup Clojure (https://github.com/marketplace/actions/setup-clojure)
         uses: DeLaGuardo/setup-clojure@master
         with:
-          tools-deps: ${{ env.TOOLS_CLI_VERSION }}
+          cli: ${{ env.TOOLS_CLI_VERSION }}
 
       - name: Check clojure version
         run: clojure -Sdescribe
 
       - name: Git checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       # ===
 
-      - uses: actions/download-artifact@v1
+      - uses: actions/download-artifact@v4
         with:
           name: closh-zero-sci-jar
           path: .
@@ -249,7 +249,7 @@ jobs:
       - name: Build Linux native image
         run: scripts/compile-native-image closh-zero-sci.jar
 
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           path: closh-zero-sci
           name: closh-zero-sci-linux
@@ -273,7 +273,7 @@ jobs:
   #       run: |
   #         echo ::set-output name=version::${GITHUB_REF#refs/tags/}
 
-  #     - uses: actions/download-artifact@v1
+  #     - uses: actions/download-artifact@v4
   #       with:
   #         name: closh-zero-sci
   #         path: .
