@@ -8,7 +8,7 @@
 
 # Following prompt is used for recording:
 #
-# (defn closh-prompt []
+# (defn clob-prompt []
 #   (str "\u001b[01;32m" (getenv "USER") "\u001b[0m:\u001b[01;34m\u2026/" (last (clojure.string/split (getenv "PWD") #"/")) "\u001b[0m$ "))
 
 # Before recording resize terminal to 80x24 to avoid any visual glitches

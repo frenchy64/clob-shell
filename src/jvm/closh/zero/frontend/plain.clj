@@ -1,14 +1,14 @@
-(ns closh.zero.frontend.plain
+(ns clob.zero.frontend.plain
   (:gen-class)
-  (:require [closh.zero.platform.eval :as eval]
-            [closh.zero.compiler]
-            [closh.zero.parser]
-            [closh.zero.pipeline]
-            [closh.zero.reader]))
+  (:require [clob.zero.platform.eval :as eval]
+            [clob.zero.compiler]
+            [clob.zero.parser]
+            [clob.zero.pipeline]
+            [clob.zero.reader]))
 
 (defn -main [& args]
   (let [cmd (or (first args) "echo hello clojure")]
     (eval/eval
-     `(-> ~(closh.zero.compiler/compile-interactive
-            (closh.zero.parser/parse (closh.zero.reader/read-string cmd)))
-          (closh.zero.pipeline/wait-for-pipeline)))))
+     `(-> ~(clob.zero.compiler/compile-interactive
+            (clob.zero.parser/parse (clob.zero.reader/read-string cmd)))
+          (clob.zero.pipeline/wait-for-pipeline)))))

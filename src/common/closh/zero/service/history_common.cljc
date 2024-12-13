@@ -1,8 +1,8 @@
-(ns closh.zero.service.history-common
+(ns clob.zero.service.history-common
   (:require #?(:cljs [path]
                :clj [clojure.java.io :as io])
             [clojure.string :as str]
-            [closh.zero.platform.process :as process])
+            [clob.zero.platform.process :as process])
   #?(:clj (:import (java.io File))))
 
 (def ^:no-doc table-history
@@ -21,9 +21,9 @@
 );")
 
 (defn get-db-filename
-  "Return path to the db file, defaults to ~/.closh/closh.sqlite"
+  "Return path to the db file, defaults to ~/.clob/clob.sqlite"
   []
-  (let [parts [(process/getenv "HOME") ".closh" "closh.sqlite"]]
+  (let [parts [(process/getenv "HOME") ".clob" "clob.sqlite"]]
     #?(:cljs (apply path/join parts)
        :clj (let [f ^File (apply io/file parts)]
               (.getCanonicalPath f)))))

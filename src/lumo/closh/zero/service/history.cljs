@@ -1,10 +1,10 @@
-(ns closh.zero.service.history
+(ns clob.zero.service.history
   (:require [clojure.string]
             [goog.object :as gobj]
             [sqlite3 :as sqlite]
             [path]
             [fs]
-            [closh.zero.service.history-common :refer [table-history table-session get-db-filename]]))
+            [clob.zero.service.history-common :refer [table-history table-session get-db-filename]]))
 
 (defn- init-database-file [db-file]
   (js/Promise.

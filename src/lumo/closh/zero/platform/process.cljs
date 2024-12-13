@@ -1,6 +1,6 @@
-(ns closh.zero.platform.process
-  (:require [closh.zero.platform.util :refer [wait-for-event jsx->clj]]
-            [closh.zero.platform.io :refer [open-io-streams]]
+(ns clob.zero.platform.process
+  (:require [clob.zero.platform.util :refer [wait-for-event jsx->clj]]
+            [clob.zero.platform.io :refer [open-io-streams]]
             [goog.object :as gobj]
             [child_process]))
 

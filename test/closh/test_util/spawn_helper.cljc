@@ -1,19 +1,19 @@
-(ns closh.test-util.spawn-helper
+(ns clob.test-util.spawn-helper
   (:require [clojure.string]
-            [closh.zero.parser]
-            [closh.zero.compiler]
-            [closh.zero.builtin]
-            [closh.zero.env]
-            #?(:clj [closh.zero.reader :as reader])
-            #?(:clj [closh.zero.platform.eval :as eval])
-            #?(:cljs [closh.zero.platform.eval :refer [execute-command-text]])
-            #?(:cljs [closh.zero.core])
-            [closh.zero.platform.process :as process]))
+            [clob.zero.parser]
+            [clob.zero.compiler]
+            [clob.zero.builtin]
+            [clob.zero.env]
+            #?(:clj [clob.zero.reader :as reader])
+            #?(:clj [clob.zero.platform.eval :as eval])
+            #?(:cljs [clob.zero.platform.eval :refer [execute-command-text]])
+            #?(:cljs [clob.zero.core])
+            [clob.zero.platform.process :as process]))
 
 (defn -main [cmd]
-  #?(:cljs (closh.zero.platform.eval/execute-text
-            (str (pr-str closh.zero.env/*closh-environment-requires*)))
-     :clj (eval/eval-closh-requires))
+  #?(:cljs (clob.zero.platform.eval/execute-text
+            (str (pr-str clob.zero.env/*clob-environment-requires*)))
+     :clj (eval/eval-clob-requires))
   (let [result #?(:cljs (execute-command-text cmd)
                   :clj (eval/eval (reader/read-sh (reader/string-reader cmd))))]
     (cond

@@ -1,12 +1,12 @@
-(ns closh.zero.service.completion
+(ns clob.zero.service.completion
   (:require [clojure.string]
             #?(:cljs [lumo.repl])
             #?(:clj [clojure.java.io :as io])
-            #?(:clj [closh.zero.pipeline :as pipeline])
-            [closh.zero.builtin :refer [getenv]]
-            [closh.zero.platform.io :refer [out-stream]]
-            [closh.zero.platform.process :refer [shx]]
-            [closh.zero.macros #?(:clj :refer :cljs :refer-macros) [chain->]]))
+            #?(:clj [clob.zero.pipeline :as pipeline])
+            [clob.zero.builtin :refer [getenv]]
+            [clob.zero.platform.io :refer [out-stream]]
+            [clob.zero.platform.process :refer [shx]]
+            [clob.zero.macros #?(:clj :refer :cljs :refer-macros) [chain->]]))
 
 #?(:cljs
    (defn- stream-output
@@ -14,7 +14,7 @@
      [stream]
      (js/Promise.
       (fn [resolve _]
-        (let [out (closh.zero.platform.io/stream-output stream)]
+        (let [out (clob.zero.platform.io/stream-output stream)]
           (doto stream
             (.on "end" #(resolve @out))
             (.on "error" #(resolve ""))))))))
@@ -28,18 +28,18 @@
 (defn get-completions-spawn
   "Get completions by spawning a command."
   [shell cmd args]
-  (let [proc #?(:cljs (shx (str (getenv "CLOSH_SOURCES_PATH") "/resources/" cmd) args)
+  (let [proc #?(:cljs (shx (str (getenv "CLOB_SOURCES_PATH") "/resources/" cmd) args)
                 :clj (if (= shell "fish")
                        (shx "fish" ["-c"
                                     (str "complete --do-complete=" (escape-fish-string (first args)))])
                        (if-let [resource (io/resource cmd)]
                          (pipeline/pipe (slurp resource)
                                         (shx shell (cons "-s" args)))
-                         (shx (str (getenv "CLOSH_SOURCES_PATH") "/resources/" cmd) args))))
+                         (shx (str (getenv "CLOB_SOURCES_PATH") "/resources/" cmd) args))))
         stream (out-stream proc)]
     (chain->
      #?(:cljs (stream-output stream)
-        :clj @(closh.zero.platform.io/stream-output stream))
+        :clj @(clob.zero.platform.io/stream-output stream))
      (fn [stdout]
        (if (clojure.string/blank? stdout)
          []

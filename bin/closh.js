@@ -9,8 +9,8 @@ var isWindows = /^win/.test(process.platform);
 var bin = isWindows ? 'lumo.cmd' : 'lumo';
 var args = [
   '--classpath', path.join(__dirname, '..', 'src', 'common') + ':' + path.join(__dirname, '..', 'src', 'lumo'),
-  '--cache', path.join(os.homedir(), '.closh', 'cache', 'lumo'),
-  '-m', 'closh.zero.main',
+  '--cache', path.join(os.homedir(), '.clob', 'cache', 'lumo'),
+  '-m', 'clob.zero.main',
 ];
 
 // NODE_PATH seems to be missing when running as global binary
@@ -23,6 +23,6 @@ if (process.env.NODE_PATH) {
 }
 process.env.NODE_PATH = paths.join(isWindows ? ';' : ':');
 
-process.env.CLOSH_SOURCES_PATH = path.join(__dirname, '..');
+process.env.CLOB_SOURCES_PATH = path.join(__dirname, '..');
 
 spawn(bin, args, { stdio: 'inherit' }).on('exit', process.exit);

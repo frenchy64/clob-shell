@@ -1,15 +1,15 @@
-(ns closh.test-util.runner
+(ns clob.test-util.runner
   (:require [goog.object :as gobj]
             [clojure.test :refer [report run-tests]]
-            [closh.compiler-test]
-            [closh.process-test]
-            [closh.common-test]
-            [closh.pipeline-test]
-            [closh.completion-test]
-            [closh.core-test]
-            [closh.reader-test]
-            [closh.util-test]
-            [closh.history-test]))
+            [clob.compiler-test]
+            [clob.process-test]
+            [clob.common-test]
+            [clob.pipeline-test]
+            [clob.completion-test]
+            [clob.core-test]
+            [clob.reader-test]
+            [clob.util-test]
+            [clob.history-test]))
 
 (defmethod report [:cljs.test/default :end-run-tests] [m]
   (if (cljs.test/successful? m)
@@ -19,12 +19,12 @@
 (defn -main []
   (time
    (run-tests
-    'closh.reader-test
-    'closh.compiler-test
-    'closh.process-test
-    'closh.common-test
-    'closh.pipeline-test
-    'closh.completion-test
-    'closh.core-test
-    'closh.util-test
-    'closh.history-test)))
+    'clob.reader-test
+    'clob.compiler-test
+    'clob.process-test
+    'clob.common-test
+    'clob.pipeline-test
+    'clob.completion-test
+    'clob.core-test
+    'clob.util-test
+    'clob.history-test)))

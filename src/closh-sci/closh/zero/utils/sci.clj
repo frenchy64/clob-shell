@@ -1,4 +1,4 @@
-(ns closh.zero.utils.sci
+(ns clob.zero.utils.sci
   (:refer-clojure :exclude [eval load-file])
   (:require [sci.core :as sci]
             [sci.impl.interpreter :as interpreter]
@@ -6,31 +6,31 @@
             ; [clojure.repl]
             ; [clojure.java.javadoc]
             [fipp.edn]
-            [closh.zero.pipeline :as pipeline]
-            [closh.zero.core :as closh-core]
-            [closh.zero.compiler]
-            [closh.zero.parser]
-            [closh.zero.platform.process :as process]
-            [closh.zero.builtin :as builtin]
-            [closh.zero.env :as env]
-            [closh.zero.util :as util]
-            [closh.zero.macros-fns :as macros-fns]
+            [clob.zero.pipeline :as pipeline]
+            [clob.zero.core :as clob-core]
+            [clob.zero.compiler]
+            [clob.zero.parser]
+            [clob.zero.platform.process :as process]
+            [clob.zero.builtin :as builtin]
+            [clob.zero.env :as env]
+            [clob.zero.util :as util]
+            [clob.zero.macros-fns :as macros-fns]
             [clojure.java.io :as jio]
             [clojure.java.javadoc :as javadoc]
             [clojure.repl :as repl]
-            [closh.zero.platform.clojure-compiler :as clojure-compiler]))
+            [clob.zero.platform.clojure-compiler :as clojure-compiler]))
 
 (set! *warn-on-reflection* true)
 
 (comment
-  (defmacro closh-requires []
-    closh.zero.env/*closh-environment-requires*)
+  (defmacro clob-requires []
+    clob.zero.env/*clob-environment-requires*)
 
-  (defmacro closh-bindings []
-    (->> closh.zero.env/*closh-environment-requires*
+  (defmacro clob-bindings []
+    (->> clob.zero.env/*clob-environment-requires*
          (drop 1)
          (mapcat (fn [[_ [namespace & opts]]]
-                   (when (not= namespace 'closh.zero.macros)
+                   (when (not= namespace 'clob.zero.macros)
                      (let [{:keys [as refer]} (apply hash-map opts)]
                        (concat
                         (for [x refer]
@@ -52,8 +52,8 @@
                 [(list 'quote k) v]))
          (into {})))
 
-  (defmacro closh-macro-bindings []
-    (with-open [rdr (io/reader "src/common/closh/zero/macros.cljc")]
+  (defmacro clob-macro-bindings []
+    (with-open [rdr (io/reader "src/common/clob/zero/macros.cljc")]
       (let [prdr (PushbackReader. rdr)
             eof (Object.)
             opts {:eof eof :read-cond :allow :features #{:clj}}]
@@ -68,16 +68,16 @@
                                    {:sci/macro true})]
                     (recur (assoc bindings
                                   (list 'quote name) fn-form
-                                  (list 'quote (symbol "closh.zero.macros" (str name))) fn-form)))
+                                  (list 'quote (symbol "clob.zero.macros" (str name))) fn-form)))
 
                   :else (recur bindings)))))))
 
-  (closh-requires)
+  (clob-requires)
 
   #_(def bindings
       (merge
-       (closh-bindings)
-       (closh-macro-bindings)
+       (clob-bindings)
+       (clob-macro-bindings)
        {})))
 
 (declare ctx)
@@ -112,7 +112,7 @@
                'load-file load-file
                'Math/sqrt #(Math/sqrt %)
                'clojure.repl/set-break-handler! repl/set-break-handler!
-               '*closh-commands* env/*closh-commands*
+               '*clob-commands* env/*clob-commands*
                'cd builtin/cd
                'exit builtin/exit
                'quit builtin/quit
@@ -121,9 +121,9 @@
                'unsetenv builtin/unsetenv
                '*args* (sci/new-dynamic-var '*args* (rest *command-line-args*))
                'source-shell util/source-shell
-               '*closh-aliases* env/*closh-aliases*
-               'expand closh-core/expand
-               'shx closh-core/shx})
+               '*clob-aliases* env/*clob-aliases*
+               'expand clob-core/expand
+               'shx clob-core/shx})
 
 (def repl-requires {; 'source
                     ; (with-meta
@@ -148,7 +148,7 @@
                     ;; TODO pp macro
 
 (def ctx {:bindings (merge bindings repl-requires macro-bindings)
-          :namespaces {'closh.zero.macros macro-bindings
+          :namespaces {'clob.zero.macros macro-bindings
                        'clojure.core {'println println
                                       'print print
                                       'pr pr
@@ -156,33 +156,33 @@
                                       'pr-str pr-str}
                        'clojure.java.io {'file jio/file
                                          'reader jio/reader}
-                       'closh.zero.pipeline {'pipe pipeline/pipe
+                       'clob.zero.pipeline {'pipe pipeline/pipe
                                              'redir pipeline/redir
                                              'wait-for-pipeline pipeline/wait-for-pipeline
                                              'pipeline-condition pipeline/pipeline-condition
                                              'pipe-multi pipeline/pipe-multi
                                              'process-output pipeline/process-output}
-                       'closh.zero.platform.process {'exit-code process/exit-code
+                       'clob.zero.platform.process {'exit-code process/exit-code
                                                      'wait process/wait
                                                      'cwd process/cwd}
-                       'closh.zero.core {'expand-variable closh-core/expand-variable
-                                         'expand-tilde closh-core/expand-tilde
-                                         'expand-filename closh-core/expand-filename
-                                         'expand-redirect closh-core/expand-redirect
-                                         'expand-partial closh-core/expand-partial
-                                         'expand closh-core/expand
-                                         'expand-command closh-core/expand-command
-                                         'get-command-suggestion closh-core/get-command-suggestion
-                                         'shx closh-core/shx
-                                         'expand-alias closh-core/expand-alias
-                                         'expand-abbreviation closh-core/expand-abbreviation
-                                         '*closh-version* closh-core/*closh-version*
-                                         'closh-version closh-core/closh-version}
-                       'closh.zero.util {'source-shell util/source-shell}
-                       'closh.zero.env {'*closh-aliases* env/*closh-aliases*
-                                        '*closh-commands* env/*closh-commands*
-                                        '*closh-abbreviations* env/*closh-commands*}
-                       'closh.zero.macros-fns macro-bindings}
+                       'clob.zero.core {'expand-variable clob-core/expand-variable
+                                         'expand-tilde clob-core/expand-tilde
+                                         'expand-filename clob-core/expand-filename
+                                         'expand-redirect clob-core/expand-redirect
+                                         'expand-partial clob-core/expand-partial
+                                         'expand clob-core/expand
+                                         'expand-command clob-core/expand-command
+                                         'get-command-suggestion clob-core/get-command-suggestion
+                                         'shx clob-core/shx
+                                         'expand-alias clob-core/expand-alias
+                                         'expand-abbreviation clob-core/expand-abbreviation
+                                         '*clob-version* clob-core/*clob-version*
+                                         'clob-version clob-core/clob-version}
+                       'clob.zero.util {'source-shell util/source-shell}
+                       'clob.zero.env {'*clob-aliases* env/*clob-aliases*
+                                        '*clob-commands* env/*clob-commands*
+                                        '*clob-abbreviations* env/*clob-commands*}
+                       'clob.zero.macros-fns macro-bindings}
           :classes {'java.util.UUID java.util.UUID
                     'java.lang.Thread java.lang.Thread
                     'java.lang.System java.lang.System}
@@ -196,8 +196,8 @@
 
 (defn eval [form]
   (sci-eval
-   (closh.zero.compiler/compile-interactive
-    (closh.zero.parser/parse form))))
+   (clob.zero.compiler/compile-interactive
+    (clob.zero.parser/parse form))))
 
 (defn repl-print? [val]
   (not (or (nil? val)

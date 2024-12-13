@@ -1,6 +1,6 @@
-(ns closh.completion-test
+(ns clob.completion-test
   (:require [clojure.test :refer [deftest are]]
-            [closh.zero.service.completion :refer [append-completion]]))
+            [clob.zero.service.completion :refer [append-completion]]))
 
 (deftest test-append-commpletion
 

@@ -5,8 +5,8 @@
 # Install dependency with:
 # sudo apt install randtype
 
-echo "> closh"
-(sleep 2; while read line; do echo "$line" | randtype; sleep 0.3; done << END) | node bin/closh.js
+echo "> clob"
+(sleep 2; while read line; do echo "$line" | randtype; sleep 0.3; done << END) | node bin/clob.js
 echo hi
 git status
 ls -l *.json

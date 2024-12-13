@@ -1,4 +1,4 @@
-(ns closh.zero.platform.io
+(ns clob.zero.platform.io
   (:require [glob :as glob-js]
             [fs]
             [deasync]

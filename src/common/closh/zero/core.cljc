@@ -1,9 +1,9 @@
-(ns closh.zero.core
+(ns clob.zero.core
   (:require [clojure.string]
-            [closh.zero.platform.io :refer [glob *stderr*]]
-            [closh.zero.platform.process :as process]
-            [closh.zero.pipeline :refer [process-value]]
-            [closh.zero.env :refer [*closh-aliases* *closh-abbreviations*]]))
+            [clob.zero.platform.io :refer [glob *stderr*]]
+            [clob.zero.platform.process :as process]
+            [clob.zero.pipeline :refer [process-value]]
+            [clob.zero.env :refer [*clob-aliases* *clob-abbreviations*]]))
 
 #?(:clj (set! *warn-on-reflection* true))
 
@@ -96,7 +96,7 @@
                (.println ^java.io.PrintStream *stderr* (str "Unexpected error:\n" ex)))))))
 
 (defn expand-alias
-  ([input] (expand-alias @*closh-aliases* input))
+  ([input] (expand-alias @*clob-aliases* input))
   ([aliases input]
    (let [token (re-find #"[^\s]+" input)
          alias (get aliases token)]
@@ -105,7 +105,7 @@
        input))))
 
 (defn expand-abbreviation
-  ([input] (expand-abbreviation @*closh-abbreviations* input))
+  ([input] (expand-abbreviation @*clob-abbreviations* input))
   ([aliases input]
    (let [token (re-find #"[^\s]+" input)
          alias (get aliases token)]
@@ -116,7 +116,7 @@
 
 ;; Based on code from clojure.core
 #?(:clj
-   (let [version-string (clojure.string/trim (slurp (clojure.java.io/resource "CLOSH_VERSION")))
+   (let [version-string (clojure.string/trim (slurp (clojure.java.io/resource "CLOB_VERSION")))
          [_ major minor incremental qualifier snapshot]
          (re-matches
           #"(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9_]+))?(?:-(SNAPSHOT))?"
@@ -125,7 +125,7 @@
                   :minor       (Integer/valueOf ^String minor)
                   :incremental (Integer/valueOf ^String incremental)
                   :qualifier   (if (= qualifier "SNAPSHOT") nil qualifier)}]
-     (def ^:dynamic *closh-version*
+     (def ^:dynamic *clob-version*
        (if (.contains version-string "SNAPSHOT")
          (assoc version :interim true)
          version))))
@@ -133,16 +133,16 @@
 ;; Based on clojure.core/clojure-version
 #?(:clj
    (defn
-     closh-version
-     "Returns closh version as a printable string."
+     clob-version
+     "Returns clob version as a printable string."
      {:added "1.0"}
      []
-     (str (:major *closh-version*)
+     (str (:major *clob-version*)
           "."
-          (:minor *closh-version*)
-          (when-let [i (:incremental *closh-version*)]
+          (:minor *clob-version*)
+          (when-let [i (:incremental *clob-version*)]
             (str "." i))
-          (when-let [q (:qualifier *closh-version*)]
+          (when-let [q (:qualifier *clob-version*)]
             (when (pos? (count q)) (str "-" q)))
-          (when (:interim *closh-version*)
+          (when (:interim *clob-version*)
             "-SNAPSHOT"))))

@@ -1,7 +1,7 @@
-(ns closh.zero.util
+(ns clob.zero.util
   (:require [clojure.data :refer [diff]]
-            [closh.zero.platform.process :refer [shx setenv getenv unsetenv]]
-            [closh.zero.pipeline :refer [process-value]]
+            [clob.zero.platform.process :refer [shx setenv getenv unsetenv]]
+            [clob.zero.pipeline :refer [process-value]]
             #?(:clj [clojure.data.json :as json])
             #?@(:cljs [[fs] [tmp]])))
 
@@ -15,7 +15,7 @@
        (.removeCallback file)
        result)
      :clj
-     (let [file (java.io.File/createTempFile "closh-tmp-" ".txt")
+     (let [file (java.io.File/createTempFile "clob-tmp-" ".txt")
            f (.getAbsolutePath file)
            result (cb f)]
        (.delete file)
@@ -35,7 +35,7 @@
 
 (defn source-shell
   "Spawns a shell interpreter and executes `exp`. If it executes successfully,
-  any exported variables are then saved into the closh environment"
+  any exported variables are then saved into the clob environment"
   ([exp] (source-shell "bash" exp))
   ([shell exp]
    (with-tempfile

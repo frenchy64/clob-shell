@@ -1,4 +1,4 @@
-#!/usr/bin/env closh-zero.jar
+#!/usr/bin/env clob-zero.jar
 ;; -*- clojure -*-
 
 
@@ -9,7 +9,7 @@
 ;;   - hash in README
 ;; - Automate Github release by using Github API
 ;;   - Create release and copy changelog contents
-;;   - Upload closh-zero.jar artifact
+;;   - Upload clob-zero.jar artifact
 
 (defcmd wait-for-enter []
   (print "Press Enter to continue: ")
@@ -34,7 +34,7 @@ wait-for-enter
 echo Update version in package.json
 wait-for-enter
 
-echo Update version in resources/CLOSH_VERSION
+echo Update version in resources/CLOB_VERSION
 wait-for-enter
 
 echo Create git tag
@@ -50,8 +50,8 @@ npm run pkg-java
 echo
 
 echo Draft a release on Github - copy the notes from Changelog
-echo Visit "https://github.com/dundalek/closh/releases/new"
-echo Upload closh-zero.jar to Github release
+echo Visit "https://github.com/dundalek/clob/releases/new"
+echo Upload clob-zero.jar to Github release
 wait-for-enter
 
 echo Pushing branch and tag...

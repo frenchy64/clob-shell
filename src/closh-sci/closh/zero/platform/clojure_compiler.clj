@@ -1,8 +1,8 @@
-(ns closh.zero.platform.clojure-compiler
+(ns clob.zero.platform.clojure-compiler
   (:refer-clojure :exclude [load load-file])
-  (:require [closh.zero.reader :as reader]
-            [closh.zero.parser]
-            [closh.zero.compiler]
+  (:require [clob.zero.reader :as reader]
+            [clob.zero.parser]
+            [clob.zero.compiler]
             [clojure.tools.reader.reader-types :as r])
   (:import (clojure.lang Compiler RT LineNumberingPushbackReader LispReader$ReaderException Compiler$CompilerException)
            (java.io File FileInputStream InputStreamReader StringReader PipedWriter PipedReader PushbackReader BufferedReader)))

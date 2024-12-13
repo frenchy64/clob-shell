@@ -1,15 +1,15 @@
-(ns closh.zero.frontend.node-readline
+(ns clob.zero.frontend.node-readline
   (:require [clojure.pprint :refer [pprint]]
             [clojure.string]
             [lumo.repl]
             [goog.object :as gobj]
-            [closh.zero.env :as env]
-            [closh.zero.platform.process :refer [process?] :as process]
-            [closh.zero.platform.eval :refer [execute-text execute-command-text]]
-            [closh.zero.core :refer [expand-alias expand-abbreviation]]
-            [closh.zero.service.completion]
-            [closh.zero.service.history :as history]
-            [closh.zero.service.history-common :refer [check-history-line]]
+            [clob.zero.env :as env]
+            [clob.zero.platform.process :refer [process?] :as process]
+            [clob.zero.platform.eval :refer [execute-text execute-command-text]]
+            [clob.zero.core :refer [expand-alias expand-abbreviation]]
+            [clob.zero.service.completion]
+            [clob.zero.service.history :as history]
+            [clob.zero.service.history-common :refer [check-history-line]]
             [readline]
             [child_process]))
 
@@ -74,12 +74,12 @@
   (let [result (atom nil)
         process-fn (fn [_ value] (reset! result value))]
     (with-redefs [lumo.repl/process-1-2-3 process-fn]
-      (execute-text "(try (closh-prompt) (catch :default e (str \"Error printing prompt: \" (.-message e) \"\\nPlease check the definition of closh-prompt function in your ~/.closhrc\\n$ \")))"))
+      (execute-text "(try (clob-prompt) (catch :default e (str \"Error printing prompt: \" (.-message e) \"\\nPlease check the definition of clob-prompt function in your ~/.clobrc\\n$ \")))"))
     (doto rl
       (.setPrompt @result)
       (.prompt true))
     (with-redefs [lumo.repl/process-1-2-3 process-fn]
-      (execute-text "(try (closh-title) (catch :default e (str \"closh: Error in (closh-title): \" (.-message e))))"))
+      (execute-text "(try (clob-title) (catch :default e (str \"clob: Error in (clob-title): \" (.-message e))))"))
     (.write js/process.stdout (str "\u001b]0;" @result "\u0007"))))
 
 ;; TODO: Potencial race condition if latter history call returns before the previous one
@@ -203,7 +203,7 @@
   (let [rl (readline/createInterface
             #js{:input js/process.stdin
                 :output js/process.stdout
-                :completer closh.zero.service.completion/complete
+                :completer clob.zero.service.completion/complete
                 :prompt "$ "})]
     (aset rl "_ttyWrite"
           (fn [c key]

@@ -1,9 +1,9 @@
-(ns closh.pipeline-test
+(ns clob.pipeline-test
   (:require [clojure.test :refer [deftest is are]]
             [clojure.string]
-            [closh.test-util.util :refer [null-file]]
-            [closh.zero.platform.process :refer [shx]]
-            [closh.zero.pipeline :refer [process-output pipe pipe-multi pipe-map pipe-filter pipeline-value]]))
+            [clob.test-util.util :refer [null-file]]
+            [clob.zero.platform.process :refer [shx]]
+            [clob.zero.pipeline :refer [process-output pipe pipe-multi pipe-map pipe-filter pipeline-value]]))
 
 (deftest test-pipeline
   (is (= (list "b" "a") (-> (shx "echo" ["a\nb"])

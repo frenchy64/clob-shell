@@ -1,8 +1,8 @@
-(ns closh.process-test
+(ns clob.process-test
   (:require [clojure.test :refer [deftest is]]
-            [closh.test-util.util :refer [null-file]]
-            [closh.zero.platform.process :as process :refer [shx process? cwd chdir]]
-            [closh.zero.pipeline :refer [process-output]]
+            [clob.test-util.util :refer [null-file]]
+            [clob.zero.platform.process :as process :refer [shx process? cwd chdir]]
+            [clob.zero.pipeline :refer [process-output]]
             #?@(:cljs [[path] [tmp] [lumo.io :refer [spit slurp]]]))
   #?(:clj (:import [java.io File])))
 
@@ -12,7 +12,7 @@
   #?(:cljs
      (.-name (tmp/fileSync))
      :clj
-     (let [file (java.io.File/createTempFile "closh-test-" ".txt")]
+     (let [file (java.io.File/createTempFile "clob-test-" ".txt")]
        (.deleteOnExit file)
        (.getAbsolutePath file))))
 

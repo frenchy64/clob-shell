@@ -1,7 +1,7 @@
-(ns closh.test-util.util
+(ns clob.test-util.util
   #?(:cljs (:require [fs]
                      [tmp]
-                     [closh.zero.platform.util :refer [wait-for-event]])))
+                     [clob.zero.platform.util :refer [wait-for-event]])))
 
 ;; Clean up tmp files on unhandled exception
 #?(:cljs (tmp/setGracefulCleanup))
@@ -14,7 +14,7 @@
        (.removeCallback file)
        result)
      :clj
-     (let [file (java.io.File/createTempFile "closh-test-" ".txt")
+     (let [file (java.io.File/createTempFile "clob-test-" ".txt")
            f (.getAbsolutePath file)
            _ (.deleteOnExit file)]
        (cb f))))

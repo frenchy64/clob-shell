@@ -3,8 +3,8 @@ FROM archlinux/base
 ENV NVM_VERSION "v0.33.6"
 ENV LUMO_VERSION "1.9.0-alpha"
 
-RUN mkdir /root/closh
-WORKDIR /root/closh
+RUN mkdir /root/clob
+WORKDIR /root/clob
 
 COPY scripts/ci_linux .
 RUN ./ci_linux

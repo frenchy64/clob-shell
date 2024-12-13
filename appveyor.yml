@@ -11,7 +11,7 @@ init:
 
 install:
   - choco install nodejs --version=9.10.0
-  - npm install -g lumo-cljs closh
+  - npm install -g lumo-cljs clob
   - npm install
 
 build_script:

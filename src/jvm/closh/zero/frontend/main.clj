@@ -1,20 +1,20 @@
-(ns closh.zero.frontend.main
+(ns clob.zero.frontend.main
   (:gen-class)
   (:require [clojure.tools.reader.reader-types :refer [read-char unread]]
             [clojure.tools.reader.impl.utils]
-            [closh.zero.reader :refer [read-sh]]
-            [closh.zero.core :as core]
-            [closh.zero.platform.process :refer [process?]]
-            [closh.zero.env :refer [*closh-environment-requires* *closh-environment-init*] :as env]
-            [closh.zero.platform.eval :as eval]
-            [closh.zero.utils.clojure-main :refer [repl repl-requires with-read-known] :as clojure-main])
+            [clob.zero.reader :refer [read-sh]]
+            [clob.zero.core :as core]
+            [clob.zero.platform.process :refer [process?]]
+            [clob.zero.env :refer [*clob-environment-requires* *clob-environment-init*] :as env]
+            [clob.zero.platform.eval :as eval]
+            [clob.zero.utils.clojure-main :refer [repl repl-requires with-read-known] :as clojure-main])
   (:refer-clojure :exclude [load-reader])
   (:import [clojure.lang Compiler RT LineNumberingPushbackReader]
            [java.io File FileInputStream InputStreamReader StringReader PipedWriter PipedReader PushbackReader BufferedReader]))
 
 (def custom-environment
   (str "(do "
-       "(alter-var-root #'load-file (constantly closh.zero.frontend.main/compiler-load-file))"
+       "(alter-var-root #'load-file (constantly clob.zero.frontend.main/compiler-load-file))"
        "(def ^{:dynamic true} *args* *command-line-args*)"
        " nil)"))
 
@@ -40,7 +40,7 @@
         reader (PipedReader. writer)]
     (doseq [c (str
                custom-environment
-               (prn-str *closh-environment-requires*))]
+               (prn-str *clob-environment-requires*))]
       (.write writer (int c)))
     (let [custom-reader
           (proxy [LineNumberingPushbackReader] [reader]
@@ -51,11 +51,11 @@
                     (proxy-super setLineNumber (dec (.getLineNumber rdr)))
                     (doseq [c (str "\n" (apply str (repeat (dec (.getColumnNumber rdr)) " ")))]
                       (.write writer (int c))))
-                  (let [form (closh.zero.reader/read opts rdr)]
+                  (let [form (clob.zero.reader/read opts rdr)]
                     (if (= form eof)
                       (.close writer)
                       (binding [*print-meta* true]
-                        (doseq [c (pr-str (conj form 'closh.zero.macros/sh-wrapper))]
+                        (doseq [c (pr-str (conj form 'clob.zero.macros/sh-wrapper))]
                           (.write writer (int c)))))))
                 (let [c (proxy-super read)]
                   c))))]
@@ -92,8 +92,8 @@
   (repl :init (fn []
                 (clojure-main/initialize args inits)
                 (apply require repl-requires)
-                (eval/eval-closh-requires)
-                (eval/eval *closh-environment-init*))
+                (eval/eval-clob-requires)
+                (eval/eval *clob-environment-init*))
         :read repl-read
         :print repl-print)
   (prn)
@@ -130,9 +130,9 @@
   {:added "1.0"
    :static true}
   [rdr]
-  (let [closh-reader (make-custom-reader rdr)]
+  (let [clob-reader (make-custom-reader rdr)]
     ;; (. clojure.lang.Compiler (load rdr)))
-    (Compiler/load closh-reader)))
+    (Compiler/load clob-reader)))
 
 (defn eval-opt
   "Evals expressions in str, prints each non-nil result using prn"
@@ -150,7 +150,7 @@
   "Print help text for main"
   [_ _]
   (println (-> (:doc (meta (var clojure-main/main)))
-               (clojure.string/replace #"java -cp clojure\.jar clojure\.main" "closh-zero.jar"))))
+               (clojure.string/replace #"java -cp clojure\.jar clojure\.main" "clob-zero.jar"))))
 
 (defn -main [& args]
   (with-redefs [clojure-main/load-script load-script

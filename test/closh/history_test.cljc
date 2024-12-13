@@ -1,11 +1,11 @@
-(ns closh.history-test
+(ns clob.history-test
   (:require [clojure.test :refer [deftest is testing]]
-            [closh.test-util.util :refer [with-tempfile] #?@(:cljs [:refer-macros [with-async]])]
-            [closh.zero.macros #?(:clj :refer :cljs :refer-macros) [chain->]]
-            #?(:cljs [closh.zero.service.history-common :refer [check-history-line]])
+            [clob.test-util.util :refer [with-tempfile] #?@(:cljs [:refer-macros [with-async]])]
+            [clob.zero.macros #?(:clj :refer :cljs :refer-macros) [chain->]]
+            #?(:cljs [clob.zero.service.history-common :refer [check-history-line]])
             #?(:cljs [util])
-            #?(:cljs [closh.zero.service.history :as history]
-               :clj [closh.zero.frontend.jline-history :as jhistory])))
+            #?(:cljs [clob.zero.service.history :as history]
+               :clj [clob.zero.frontend.jline-history :as jhistory])))
 
 #?(:clj
    (do

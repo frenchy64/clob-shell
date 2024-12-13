@@ -1,6 +1,6 @@
-(ns closh.reader-test
+(ns clob.reader-test
   (:require [clojure.test :refer [deftest is are]]
-            [closh.zero.reader :as reader]))
+            [clob.zero.reader :as reader]))
 
 (deftest test-reader
 
@@ -12,11 +12,11 @@
     (list 'ls (symbol "*.{cljc,clj}"))
     "ls *.{cljc,clj}"
 
-    (list 'vim (symbol "~/.closhrc"))
-    "vim ~/.closhrc"
+    (list 'vim (symbol "~/.clobrc"))
+    "vim ~/.clobrc"
 
-    (list 'git 'clone (symbol "git@github.com:dundalek/closh.git"))
-    "git clone git@github.com:dundalek/closh.git"
+    (list 'git 'clone (symbol "git@github.com:dundalek/clob.git"))
+    "git clone git@github.com:dundalek/clob.git"
 
     '(echo $USER/$DISPLAY)
     "echo $USER/$DISPLAY"
@@ -105,22 +105,22 @@
     "echo (+ 1"))
 
 (deftest test-reader-forms
-  (is (= '[(closh.zero.macros/sh (+ 1 2))
-           (closh.zero.macros/sh (* 3 4))]
+  (is (= '[(clob.zero.macros/sh (+ 1 2))
+           (clob.zero.macros/sh (* 3 4))]
          (let [in (reader/string-reader "(+ 1 2)\n(* 3 4)")]
            [(reader/read-sh in)
             (reader/read-sh in)])))
 
-  (is (= '[(closh.zero.macros/sh echo a b)
-           (closh.zero.macros/sh ls)]
+  (is (= '[(clob.zero.macros/sh echo a b)
+           (clob.zero.macros/sh ls)]
          (let [in (reader/string-reader "echo a b\nls")]
            [(reader/read-sh in)
             (reader/read-sh in)])))
 
-  (is (= '[(closh.zero.macros/sh (+ 1 2))]
+  (is (= '[(clob.zero.macros/sh (+ 1 2))]
          (let [in (reader/string-reader "(+ 1 2)\n")]
            [(reader/read-sh in)])))
 
-  (is (= '[(closh.zero.macros/sh (+ 1 2))]
+  (is (= '[(clob.zero.macros/sh (+ 1 2))]
          (let [in (reader/string-reader "(+ 1 2)")]
            [(reader/read-sh in)]))))

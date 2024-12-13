@@ -1,8 +1,8 @@
-(ns closh.zero.pipeline
+(ns clob.zero.pipeline
   (:require [clojure.string]
-            [closh.zero.platform.process :as process :refer [process?]]
-            [closh.zero.platform.io :refer [out-stream in-stream err-stream stream-output pipe-stream line-seq stream-write output-stream input-stream output-stream? input-stream? *stdout* *stderr*]]
-            #?(:cljs [closh.zero.platform.util :refer [wait-for-event]]))
+            [clob.zero.platform.process :as process :refer [process?]]
+            [clob.zero.platform.io :refer [out-stream in-stream err-stream stream-output pipe-stream line-seq stream-write output-stream input-stream output-stream? input-stream? *stdout* *stderr*]]
+            #?(:cljs [clob.zero.platform.util :refer [wait-for-event]]))
   (:refer-clojure :exclude [line-seq]))
 
 #?(:clj (set! *warn-on-reflection* true))

@@ -1,15 +1,15 @@
-(ns closh.test-util.runner
+(ns clob.test-util.runner
   (:require [clojure.test :refer [run-tests]]
-            [closh.compiler-test]
-            [closh.process-test]
-            [closh.common-test]
-            [closh.pipeline-test]
-            [closh.completion-test]
-            [closh.core-test]
-            [closh.reader-test]
-            [closh.util-test]
-            [closh.history-test]
-            [closh.scripting-test]))
+            [clob.compiler-test]
+            [clob.process-test]
+            [clob.common-test]
+            [clob.pipeline-test]
+            [clob.completion-test]
+            [clob.core-test]
+            [clob.reader-test]
+            [clob.util-test]
+            [clob.history-test]
+            [clob.scripting-test]))
 
 (def report-orig clojure.test/report)
 
@@ -21,13 +21,13 @@
   (binding [clojure.test/report report-custom]
     (time
      (run-tests
-      'closh.reader-test
-      'closh.compiler-test
-      'closh.process-test
-      'closh.common-test
-      'closh.pipeline-test
-      'closh.completion-test
-      'closh.core-test
-      'closh.util-test
-      'closh.history-test
-      'closh.scripting-test))))
+      'clob.reader-test
+      'clob.compiler-test
+      'clob.process-test
+      'clob.common-test
+      'clob.pipeline-test
+      'clob.completion-test
+      'clob.core-test
+      'clob.util-test
+      'clob.history-test
+      'clob.scripting-test))))

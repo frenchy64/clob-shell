@@ -1,17 +1,17 @@
-(ns closh.compiler-test
+(ns clob.compiler-test
   (:require [clojure.test :refer [deftest is are]]
-            [closh.zero.parser]
-            [closh.zero.compiler]
-            [closh.zero.builtin]
-            [closh.zero.core :refer [shx expand expand-partial expand-redirect expand-command]]))
+            [clob.zero.parser]
+            [clob.zero.compiler]
+            [clob.zero.builtin]
+            [clob.zero.core :refer [shx expand expand-partial expand-redirect expand-command]]))
 
 #_(comment
-    `(apply ((deref closh.zero.env/*closh-commands*) (quote ~'cd)) (concat (closh.zero.core/expand "dirname")))
-    (closh.zero.compiler/compile-batch (closh.zero.parser/parse '(cd dirname))))
+    `(apply ((deref clob.zero.env/*clob-commands*) (quote ~'cd)) (concat (clob.zero.core/expand "dirname")))
+    (clob.zero.compiler/compile-batch (clob.zero.parser/parse '(cd dirname))))
 
 (deftest compiler-test
 
-  (are [x y] (= x (closh.zero.compiler/compile-batch (closh.zero.parser/parse y)))
+  (are [x y] (= x (clob.zero.compiler/compile-batch (clob.zero.parser/parse y)))
     `(shx (expand-command "ls") [(expand "-l")])
     '(ls -l)
 
@@ -57,7 +57,7 @@
     `(shx (expand-command "wc") [(expand "-l")] {:redir [[:set 2 1]]})
     '(wc -l 2 >& 1)
 
-    `(apply ((deref closh.zero.env/*closh-commands*) (quote ~'cd)) (concat (closh.zero.core/expand "dirname")))
+    `(apply ((deref clob.zero.env/*clob-commands*) (quote ~'cd)) (concat (clob.zero.core/expand "dirname")))
     '(cd dirname)
 
     ;; === Expansion coercion tests ===
@@ -74,10 +74,10 @@
     `(shx (expand-command "echo") [[(~'+ 1 2)]])
     '(echo (+ 1 2))
 
-    `(apply ((deref closh.zero.env/*closh-commands*) (quote ~'exit)) (concat [1] (closh.zero.core/expand-partial "abc")))
+    `(apply ((deref clob.zero.env/*clob-commands*) (quote ~'exit)) (concat [1] (clob.zero.core/expand-partial "abc")))
     '(exit 1 "abc"))
 
   (is (=
-       `(do (closh.zero.pipeline/wait-when-process (shx (expand-command "echo") [(expand "a")]))
+       `(do (clob.zero.pipeline/wait-when-process (shx (expand-command "echo") [(expand "a")]))
             (shx (expand-command "echo") [(expand "b")]))
-       (closh.zero.compiler/compile-batch (closh.zero.parser/parse '(echo a \; echo b))))))
+       (clob.zero.compiler/compile-batch (clob.zero.parser/parse '(echo a \; echo b))))))

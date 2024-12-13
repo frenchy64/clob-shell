@@ -73,11 +73,11 @@ _canonicalize_file_path() {
     (cd "$dir" 2>/dev/null && printf '%s/%s\n' "$(pwd -P)" "$file")
 }
 
-export CLOSH_SOURCES_PATH=$(dirname $(dirname $(realpath "$0")))
+export CLOB_SOURCES_PATH=$(dirname $(dirname $(realpath "$0")))
 
-LUMO_BIN="$CLOSH_SOURCES_PATH/node_modules/lumo-cljs/bin/lumo"
+LUMO_BIN="$CLOB_SOURCES_PATH/node_modules/lumo-cljs/bin/lumo"
 
 # NODE_PATH seems to be missing when running as global binary
-export NODE_PATH="$CLOSH_SOURCES_PATH/node_modules:$CLOSH_SOURCES_PATH/..:$NODE_PATH"
+export NODE_PATH="$CLOB_SOURCES_PATH/node_modules:$CLOB_SOURCES_PATH/..:$NODE_PATH"
 
-exec "$LUMO_BIN" --classpath "$CLOSH_SOURCES_PATH/src/common:$CLOSH_SOURCES_PATH/src/lumo" --cache "$HOME/.closh/cache/lumo" -m closh.zero.main
+exec "$LUMO_BIN" --classpath "$CLOB_SOURCES_PATH/src/common:$CLOB_SOURCES_PATH/src/lumo" --cache "$HOME/.clob/cache/lumo" -m clob.zero.main

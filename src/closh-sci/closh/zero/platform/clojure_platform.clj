@@ -1,18 +1,18 @@
-(ns closh.zero.platform.clojure-platform
+(ns clob.zero.platform.clojure-platform
   (:refer-clojure :exclude [eval read load-reader read+string])
-  (:require [closh.zero.reader :as reader]
-            [closh.zero.parser]
-            [closh.zero.compiler]
-            [closh.zero.platform.eval :as eval]
-            [closh.zero.platform.clojure-compiler :as compiler])
+  (:require [clob.zero.reader :as reader]
+            [clob.zero.parser]
+            [clob.zero.compiler]
+            [clob.zero.platform.eval :as eval]
+            [clob.zero.platform.clojure-compiler :as compiler])
   (:import (clojure.lang LineNumberingPushbackReader)))
 
 (def read reader/read)
 
 (defn eval [form]
   (eval/eval
-   (closh.zero.compiler/compile-interactive
-    (closh.zero.parser/parse form))))
+   (clob.zero.compiler/compile-interactive
+    (clob.zero.parser/parse form))))
 
 ;; Copied from clojure/core
 (defn read+string

@@ -1,4 +1,4 @@
-(ns closh.zero.frontend.rebel
+(ns clob.zero.frontend.rebel
   (:gen-class)
   (:require [rebel-readline.clojure.main :refer [syntax-highlight-prn]]
             [rebel-readline.core :as core]
@@ -7,15 +7,15 @@
             [rebel-readline.clojure.service.local :as clj-service]
             [clojure.string :as string]
             [clojure.java.io :as jio]
-            [closh.zero.env :as env]
-            [closh.zero.reader]
-            [closh.zero.core :as closh.core]
-            [closh.zero.platform.process :refer [process?]]
-            [closh.zero.platform.eval :as eval]
-            [closh.zero.frontend.main :as main]
-            [closh.zero.service.completion :refer [complete-shell]]
-            [closh.zero.utils.clojure-main :refer [repl-requires] :as clojure-main]
-            [closh.zero.frontend.jline-history :as jline-history])
+            [clob.zero.env :as env]
+            [clob.zero.reader]
+            [clob.zero.core :as clob.core]
+            [clob.zero.platform.process :refer [process?]]
+            [clob.zero.platform.eval :as eval]
+            [clob.zero.frontend.main :as main]
+            [clob.zero.service.completion :refer [complete-shell]]
+            [clob.zero.utils.clojure-main :refer [repl-requires] :as clojure-main]
+            [clob.zero.frontend.jline-history :as jline-history])
   (:import [org.jline.reader Completer ParsedLine LineReader]
            (org.jline.reader.impl LineReaderImpl)))
 
@@ -23,12 +23,12 @@
   (let [ex-map (Throwable->map e)]
     (println "\nError printing prompt:" (or (:cause ex-map)
                                             (-> ex-map :via first :type))))
-  (println "Please check the definition of closh-prompt function in your ~/.closhrc")
+  (println "Please check the definition of clob-prompt function in your ~/.clobrc")
   (print "$ "))
 
 (defn repl-prompt []
   (try
-    (eval/eval '(print (closh-prompt)))
+    (eval/eval '(print (clob-prompt)))
     (catch Exception e
       (if (or (instance? java.lang.InterruptedException e)
               ;; SCI wraps the exception in ex-info
@@ -36,15 +36,15 @@
         (do (println "\nInterrupted")
             (Thread/interrupted)
             (try
-              (eval/eval '(print (closh-prompt)))
+              (eval/eval '(print (clob-prompt)))
               (catch Exception e
                 (handle-prompt-exception e))))
         (handle-prompt-exception e))))
   (let [title
         (try
-          (eval/eval '(closh-title))
+          (eval/eval '(clob-title))
           (catch Exception e
-            (str "closh: Error in (closh-title): " (:cause (Throwable->map e)))))]
+            (str "clob: Error in (clob-title): " (:cause (Throwable->map e)))))]
     (.print System/out (str "\u001b]0;" title "\u0007"))))
 
 (def opts {:prompt repl-prompt})
@@ -55,7 +55,7 @@
    (fn [s] (clojure.lang.LineNumberingPushbackReader.
             (java.io.StringReader. s)))
    core/has-remaining?
-   closh.zero.frontend.main/repl-read))
+   clob.zero.frontend.main/repl-read))
 
 (defn repl-print
   [& args]
@@ -118,13 +118,13 @@
                                         (clj-service/create
                                          (when api/*line-reader* @api/*line-reader*))
                                         {:completer (clojure-completer)})]
-       (.setVariable line-reader LineReader/HISTORY_FILE (str (jio/file (System/getProperty "user.home") ".closh" "history")))
+       (.setVariable line-reader LineReader/HISTORY_FILE (str (jio/file (System/getProperty "user.home") ".clob" "history")))
        (try
          (.setHistory line-reader (doto (jline-history/sqlite-history)
                                     (.moveToEnd)))
          (catch Exception e
            (binding [*out* *err*]
-             (println "Error while initializing history file ~/.closh/closh.sqlite:\n" e))))
+             (println "Error while initializing history file ~/.clob/clob.sqlite:\n" e))))
        line-reader)
      (binding [*out* (api/safe-terminal-writer api/*line-reader*)]
        (when-let [prompt-fn (:prompt opts)]
@@ -137,13 +137,13 @@
                      (in-ns 'user)
                      (apply require repl-requires)
                      (in-ns 'user)
-                     (eval/eval-closh-requires)
-                     (eval/eval env/*closh-environment-init*)
+                     (eval/eval-clob-requires)
+                     (eval/eval env/*clob-environment-init*)
                      (try
-                       (load-init-file (.getCanonicalPath (jio/file (System/getProperty "user.home") ".closhrc")))
+                       (load-init-file (.getCanonicalPath (jio/file (System/getProperty "user.home") ".clobrc")))
                        (catch Exception e
                          (binding [*out* *err*]
-                           (println "Error while loading init file ~/.closhrc:\n" e)))))
+                           (println "Error while loading init file ~/.clobrc:\n" e)))))
              :print repl-print
              :read (create-repl-read)
              :eval (fn [form]
@@ -159,7 +159,7 @@
 
 (defn -main [& args]
   (if (= args '("--version"))
-    (prn {:closh (closh.core/closh-version)
+    (prn {:clob (clob.core/clob-version)
           :clojure (clojure-version)})
     (with-redefs [clojure-main/load-script main/load-script
                   clojure-main/eval-opt main/eval-opt

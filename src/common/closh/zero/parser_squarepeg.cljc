@@ -1,4 +1,4 @@
-(ns closh.zero.parser-squarepeg
+(ns clob.zero.parser-squarepeg
   (:require [clojure.set]
             [squarepeg.core :as g]))
 

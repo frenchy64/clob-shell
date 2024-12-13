@@ -1,8 +1,8 @@
-(ns closh.util-test
+(ns clob.util-test
   (:require [clojure.test :refer [deftest is]]
-            [closh.zero.platform.process :refer [getenv setenv unsetenv shx]]
-            [closh.zero.pipeline :refer [pipeline-value]]
-            [closh.zero.util :refer [source-shell]]))
+            [clob.zero.platform.process :refer [getenv setenv unsetenv shx]]
+            [clob.zero.pipeline :refer [pipeline-value]]
+            [clob.zero.util :refer [source-shell]]))
 
 (deftest test-source-shell
 

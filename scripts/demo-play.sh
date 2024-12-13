@@ -15,14 +15,14 @@
 # (for [[k v] *1] [k (count v)]) | (into {})
 # ls |> (map extension) | (frequencies)
 
-echo "> closh"
-(sleep 6; while read line; do echo "$line" | randtype -t 8,40000; sleep 0.5; done << END) | unbuffer -p clojure -m closh.zero.frontend.rebel
+echo "> clob"
+(sleep 6; while read line; do echo "$line" | randtype -t 8,40000; sleep 0.5; done << END) | unbuffer -p clojure -m clob.zero.frontend.rebel
 date
 (def x "Clojure")
 (str "Hello " x)
 echo (+ 3 4)
 pwd
-cd src/closh/zero/platform
+cd src/clob/zero/platform
 wc -l *
 wc -l * |> (last)
 ls | wc -l

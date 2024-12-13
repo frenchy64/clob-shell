@@ -1,7 +1,7 @@
-(ns closh.zero.compiler
-  (:require [closh.zero.env :refer [*closh-commands*]]
-            [closh.zero.core :as core]
-            [closh.zero.pipeline :as pipeline]))
+(ns clob.zero.compiler
+  (:require [clob.zero.env :refer [*clob-commands*]]
+            [clob.zero.core :as core]
+            [clob.zero.pipeline :as pipeline]))
 
 (def ^:no-doc pipes
   "Maps shorthand symbols of pipe functions to full name"
@@ -72,10 +72,10 @@
                         (str name))
              parameters (map process-arg parameters)]
          (cond
-           (@*closh-commands* name)
+           (@*clob-commands* name)
            (if (empty? parameters)
-             `((@closh.zero.env/*closh-commands* (quote ~name)))
-             `(apply (@closh.zero.env/*closh-commands* (quote ~name)) (concat ~@parameters)))
+             `((@clob.zero.env/*clob-commands* (quote ~name)))
+             `(apply (@clob.zero.env/*clob-commands* (quote ~name)) (concat ~@parameters)))
 
            :else
            `(core/shx (core/expand-command ~name-val)
@@ -111,7 +111,7 @@
              cmd (if (not (special? (first cmd)))
                    (let [x (gensym)]
                      `(fn [~x]
-                        (closh.zero.pipeline/redir ~(concat cmd [x]) ~redirects)))
+                        (clob.zero.pipeline/redir ~(concat cmd [x]) ~redirects)))
                    cmd)]
          (list fn result cmd)))
      (process-command cmd redir-begin)
@@ -158,8 +158,8 @@
               pred (if neg 'true? 'false?)
               tmp (gensym)]
           (assoc pipeline :pipeline
-                 `(let [~tmp (closh.zero.pipeline/wait-for-pipeline ~(process-pipeline (:pipeline pipeline)))]
-                    (if (~pred (closh.zero.pipeline/pipeline-condition ~tmp))
+                 `(let [~tmp (clob.zero.pipeline/wait-for-pipeline ~(process-pipeline (:pipeline pipeline)))]
+                    (if (~pred (clob.zero.pipeline/pipeline-condition ~tmp))
                       ~child
                       ~tmp)))))
       (-> items

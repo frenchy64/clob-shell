@@ -1,2 +1,2 @@
 #!/bin/sh
-clojure -M -m closh.zero.frontend.rebel
+clojure -M -m clob.zero.frontend.rebel

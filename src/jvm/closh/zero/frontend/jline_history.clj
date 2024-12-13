@@ -1,8 +1,8 @@
-(ns closh.zero.frontend.jline-history
+(ns clob.zero.frontend.jline-history
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.java.io :as io]
-            [closh.zero.service.history-common :refer [table-history table-session get-db-filename check-history-line]]
-            [closh.zero.platform.process :as process])
+            [clob.zero.service.history-common :refer [table-history table-session get-db-filename check-history-line]]
+            [clob.zero.platform.process :as process])
   (:import [org.jline.reader History History$Entry]
            [java.time Instant]
            [java.util ListIterator]))

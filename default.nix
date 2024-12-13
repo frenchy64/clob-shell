@@ -1,6 +1,6 @@
 with import <nixpkgs> {};
 stdenv.mkDerivation {
-  name = "closh-env";
+  name = "clob-env";
   buildInputs = [
     bash
     clojure

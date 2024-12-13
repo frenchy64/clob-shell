@@ -10,7 +10,7 @@
 
 (ns ^{:doc "Top-level main function for Clojure REPL and scripts."
       :author "Stephen C. Gilardi and Rich Hickey"}
- closh.zero.utils.clojure-main
+ clob.zero.utils.clojure-main
   (:refer-clojure :exclude [with-bindings])
   (:require [clojure.spec.alpha :as spec])
   (:import (java.io StringReader)

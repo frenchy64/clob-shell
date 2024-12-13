@@ -1,4 +1,4 @@
-(ns closh.zero.platform.util
+(ns clob.zero.platform.util
   (:require [goog.object :as gobj]
             [deasync]))
 

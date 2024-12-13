@@ -1,58 +1,58 @@
-(ns closh.core-test
+(ns clob.core-test
   (:require [clojure.test :refer [deftest is are]]
-            [closh.test-util.util :refer [null-file with-tempfile with-tempfile-content create-fake-writer get-fake-writer str-fake-writer]]
+            [clob.test-util.util :refer [null-file with-tempfile with-tempfile-content create-fake-writer get-fake-writer str-fake-writer]]
             [clojure.string :as str]
-            [closh.zero.reader :as reader]
-            [closh.zero.builtin :refer [getenv setenv]]
-            [closh.zero.env]
-            [closh.zero.compiler]
-            [closh.zero.parser]
-            [closh.zero.platform.io]
-            [closh.zero.platform.process :as process]
-            #?(:cljs [closh.zero.platform.eval :refer [execute-command-text]])
-            [closh.zero.pipeline :as pipeline :refer [process-output process-value]]
-            [closh.zero.core :refer [shx expand]]
-            ;;[closh.zero.macros #?(:clj :refer :cljs :refer-macros) [sh sh-str defalias defabbr]]
+            [clob.zero.reader :as reader]
+            [clob.zero.builtin :refer [getenv setenv]]
+            [clob.zero.env]
+            [clob.zero.compiler]
+            [clob.zero.parser]
+            [clob.zero.platform.io]
+            [clob.zero.platform.process :as process]
+            #?(:cljs [clob.zero.platform.eval :refer [execute-command-text]])
+            [clob.zero.pipeline :as pipeline :refer [process-output process-value]]
+            [clob.zero.core :refer [shx expand]]
+            ;;[clob.zero.macros #?(:clj :refer :cljs :refer-macros) [sh sh-str defalias defabbr]]
             #?(:cljs [lumo.io :refer [spit slurp]])
             #?(:cljs [fs])
-            #?(:clj [closh.zero.platform.eval :as eval])))
+            #?(:clj [clob.zero.platform.eval :as eval])))
 
 #?(:clj
    (do
      (def user-namespace (create-ns 'user))
      (binding [*ns* user-namespace]
-       (eval/eval-closh-requires)))
+       (eval/eval-clob-requires)))
    :cljs
-   (closh.zero.platform.eval/execute-text
-    (str (pr-str closh.zero.env/*closh-environment-requires*))))
+   (clob.zero.platform.eval/execute-text
+    (str (pr-str clob.zero.env/*clob-environment-requires*))))
 
 (defn bash [cmd]
   (pipeline/process-value (shx "bash" ["-c" cmd])))
 
-(defn closh-spawn-helper [cmd]
-  #?(:cljs (pipeline/process-value (shx "lumo" ["-K" "-c" "src/common:src/lumo:test" "-m" "closh.test-util.spawn-helper" cmd]))
+(defn clob-spawn-helper [cmd]
+  #?(:cljs (pipeline/process-value (shx "lumo" ["-K" "-c" "src/common:src/lumo:test" "-m" "clob.test-util.spawn-helper" cmd]))
      :clj (pipeline/process-value
-           (cond (and (process/getenv "__CLOSH_USE_SCI_NATIVE__") (process/getenv "CI_ENV"))
-                 (shx "./closh-zero-sci" "-e" [cmd])
+           (cond (and (process/getenv "__CLOB_USE_SCI_NATIVE__") (process/getenv "CI_ENV"))
+                 (shx "./clob-zero-sci" "-e" [cmd])
 
-                 (process/getenv "__CLOSH_USE_SCI_NATIVE__")
-                 (shx "java" ["-jar" "target/closh-zero-sci.jar" "-e" cmd])
+                 (process/getenv "__CLOB_USE_SCI_NATIVE__")
+                 (shx "java" ["-jar" "target/clob-zero-sci.jar" "-e" cmd])
 
-                 (process/getenv "__CLOSH_USE_SCI_EVAL__")
-                 (shx "clojure" ["-M:sci" "-m" "closh.zero.frontend.sci" "-e" cmd])
+                 (process/getenv "__CLOB_USE_SCI_EVAL__")
+                 (shx "clojure" ["-M:sci" "-m" "clob.zero.frontend.sci" "-e" cmd])
 
                  :else
-                 (shx "clojure" ["-M" "-m" "closh.zero.frontend.rebel" "-e" cmd])))))
+                 (shx "clojure" ["-M" "-m" "clob.zero.frontend.rebel" "-e" cmd])))))
 
-(defn closh-spawn-in-process [cmd]
+(defn clob-spawn-in-process [cmd]
   (let [out (create-fake-writer)
         err (create-fake-writer)]
-    (binding [closh.zero.platform.io/*stdout* (get-fake-writer out)
-              closh.zero.platform.io/*stderr* (get-fake-writer err)]
+    (binding [clob.zero.platform.io/*stdout* (get-fake-writer out)
+              clob.zero.platform.io/*stderr* (get-fake-writer err)]
       (let [code (reader/read (reader/string-reader cmd))
-            proc #?(:clj (eval/eval `(-> ~(closh.zero.compiler/compile-batch (closh.zero.parser/parse code))
-                                         (closh.zero.pipeline/wait-for-pipeline)))
-                    :cljs (execute-command-text (pr-str (conj code 'closh.zero.macros/sh))))]
+            proc #?(:clj (eval/eval `(-> ~(clob.zero.compiler/compile-batch (clob.zero.parser/parse code))
+                                         (clob.zero.pipeline/wait-for-pipeline)))
+                    :cljs (execute-command-text (pr-str (conj code 'clob.zero.macros/sh))))]
         (if (process/process? proc)
           (do
             (process/wait proc)
@@ -64,23 +64,23 @@
              :stderr (str (str-fake-writer err) stderr)
              :code code}))))))
 
-(defn closh-run [cmd]
-  #?(:cljs (execute-command-text cmd closh.zero.reader/read-sh-value)
-     :clj (let [code (closh.zero.compiler/compile-batch
-                      (closh.zero.parser/parse (reader/read (reader/string-reader cmd))))]
+(defn clob-run [cmd]
+  #?(:cljs (execute-command-text cmd clob.zero.reader/read-sh-value)
+     :clj (let [code (clob.zero.compiler/compile-batch
+                      (clob.zero.parser/parse (reader/read (reader/string-reader cmd))))]
             (binding [*ns* user-namespace]
-              (closh.zero.pipeline/process-value (eval/eval code))))))
+              (clob.zero.pipeline/process-value (eval/eval code))))))
 
-(def closh-spawn
+(def clob-spawn
   ;; Run proper spawn helper on CI, for local machine use in-process runner for faster iteration
-  (if (or (process/getenv "__CLOSH_USE_SCI_NATIVE__") (process/getenv "CI_ENV"))
-    closh-spawn-helper
-    closh-spawn-in-process))
+  (if (or (process/getenv "__CLOB_USE_SCI_NATIVE__") (process/getenv "CI_ENV"))
+    clob-spawn-helper
+    clob-spawn-in-process))
 
-(def closh
-  (if (process/getenv "__CLOSH_USE_SCI_NATIVE__")
-    closh-spawn
-    closh-run))
+(def clob
+  (if (process/getenv "__CLOB_USE_SCI_NATIVE__")
+    clob-spawn
+    clob-run))
 
 (deftest run-test
 
@@ -99,11 +99,11 @@
              (clojure.string/trimr)
              (clojure.string/split-lines)
              (seq))
-         (closh.zero.platform.io/line-seq
+         (clob.zero.platform.io/line-seq
           #?(:cljs (fs/createReadStream "package.json")
              :clj (java.io.FileInputStream. "package.json")))))
 
-  (are [x y] (= x (:stdout (closh y)))
+  (are [x y] (= x (:stdout (clob y)))
     "3"
     "(+ 1 2)"
 
@@ -219,7 +219,7 @@
     ; "{"
     ; "(first) < package.json")
 
-  (are [x] (= (bash x) (closh x))
+  (are [x] (= (bash x) (clob x))
     "ls"
 
     "git status"
@@ -243,7 +243,7 @@
 
     "/bin/ech? x")
 
-  (are [x y] (= (bash x) (closh y))
+  (are [x y] (= (bash x) (clob y))
     "echo \"*\""
     "echo \"*\""
 
@@ -292,8 +292,8 @@
     (str "cat < package.json 2>" null-file " | cat")
     (str "cat < package.json 2 > " null-file " | cat")
 
-    "for f in test/closh/*.cljc; do echo $f; cat $f; done"
-    "ls test/closh/*.cljc |> (map #(str % \"\\n\" (sh-str cat (str %)))) | cat"
+    "for f in test/clob/*.cljc; do echo $f; cat $f; done"
+    "ls test/clob/*.cljc |> (map #(str % \"\\n\" (sh-str cat (str %)))) | cat"
 
     "if test -f package.json; then echo file exists; else echo no file; fi"
     "echo (if (sh-ok test -f package.json) \"file exists\" \"no file\")"
@@ -307,7 +307,7 @@
     "bash -c \"echo err 1>&2; echo out\""
     "bash -c \"echo err 1>&2; echo out\"")
 
-  (are [x y] (= x (with-tempfile-content (fn [f] (closh y))))
+  (are [x y] (= x (with-tempfile-content (fn [f] (clob y))))
 
     "x1\n"
     (str "echo x1 > " f)
@@ -332,20 +332,20 @@
     (str "(sh echo x3 | (clojure.string/upper-case) > \"" f "\")"
          "(sh echo y1 | (clojure.string/upper-case) >> \"" f "\")"))
 
-  (are [x y] (= x (with-tempfile (fn [f] (closh y))))
+  (are [x y] (= x (with-tempfile (fn [f] (clob y))))
 
     {:stdout "", :stderr "", :code 0}
     (str "echo hello | (clojure.string/upper-case) > " f))
 
   (are [x y] (= (with-tempfile-content (fn [f] (bash x)))
-                (with-tempfile-content (fn [f] (closh y))))
+                (with-tempfile-content (fn [f] (clob y))))
 
     ; macOS does not have `tac` command but `tail -r` can be used instead
     (str "(ls | tac || ls | tail -r) > " f)
     (str "ls |> (reverse) > " f)))
 
 (deftest run-special-cases
-  (are [x y] (= (bash x) (closh-spawn y))
+  (are [x y] (= (bash x) (clob-spawn y))
     "echo hi && echo OK"
     "echo hi && echo OK"
 
@@ -371,62 +371,62 @@
          (-> '(do (sh bash -c "sleep 0.2 && echo 2")
                   (sh bash -c "sleep 0.1 && echo 1")
                   (sh bash -c "echo go"))
-             pr-str closh-spawn :stdout)))
+             pr-str clob-spawn :stdout)))
 
   (is (= "2\n1\ngo\n"
          (-> '(sh bash -c "sleep 0.2 && echo 2" \;
                   bash -c "sleep 0.1 && echo 1" \;
                   bash -c "echo go")
-             pr-str closh-spawn :stdout)))
+             pr-str clob-spawn :stdout)))
 
   (is (= {:stdout "x\n" :stderr "" :code 0}
-         (closh-spawn "(sh (cmd (str \"ec\" \"ho\")) x)")))
+         (clob-spawn "(sh (cmd (str \"ec\" \"ho\")) x)")))
 
   (is (= "_asdfghj_: command not found\n"
-         (:stderr (closh-spawn "_asdfghj_"))))
+         (:stderr (clob-spawn "_asdfghj_"))))
 
   (is (= {:stderr "_asdfghj_: command not found\n"
           :stdout ""}
-         (-> (closh-spawn "_asdfghj_ && echo NO")
+         (-> (clob-spawn "_asdfghj_ && echo NO")
              (select-keys [:stdout :stderr]))))
 
   (is (= {:stderr "_asdfghj_: command not found\n"
           :stdout "YES\n"}
-         (-> (closh-spawn "_asdfghj_ || echo YES")
+         (-> (clob-spawn "_asdfghj_ || echo YES")
              (select-keys [:stdout :stderr])))))
 
 (deftest run-extra-special-cases
-  (are [x y] (= (bash x) (closh-spawn-helper y))
+  (are [x y] (= (bash x) (clob-spawn-helper y))
 
     ; "mkdir x/y/z || echo FAILED"
     ; "mkdir x/y/z || echo FAILED"
 
-    "for f in test/closh/*.cljc; do echo $f; cat $f; done"
-    "ls test/closh/*.cljc |> #(doseq [f %] (sh echo (str f)) (sh cat (str f)))"))
+    "for f in test/clob/*.cljc; do echo $f; cat $f; done"
+    "ls test/clob/*.cljc |> #(doseq [f %] (sh echo (str f)) (sh cat (str f)))"))
 
 (deftest test-builtin-getenv-setenv
 
-  (is (= (pr-str (setenv "ONE" "6")) (:stdout (closh "setenv \"ONE\" \"6\""))))
-  (is (= "42" (:stdout (closh "(sh setenv ONE 42) (sh getenv ONE)"))))
-  (is (= "42" (:stdout (closh "(sh setenv \"ONE\" \"42\") (sh getenv \"ONE\")"))))
-  (is (= (getenv "ONE") (:stdout (closh "getenv \"ONE\"")))))
+  (is (= (pr-str (setenv "ONE" "6")) (:stdout (clob "setenv \"ONE\" \"6\""))))
+  (is (= "42" (:stdout (clob "(sh setenv ONE 42) (sh getenv ONE)"))))
+  (is (= "42" (:stdout (clob "(sh setenv \"ONE\" \"42\") (sh getenv \"ONE\")"))))
+  (is (= (getenv "ONE") (:stdout (clob "getenv \"ONE\"")))))
 
 (deftest test-builtin-cd
-  (is (= (str/trim (:stdout (closh "pwd")))
-         (str/trim (:stdout (closh "mkdir -p out && cd out && cd -")))))
+  (is (= (str/trim (:stdout (clob "pwd")))
+         (str/trim (:stdout (clob "mkdir -p out && cd out && cd -")))))
 
-  (is (str/ends-with? (let [result (str/trim (:stdout (closh "mkdir -p \"out/1\" && cd out && cd 1 && pwd")))]
-                        (closh "cd ../..")
+  (is (str/ends-with? (let [result (str/trim (:stdout (clob "mkdir -p \"out/1\" && cd out && cd 1 && pwd")))]
+                        (clob "cd ../..")
                         result)
                       "/out/1")))
 
 (deftest commands
   (are [x y] (= x
-                #?(:clj (:stdout (closh (pr-str y)))
+                #?(:clj (:stdout (clob (pr-str y)))
                    ;; Workaround for cljs version: It is broken because macro expansion kicks in before the commands get defined.
                    ;; So we run it twice, first pass commands get defined, then in second pass they get correctly expanded.
-                   :cljs (do (closh (pr-str y))
-                             (:stdout (closh (pr-str y))))))
+                   :cljs (do (clob (pr-str y))
+                             (:stdout (clob (pr-str y))))))
 
     "abcX" '(do (defcmd cmd-x [s] (str s "X"))
                 (sh cmd-x "abc"))
@@ -464,7 +464,7 @@
               (sh-str cmd-hello | tr "[:lower:]" "[:upper:]")))
 
   (is (= "ABC" (with-tempfile-content
-                 (fn [f] (closh (str
+                 (fn [f] (clob (str
                                  "(do"
                                  (pr-str '(defcmd cmd-upper clojure.string/upper-case))
                                  "(sh echo -n abc | cmd-upper > \"" f "\")"

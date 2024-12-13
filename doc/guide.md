@@ -73,25 +73,25 @@ Most of helper utilities can be replaced with functions on sequences.
 
 ```clojure
 bash:  ls | head -n 5
-closh: ls |> (take 5)
+clob: ls |> (take 5)
 
 bash:  ls | tail -n 5
-closh: ls |> (take-last 5)
+clob: ls |> (take-last 5)
 
 bash:  ls | tail -n +5
-closh: ls |> (drop 4)
+clob: ls |> (drop 4)
 
 ; Print filenames starting with "."
 bash:  ls -a | grep "^\\."
-closh: ls -a |> (filter #(re-find #"^\." %))
+clob: ls -a |> (filter #(re-find #"^\." %))
 
 ; Print only odd numbered lines counting from 1
 bash:  ls | sed -n 1~2p
-closh: ls |> (keep-indexed #(when (odd? (inc %1)) %2))
+clob: ls |> (keep-indexed #(when (odd? (inc %1)) %2))
 
 ; Math
 bash:  echo '(1 + sqrt(5))/2' | bc -l
-closh: (/ (+ 1 (Math.sqrt 5)) 2)
+clob: (/ (+ 1 (Math.sqrt 5)) 2)
 ```
 ### Control flow
 
@@ -123,14 +123,14 @@ echo (if (sh-ok test -f package.json) "file exists" "no file")
 
 ```
 bash:  ls; echo hi
-closh: (sh ls) (sh echo hi)
+clob: (sh ls) (sh echo hi)
 ```
 
 ## Reference
 
 ### History
 
-History gets saved to the file `~/.closh/closh.sqlite` which is a SQLite database.
+History gets saved to the file `~/.clob/clob.sqlite` which is a SQLite database.
 
 Use <kbd>up</kbd> and <kbd>down</kbd> arrows to cycle through history. First history from a current session is used, then history from all other sessions is used.
 
@@ -144,13 +144,13 @@ While in the history search mode you can use following controls:
 
 To show history you can run:
 ```sh
-sqlite3 ~/.closh/closh.sqlite "SELECT command FROM history ORDER BY id ASC"
+sqlite3 ~/.clob/clob.sqlite "SELECT command FROM history ORDER BY id ASC"
 ```
 
-For convenience you can add the following to your `~/.closhrc` file:
+For convenience you can add the following to your `~/.clobrc` file:
 ```clj
 (defcmd history []
-  (sh sqlite3 (str (getenv "HOME") "/.closh/closh.sqlite") "SELECT command FROM history ORDER BY id ASC" | cat))
+  (sh sqlite3 (str (getenv "HOME") "/.clob/clob.sqlite") "SELECT command FROM history ORDER BY id ASC" | cat))
 ```
 
 ### Environment variables
@@ -179,7 +179,7 @@ getenv
 => ;; returns a map of all environment variables
 ```
 
-**source-shell**: run bash scripts and import the resulting environment variables into the closh environment
+**source-shell**: run bash scripts and import the resulting environment variables into the clob environment
 ```
 (source-shell "export ONE=42")
 => nil
@@ -209,23 +209,23 @@ VAR=1 command
 
 ### Custom prompt
 
-The prompt can be customized by defining `closh-prompt` function in `~/.closhrc` file.
+The prompt can be customized by defining `clob-prompt` function in `~/.clobrc` file.
 
 For example you can use [powerline](https://github.com/banga/powerline-shell) prompt like this:
 
 ```clojure
-(require-macros '[closh.zero.core :refer [sh-str]])
+(require-macros '[clob.zero.core :refer [sh-str]])
 
-(defn closh-prompt []
+(defn clob-prompt []
   (sh-str powerline-shell --shell bare))
 ```
 
 Or you can reuse existing prompt from [fish](http://fishshell.com/) shell:
 
 ```clojure
-(require-macros '[closh.zero.core :refer [sh-str]])
+(require-macros '[clob.zero.core :refer [sh-str]])
 
-(defn closh-prompt []
+(defn clob-prompt []
   (sh-str fish -c fish_prompt))
 ```
 
@@ -238,7 +238,7 @@ Bash [prompt format](http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-esc
 
 (def PS1 "\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ ")
 
-(defn closh-prompt []
+(defn clob-prompt []
   (decode-prompt PS1 #js{:env js/process.env}))
 ```
 
@@ -246,7 +246,7 @@ Or you can implement a custom [prompt in clojure](https://gist.github.com/jeroen
 
 ### Tab completion
 
-Closh delegates completion to existing shells. When tab completion is triggered it tries to fetch completions first from `fish`, then `zsh` and finally `bash`. One the mentioned shells needs to be installed for completion to work.
+Clob delegates completion to existing shells. When tab completion is triggered it tries to fetch completions first from `fish`, then `zsh` and finally `bash`. One the mentioned shells needs to be installed for completion to work.
 
 If the completion does not work you can find out the reason by cloning the repo and trying out:
 
@@ -258,7 +258,7 @@ If the completion does not work you can find out the reason by cloning the repo 
 
 ### Custom commands
 
-You can define helper aliases, abbreviations, functions and commands in your `~/.closhrc` file.
+You can define helper aliases, abbreviations, functions and commands in your `~/.clobrc` file.
 
 #### Aliases
 
@@ -310,11 +310,11 @@ echo "*"
 Disable expansion completely with a single quote:
 ```clojure
 bash:  echo '$HOME'
-closh: echo '$HOME ; notice there is only one quote
+clob: echo '$HOME ; notice there is only one quote
 
 ; if the quoted string has spaces wrap in double quotes and then prepend single quote
 bash:  echo '$HOME $PWD'
-closh: echo '"$HOME $PWD"
+clob: echo '"$HOME $PWD"
 ```
 
 ### Signal handling
