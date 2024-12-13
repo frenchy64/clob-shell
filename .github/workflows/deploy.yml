@@ -12,7 +12,7 @@ on: [push, pull_request]
 
 jobs:
   build-jar:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
@@ -73,7 +73,7 @@ jobs:
   # Initial task to compile a JAR, store as a pipeline artifact to be used by
   # downstream builders.
   build-jar-sci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
@@ -134,7 +134,8 @@ jobs:
   # Use GraalVM on macOS to convert JAR to a native macOS binary
   native-image-mac:
     needs: [build-jar-sci]
-    runs-on: macOS-latest
+    if: ${{ ! always() }}
+    runs-on: macos-14
     steps:
       - name: Parse Ref
         id: parse-ref
@@ -199,7 +200,8 @@ jobs:
 
   native-image-linux:
     needs: [build-jar-sci]
-    runs-on: ubuntu-latest
+    if: ${{ ! always() }}
+    runs-on: ubuntu-24.04
     steps:
       - name: Parse Ref
         id: parse-ref
@@ -266,7 +268,7 @@ jobs:
 
   # releaser:
   #   needs: [native-image-mac]
-  #   runs-on: ubuntu-latest
+  #   runs-on: ubuntu-24.04
   #   steps:
   #     - name: Parse Ref
   #       id: parse-ref
