@@ -99,19 +99,17 @@
     (reduce
      (fn [result [{:keys [op cmd]} redir]]
        (let [rest (rest cmd)
-             args (if (vector? (ffirst rest))
-                    (apply concat rest)
-                    rest)
+             args (cond->> rest
+                    (vector? (ffirst rest))
+                    (apply concat))
              redirects (into []
                              (comp (filter #(= (first %) :redirect))
                                    (mapcat (comp process-redirect second)))
                              (concat redir args))
              cmd (process-command cmd redir)
              fn (pipes op)
-             cmd (if (not (special? (first cmd)))
-                   (let [x (gensym)]
-                     `(fn [~x]
-                        (pipeline/redir ~(concat cmd [x]) ~redirects)))
+             cmd (if-not (special? (first cmd))
+                   `#(pipeline/redir (~@cmd %) ~redirects)
                    cmd)]
          (list fn result cmd)))
      (process-command cmd redir-begin)
@@ -154,14 +152,13 @@
      (reduce
       (fn [{op :op child :pipeline} pipeline]
         (let [condition (if (= op '&&) true false)
-              neg (if (:not (:pipeline pipeline)) (not condition) condition)
-              pred (if neg 'true? 'false?)
-              tmp (gensym)]
+              neg (cond-> condition (:not (:pipeline pipeline)) not)
+              pred (if neg `true? `false?)]
           (assoc pipeline :pipeline
-                 `(let [~tmp (clob.pipeline/wait-for-pipeline ~(process-pipeline (:pipeline pipeline)))]
-                    (if (~pred (clob.pipeline/pipeline-condition ~tmp))
+                 `(let [tmp# (clob.pipeline/wait-for-pipeline ~(process-pipeline (:pipeline pipeline)))]
+                    (if (~pred (clob.pipeline/pipeline-condition tmp#))
                       ~child
-                      ~tmp)))))
+                      tmp#)))))
       (-> items
           (first)
           (update :pipeline process-pipeline))
