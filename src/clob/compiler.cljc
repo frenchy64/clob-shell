@@ -28,11 +28,9 @@
 (defn ^:no-doc process-redirect
   "Transform conformed redirection specification."
   [{:keys [op fd arg]}]
-  (let [arg (cond
-              (list? arg) arg
-              (number? arg) arg
-              (keyword? arg) arg
-              :else (list `core/expand-redirect (str arg)))]
+  (let [arg (if ((some-fn list? number? keyword?) arg)
+              arg
+              (list `core/expand-redirect (str arg)))]
     (case op
       > [[:out (or fd 1) arg]]
       < [[:in (or fd 0) arg]]
