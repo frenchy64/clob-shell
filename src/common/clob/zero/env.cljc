@@ -1,7 +1,7 @@
 (ns clob.zero.env)
 
-(def success #?(:clj (Object.) :cljs #()))
-(def failure #?(:clj (Object.) :cljs #()))
+(def success (Object.))
+(def failure (Object.))
 
 (def ^:dynamic *clob-aliases* (atom {}))
 (def ^:dynamic *clob-abbreviations* (atom {}))
@@ -17,9 +17,8 @@
             '[clob.zero.platform.process]
             '[clob.zero.pipeline]
             '[clojure.string :as str]
-            '[clob.zero.macros #?(:clj :refer :cljs :refer-macros) [sh sh-str sh-code sh-ok sh-seq sh-lines sh-value defalias defabbr defcmd]]
-            '[clob.zero.util :refer [source-shell]]
-            #?(:cljs '[lumo.io :refer [slurp spit]])))
+            '[clob.zero.macros :refer [sh sh-str sh-code sh-ok sh-seq sh-lines sh-value defalias defabbr defcmd]]
+            '[clob.zero.util :refer [source-shell]]))
 
 (def ^:dynamic *clob-environment-init*
   '(do
@@ -27,5 +26,4 @@
 
      (def ^:dynamic clob-title (fn [] (str "clob " (clob.zero.platform.process/cwd))))
 
-     ;; Return nil otherwise #'cljs.user/clob-prompt got printed every time exception was thrown
      nil))

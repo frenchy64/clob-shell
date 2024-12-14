@@ -12,13 +12,11 @@
   "dependencies": {
     "deasync": "0.1.14",
     "glob": "7.1.3",
-    "lumo-cljs": "1.9.0-alpha",
     "sqlite3": "4.0.4",
     "tmp": "0.0.33"
   },
   "devDependencies": {
     "nodemon": "1.18.7",
-    "pkg-lumo": "1.0.2"
   },
   "engines": {
     "node": "9.x"
@@ -29,7 +27,6 @@
     "dev": "nodemon --config .nodemon.json",
     "docker-build": "docker build . -t clob",
     "docker-start": "npm run docker-build && docker run --rm -it clob",
-    "pkg-lumo": "pkg-lumo -c src/common:src/lumo -m clob.main",
     "pkg-java": "npm run compile-uberjar && scripts/wrap-jar.sh target/clob-zero.jar",
     "compile-uberjar": "clojure -M:depstar -m hf.depstar.uberjar --compile -m clob.zero.frontend.rebel target/clob-zero.jar --verbose",
     "lint": "clojure -M:lint",
@@ -37,9 +34,7 @@
     "lint-kondo": "clj-kondo --lint src:test",
     "test": "npm run test-cljs && npm run test-clj && npm run test-clj-sci",
     "test-auto": "nodemon -e clj,cljs,cljc -x \"npm run test-cljs; npm run test-clj\"",
-    "test-cljs": "lumo -K -c src/common:src/lumo:test -m clob.test-util.runner",
     "test-cljs-auto": "nodemon -e clj,cljs,cljc -x \"npm run test-cljs\"",
-    "test-windows": "lumo -K -c src/common;src/lumo;test -m clob.test-util.runner",
     "test-docker": "npm run docker-build && docker run --rm -it clob npm run test",
     "test-clj": "clojure -Mtest -m clob.test-util.runner",
     "test-clj-sci": "env __CLOB_USE_SCI_EVAL__=true clojure -M:sci:test -m clob.test-util.runner",

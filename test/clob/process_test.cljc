@@ -2,19 +2,13 @@
   (:require [clojure.test :refer [deftest is]]
             [clob.test-util.util :refer [null-file]]
             [clob.zero.platform.process :as process :refer [shx process? cwd chdir]]
-            [clob.zero.pipeline :refer [process-output]]
-            #?@(:cljs [[path] [tmp] [lumo.io :refer [spit slurp]]]))
+            [clob.zero.pipeline :refer [process-output]])
   #?(:clj (:import [java.io File])))
 
-#?(:cljs (tmp/setGracefulCleanup))
-
 (defn get-tmpfile []
-  #?(:cljs
-     (.-name (tmp/fileSync))
-     :clj
-     (let [file (java.io.File/createTempFile "clob-test-" ".txt")]
-       (.deleteOnExit file)
-       (.getAbsolutePath file))))
+  (let [file (java.io.File/createTempFile "clob-test-" ".txt")]
+    (.deleteOnExit file)
+    (.getAbsolutePath file)))
 
 (deftest run-test
 
@@ -52,8 +46,7 @@
       "When cd back to parent directory the path should be canonical and not contain ..")
 
   (is (= (cwd)
-         (let [d #?(:clj (.getName (File. (.getCanonicalPath (File. (cwd)))))
-                    :cljs (path/basename (path/normalize (cwd))))]
+         (let [d (.getName (File. (.getCanonicalPath (File. (cwd)))))]
            (chdir "..")
            (chdir d)
            (cwd))))

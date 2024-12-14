@@ -9,40 +9,31 @@
             [clob.zero.parser]
             [clob.zero.platform.io]
             [clob.zero.platform.process :as process]
-            #?(:cljs [clob.zero.platform.eval :refer [execute-command-text]])
             [clob.zero.pipeline :as pipeline :refer [process-output process-value]]
             [clob.zero.core :refer [shx expand]]
-            ;;[clob.zero.macros #?(:clj :refer :cljs :refer-macros) [sh sh-str defalias defabbr]]
-            #?(:cljs [lumo.io :refer [spit slurp]])
-            #?(:cljs [fs])
-            #?(:clj [clob.zero.platform.eval :as eval])))
+            ;;[clob.zero.macros :refer [sh sh-str defalias defabbr]]
+            [clob.zero.platform.eval :as eval]))
 
-#?(:clj
-   (do
-     (def user-namespace (create-ns 'user))
-     (binding [*ns* user-namespace]
-       (eval/eval-clob-requires)))
-   :cljs
-   (clob.zero.platform.eval/execute-text
-    (str (pr-str clob.zero.env/*clob-environment-requires*))))
+(def user-namespace (create-ns 'user))
+(binding [*ns* user-namespace]
+  (eval/eval-clob-requires))
 
 (defn bash [cmd]
   (pipeline/process-value (shx "bash" ["-c" cmd])))
 
 (defn clob-spawn-helper [cmd]
-  #?(:cljs (pipeline/process-value (shx "lumo" ["-K" "-c" "src/common:src/lumo:test" "-m" "clob.test-util.spawn-helper" cmd]))
-     :clj (pipeline/process-value
-           (cond (and (process/getenv "__CLOB_USE_SCI_NATIVE__") (process/getenv "CI_ENV"))
-                 (shx "./clob-zero-sci" "-e" [cmd])
+  (pipeline/process-value
+    (cond (and (process/getenv "__CLOB_USE_SCI_NATIVE__") (process/getenv "CI_ENV"))
+          (shx "./clob-zero-sci" "-e" [cmd])
 
-                 (process/getenv "__CLOB_USE_SCI_NATIVE__")
-                 (shx "java" ["-jar" "target/clob-zero-sci.jar" "-e" cmd])
+          (process/getenv "__CLOB_USE_SCI_NATIVE__")
+          (shx "java" ["-jar" "target/clob-zero-sci.jar" "-e" cmd])
 
-                 (process/getenv "__CLOB_USE_SCI_EVAL__")
-                 (shx "clojure" ["-M:sci" "-m" "clob.zero.frontend.sci" "-e" cmd])
+          (process/getenv "__CLOB_USE_SCI_EVAL__")
+          (shx "clojure" ["-M:sci" "-m" "clob.zero.frontend.sci" "-e" cmd])
 
-                 :else
-                 (shx "clojure" ["-M" "-m" "clob.zero.frontend.rebel" "-e" cmd])))))
+          :else
+          (shx "clojure" ["-M" "-m" "clob.zero.frontend.rebel" "-e" cmd]))))
 
 (defn clob-spawn-in-process [cmd]
   (let [out (create-fake-writer)
@@ -50,9 +41,8 @@
     (binding [clob.zero.platform.io/*stdout* (get-fake-writer out)
               clob.zero.platform.io/*stderr* (get-fake-writer err)]
       (let [code (reader/read (reader/string-reader cmd))
-            proc #?(:clj (eval/eval `(-> ~(clob.zero.compiler/compile-batch (clob.zero.parser/parse code))
-                                         (clob.zero.pipeline/wait-for-pipeline)))
-                    :cljs (execute-command-text (pr-str (conj code 'clob.zero.macros/sh))))]
+            proc (eval/eval `(-> ~(clob.zero.compiler/compile-batch (clob.zero.parser/parse code))
+                                 (clob.zero.pipeline/wait-for-pipeline)))]
         (if (process/process? proc)
           (do
             (process/wait proc)
@@ -65,11 +55,10 @@
              :code code}))))))
 
 (defn clob-run [cmd]
-  #?(:cljs (execute-command-text cmd clob.zero.reader/read-sh-value)
-     :clj (let [code (clob.zero.compiler/compile-batch
-                      (clob.zero.parser/parse (reader/read (reader/string-reader cmd))))]
-            (binding [*ns* user-namespace]
-              (clob.zero.pipeline/process-value (eval/eval code))))))
+  (let [code (clob.zero.compiler/compile-batch
+               (clob.zero.parser/parse (reader/read (reader/string-reader cmd))))]
+    (binding [*ns* user-namespace]
+      (clob.zero.pipeline/process-value (eval/eval code)))))
 
 (def clob-spawn
   ;; Run proper spawn helper on CI, for local machine use in-process runner for faster iteration
@@ -100,8 +89,7 @@
              (clojure.string/split-lines)
              (seq))
          (clob.zero.platform.io/line-seq
-          #?(:cljs (fs/createReadStream "package.json")
-             :clj (java.io.FileInputStream. "package.json")))))
+          (java.io.FileInputStream. "package.json"))))
 
   (are [x y] (= x (:stdout (clob y)))
     "3"
@@ -312,9 +300,7 @@
     "x1\n"
     (str "echo x1 > " f)
 
-    ; TODO: enable spit - there is a problem with test runner when lumo.io is required
-    ; "x2\n"
-    ; (str "echo x2 | (spit \"" f "\")")
+    (str "echo x2 | (spit \"" f "\")")
 
     "x3\ny1\n"
     (str "(sh echo x3 > \"" f "\") (sh echo y1 >> \"" f "\")")
@@ -421,12 +407,7 @@
                       "/out/1")))
 
 (deftest commands
-  (are [x y] (= x
-                #?(:clj (:stdout (clob (pr-str y)))
-                   ;; Workaround for cljs version: It is broken because macro expansion kicks in before the commands get defined.
-                   ;; So we run it twice, first pass commands get defined, then in second pass they get correctly expanded.
-                   :cljs (do (clob (pr-str y))
-                             (:stdout (clob (pr-str y))))))
+  (are [x y] (= x (:stdout (clob (pr-str y))))
 
     "abcX" '(do (defcmd cmd-x [s] (str s "X"))
                 (sh cmd-x "abc"))
