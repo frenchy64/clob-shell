@@ -2,12 +2,6 @@
  {org.clojure/clojure {:mvn/version "1.12.0"}
   org.clojure/tools.reader {:mvn/version "1.5.0"}
   org.clojure/data.json {:mvn/version "2.5.1"}
-  ;TODO replace with clj-commons/pomegranate {:mvn/version "1.2.24"}
-  ; triggers:
-  ; SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
-  ; SLF4J: Defaulting to no-operation (NOP) logger implementation
-  ; SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
-  com.cemerick/pomegranate {:mvn/version "1.1.0"}
   org.clojure/tools.cli {:mvn/version "1.1.230"}
   org.clojure/java.jdbc {:mvn/version "0.7.12"}
   org.xerial/sqlite-jdbc {:mvn/version "3.47.1.0"}
@@ -27,9 +21,9 @@
   :depstar {:extra-deps {seancorfield/depstar {:mvn/version "1.1.117"}}}
 
   :sci {:extra-paths ["src/clob-sci" "classes"]
-        :extra-deps {fipp/fipp {:mvn/version "0.6.22"}
-                     borkdude/sci {:mvn/version "0.1.0"}
-                     borkdude/edamame {:mvn/version "0.0.10"}
+        :extra-deps {fipp/fipp {:mvn/version "0.6.27"}
+                     org.babashka/sci {:mvn/version "0.9.44"}
+                     borkdude/edamame {:mvn/version "1.4.27"}
                      com.bhauman/rebel-readline
                      {:git/url "https://github.com/dundalek/rebel-readline.git"
                       :sha "123be27a75de902233356e11ac66ac53cc5edc08"

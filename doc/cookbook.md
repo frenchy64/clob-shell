@@ -1,43 +1,6 @@
 
 Take a look at example [config files](https://github.com/dundalek/dotfiles/tree/master/closh). Also get inspired by [community configs](https://github.com/search?q=in%3Apath+closh&type=Code).
 
-## Running nREPL server
-
-[Pomegranate](https://github.com/cemerick/pomegranate) is included on the classpath so you can dynamically load other libraries. Using pomegranate nREPL server can be included and started. For example you can put following into your `~/.clobrc`:
-
-```clojure
-(defn start-nrepl
-  ([] (start-nrepl 7888))
-  ([port]
-   (eval
-    `(do
-       (require '[cemerick.pomegranate])
-       (cemerick.pomegranate/add-dependencies
-         :coordinates '[[org.clojure/tools.nrepl "0.2.13"]]
-         :repositories (merge cemerick.pomegranate.aether/maven-central
-                              {"clojars" "https://clojars.org/repo"}))
-       (require '[clojure.tools.nrepl.server])
-       (println "Starting nrepl at" ~port)
-       (defonce server (clojure.tools.nrepl.server/start-server :port ~port))))))
-```
-
-Then start the nREPL server with:
-```clojure
-(start-nrepl)
-```
-
-Connect to it from other client, for example:
-```sh
-lein repl :connect 7888
-```
-
-The current nREPL support is limited, for example the custom reader is not included. It can probably be added via middleware. If you have some experience creating nREPL middleware please leave a note in [#88](https://github.com/dundalek/closh/issues/88). So shelling out via nREPL at the momemnt needs to be done with `sh` macros:
-
-```clojure
-$ (sh-str echo hello nrepl)
-$ (sh-value ls *.txt)
-```
-
 ## Autojump
 
 To enable [Autojump](https://github.com/wting/autojump) refer to a following [configuration](https://github.com/dundalek/dotfiles/blob/master/closh/.closh_autojump.cljc).
