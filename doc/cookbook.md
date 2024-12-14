@@ -31,7 +31,7 @@ Connect to it from other client, for example:
 lein repl :connect 7888
 ```
 
-The current nREPL support is limited, for example the custom reader is not included. It can probably be added via middleware. If you have some experience creating nREPL middleware please leave a note in [#88](https://github.com/dundalek/clob/issues/88). So shelling out via nREPL at the momemnt needs to be done with `sh` macros:
+The current nREPL support is limited, for example the custom reader is not included. It can probably be added via middleware. If you have some experience creating nREPL middleware please leave a note in [#88](https://github.com/dundalek/closh/issues/88). So shelling out via nREPL at the momemnt needs to be done with `sh` macros:
 
 ```clojure
 $ (sh-str echo hello nrepl)

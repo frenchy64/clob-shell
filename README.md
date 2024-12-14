@@ -2,6 +2,8 @@
 
 Clob is a fork of [closh](https://github.com/dundalek/closh).
 
+Clob is experimental and has no releases.
+
 ## Install
 
 ### Clojure/JVM version

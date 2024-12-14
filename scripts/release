@@ -50,7 +50,7 @@ npm run pkg-java
 echo
 
 echo Draft a release on Github - copy the notes from Changelog
-echo Visit "https://github.com/dundalek/clob/releases/new"
+echo Visit "https://github.com/dundalek/closh/releases/new"
 echo Upload clob-zero.jar to Github release
 wait-for-enter
 
