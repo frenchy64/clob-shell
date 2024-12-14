@@ -19,3 +19,4 @@ reports
 /pom.xml
 /*.iml
 **/.lsp/*.db
+/clob-sci

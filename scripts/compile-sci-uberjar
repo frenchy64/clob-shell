@@ -10,4 +10,4 @@ rm -rf classes
 mkdir classes
 clojure -Msci -e "(compile 'clob.readline.line-reader-class)"
 clojure -Asci -Spom
-clojure -M:depstar:sci -m hf.depstar.uberjar --compile -m clob.frontend.sci-rebel "$jar" # --verbose
+clojure -M:depstar -m hf.depstar.uberjar --compile -m clob.frontend.sci-rebel "$jar" # --verbose
