@@ -3,7 +3,7 @@
             [clob.zero.builtin :refer [getenv setenv]]
             [clob.zero.env]
             [clob.zero.core :refer [expand expand-alias expand-abbreviation]]
-            [clob.zero.macros #?(:clj :refer :cljs :refer-macros) [defalias defabbr]]))
+            [clob.zero.macros :refer [defalias defabbr]]))
 
 (deftest test-getenv-setenv
   (is (= {"A" "Test A" "B" "B Testing"}

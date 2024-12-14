@@ -1,61 +1,33 @@
-(ns clob.test-util.util
-  #?(:cljs (:require [fs]
-                     [tmp]
-                     [clob.zero.platform.util :refer [wait-for-event]])))
-
-;; Clean up tmp files on unhandled exception
-#?(:cljs (tmp/setGracefulCleanup))
+(ns clob.test-util.util)
 
 (defn with-tempfile [cb]
-  #?(:cljs
-     (let [file (tmp/fileSync)
-           f (.-name file)
-           result (cb f)]
-       (.removeCallback file)
-       result)
-     :clj
-     (let [file (java.io.File/createTempFile "clob-test-" ".txt")
-           f (.getAbsolutePath file)
-           _ (.deleteOnExit file)]
-       (cb f))))
+  (let [file (java.io.File/createTempFile "clob-test-" ".txt")
+        f (.getAbsolutePath file)
+        _ (.deleteOnExit file)]
+    (cb f)))
 
 (defn with-tempfile-content [cb]
   (with-tempfile
     (fn [f]
       (cb f)
-      #?(:cljs (fs/readFileSync f "utf-8")
-         :clj (slurp f)))))
+      (slurp f))))
 
 (def null-file
-  (if
-   #?(:cljs (= js/process.platform "win32")
-      :clj (-> (System/getProperty "os.name")
-               (.toLowerCase)
-               (.indexOf "win")
-               (pos?)))
+  (if (-> (System/getProperty "os.name")
+          (.toLowerCase)
+          (.indexOf "win")
+          (pos?))
     "nul"
     "/dev/null"))
 
 (defn create-fake-writer []
-  #?(:clj (java.io.ByteArrayOutputStream.)
-     :cljs
-     (let [file (tmp/fileSync)
-           name (.-name file)
-           stream (fs/createWriteStream name)]
-       (wait-for-event stream "open")
-       {:file file
-        :name name
-        :stream stream})))
+  (java.io.ByteArrayOutputStream.))
 
 (defn get-fake-writer [writer]
-  #?(:clj (java.io.PrintStream. writer)
-     :cljs (:stream writer)))
+  (java.io.PrintStream. writer))
 
 (defn str-fake-writer [writer]
-  #?(:clj (str writer)
-     :cljs (let [content (fs/readFileSync (:name writer) "utf-8")]
-             (.removeCallback (:file writer))
-             content)))
+  (str writer))
 
 (defmacro with-async [& body]
   `(clojure.test/async done#

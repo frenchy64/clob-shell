@@ -1,6 +1,5 @@
 (ns clob.zero.service.history-common
-  (:require #?(:cljs [path]
-               :clj [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [clob.zero.platform.process :as process])
   #?(:clj (:import (java.io File))))
@@ -23,10 +22,9 @@
 (defn get-db-filename
   "Return path to the db file, defaults to ~/.clob/clob.sqlite"
   []
-  (let [parts [(process/getenv "HOME") ".clob" "clob.sqlite"]]
-    #?(:cljs (apply path/join parts)
-       :clj (let [f ^File (apply io/file parts)]
-              (.getCanonicalPath f)))))
+  (let [parts [(process/getenv "HOME") ".clob" "clob.sqlite"]
+        f ^File (apply io/file parts)]
+    (.getCanonicalPath f)))
 
 (defn check-history-line [s]
   (when (and (not (str/blank? s))

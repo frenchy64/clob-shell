@@ -1,58 +1,31 @@
 (ns clob.history-test
   (:require [clojure.test :refer [deftest is testing]]
-            [clob.test-util.util :refer [with-tempfile] #?@(:cljs [:refer-macros [with-async]])]
-            [clob.zero.macros #?(:clj :refer :cljs :refer-macros) [chain->]]
-            #?(:cljs [clob.zero.service.history-common :refer [check-history-line]])
-            #?(:cljs [util])
-            #?(:cljs [clob.zero.service.history :as history]
-               :clj [clob.zero.frontend.jline-history :as jhistory])))
+            [clob.test-util.util :refer [with-tempfile]]
+            [clob.zero.macros :refer [chain->]]
+            [clob.zero.frontend.jline-history :as jhistory]))
 
-#?(:clj
-   (do
-     (defn iter->seq [iter]
-       (loop [coll []]
-         (if (.hasPrevious iter)
-           (recur (conj coll (.previous iter)))
-           coll)))
+(defn iter->seq [iter]
+  (loop [coll []]
+    (if (.hasPrevious iter)
+      (recur (conj coll (.previous iter)))
+      coll)))
 
-     (defn history->seq [h]
-       (->>
-        (iter->seq (.iterator h (.index h)))
-        (map #(.line %))
-        (into [])))))
-
-#?(:cljs
-   (do
-     (def add-history-promise (util/promisify history/add-history))
-     (def search-history-prev (util/promisify history/search-history-prev))
-     (def search-history-next (util/promisify history/search-history-next))
-
-     (defn history->seq
-       ([h] (history->seq h "" nil :prefix []))
-       ([h query history-state search-mode coll]
-        (.then (search-history-prev h query history-state search-mode)
-               (fn [data]
-                 (if-let [[line history-state] data]
-                   (history->seq h query history-state search-mode (conj coll line))
-                   coll)))))))
+(defn history->seq [h]
+  (->>
+    (iter->seq (.iterator h (.index h)))
+    (map #(.line %))
+    (into [])))
 
 (defn create-history [db-file]
-  #?(:clj (jhistory/sqlite-history db-file)
-     :cljs (history/init-database db-file)))
+  (jhistory/sqlite-history db-file))
 
 (defn add-history [h command]
-  #?(:clj (.add h command)
-     :cljs (if-let [command (check-history-line command)]
-             (add-history-promise h command "")
-             (js/Promise.resolve))))
+  (.add h command))
 
 (defn assert-history [expected h]
-  #?(:clj (is (= expected (history->seq h)))
-     :cljs (.then (history->seq h)
-                  (fn [result]
-                    (is (= expected result))))))
+  (is (= expected (history->seq h))))
 
-#?(:clj (defmacro with-async [form] form))
+(defmacro with-async [form] form)
 
 (deftest history-multi-sessions
   (testing "First get history from current session, then from other sessions"
@@ -65,7 +38,7 @@
              (add-history s1 "a")
              (fn [_] (add-history s2 "b"))
              (fn [_] (add-history s1 "c"))
-             #?(:clj (fn [_] (.moveToEnd s2)))
+             (fn [_] (.moveToEnd s2))
              (fn [_] (assert-history ["c" "a" "b"] s1))
              (fn [_] (assert-history ["b" "c" "a"] s2)))))))))
 
