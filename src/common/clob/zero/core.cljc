@@ -64,36 +64,26 @@
   (try
     (->
      (process/shx command-not-found-bin ["--no-failure-msg" cmdname])
-     #?(:cljs (.on "error" (fn [])))
      (process-value)
      (:stderr))
-    (catch #?(:cljs :default :clj Exception) _)))
+    (catch Exception _)))
 
 (defn shx
   "Executes a command as child process."
   ([cmd] (shx cmd []))
   ([cmd args] (shx cmd args {}))
   ([cmd args opts]
-   #?(:cljs (doto (process/shx cmd args opts)
-              (.on "error"
-                   (fn [err]
-                     (case (.-errno err)
-                       "ENOENT" (let [suggestion (get-command-suggestion cmd)]
-                                  (when-not (clojure.string/blank? suggestion)
-                                    (.write *stderr* suggestion))
-                                  (.write *stderr* (str cmd ": command not found\n")))
-                       (.write *stderr* (str "Unexpected error:\n" err "\n"))))))
-      :clj (try
-             (process/shx cmd args opts)
-             (catch java.io.IOException _e
-               (let [suggestion (get-command-suggestion cmd)]
-                 (when-not (clojure.string/blank? suggestion)
-                   (.print ^java.io.PrintStream *stderr* suggestion))
-                 (.println ^java.io.PrintStream *stderr* (str cmd ": command not found"))
-                 #_(println "STACKTRACE:")
-                 #_(.printStackTrace e)))
-             (catch Exception ex
-               (.println ^java.io.PrintStream *stderr* (str "Unexpected error:\n" ex)))))))
+   (try
+     (process/shx cmd args opts)
+     (catch java.io.IOException _e
+       (let [suggestion (get-command-suggestion cmd)]
+         (when-not (clojure.string/blank? suggestion)
+           (.print ^java.io.PrintStream *stderr* suggestion))
+         (.println ^java.io.PrintStream *stderr* (str cmd ": command not found"))
+         #_(println "STACKTRACE:")
+         #_(.printStackTrace e)))
+     (catch Exception ex
+       (.println ^java.io.PrintStream *stderr* (str "Unexpected error:\n" ex))))))
 
 (defn expand-alias
   ([input] (expand-alias @*clob-aliases* input))

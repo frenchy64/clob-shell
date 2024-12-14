@@ -2,7 +2,7 @@
   (:require [clojure.string]
             [clob.zero.platform.process :as process]
             [clob.zero.env :as env]
-            [clob.zero.macros #?(:clj :refer :cljs :refer-macros) [defcmd]]))
+            [clob.zero.macros :refer [defcmd]]))
 
 (defcmd exit
   "Exits the process using optional first argument as exit code."

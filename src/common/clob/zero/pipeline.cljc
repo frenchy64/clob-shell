@@ -1,8 +1,7 @@
 (ns clob.zero.pipeline
   (:require [clojure.string]
             [clob.zero.platform.process :as process :refer [process?]]
-            [clob.zero.platform.io :refer [out-stream in-stream err-stream stream-output pipe-stream line-seq stream-write output-stream input-stream output-stream? input-stream? *stdout* *stderr*]]
-            #?(:cljs [clob.zero.platform.util :refer [wait-for-event]]))
+            [clob.zero.platform.io :refer [out-stream in-stream err-stream stream-output pipe-stream line-seq stream-write output-stream input-stream output-stream? input-stream? *stdout* *stderr*]])
   (:refer-clojure :exclude [line-seq]))
 
 #?(:clj (set! *warn-on-reflection* true))
@@ -57,10 +56,9 @@
       {:stdout @stdout
        :stderr @stderr
        :code (process/exit-code proc)})
-    {:stdout #?(:cljs (str proc)
-                :clj (if (instance? clojure.lang.LazySeq proc)
-                       (pr-str proc)
-                       (str proc)))
+    {:stdout (if (instance? clojure.lang.LazySeq proc)
+               (pr-str proc)
+               (str proc))
      :stderr ""
      :code 0}))
 
@@ -87,9 +85,7 @@
        (process? to)
        (do
          (when-let [in (in-stream to)]
-           (let [out (or (out-stream from)
-                         #?(:cljs (doto (stream.PassThrough.)
-                                    (.end))))]
+           (let [out (out-stream from)]
              (pipe-stream out in)))
          to)
 
@@ -157,7 +153,7 @@
         (reduce
          (fn [redirects [op fd target]]
            (case op
-             :rw (throw (new #?(:clj Exception :cljs js/Error) "Read/Write redirection is not supported"))
+             :rw (throw (Exception. "Read/Write redirection is not supported"))
              (let [redirect (case op
                               :in (input-stream  target)
                               :out (output-stream target)
@@ -174,6 +170,5 @@
     (if (not= stdout :stdout)
       (do
         (pipe val stdout)
-        #?(:cljs (wait-for-event stdout "finish"))
         nil)
       val)))

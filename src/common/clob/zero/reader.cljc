@@ -1,35 +1,23 @@
 (ns clob.zero.reader
   (:refer-clojure :exclude [read read-string])
   (:require [clojure.tools.reader.reader-types :as r]
-            [clojure.tools.reader.edn :as edn]
-            #?(:cljs [cljs.tools.reader])
-            #?(:cljs [cljs.tools.reader.impl.utils :refer [ws-rx]]))
-  #?(:cljs (:import goog.string.StringBuffer)))
+            [clojure.tools.reader.edn :as edn]))
 
-#?(:clj (set! *warn-on-reflection* true))
+(set! *warn-on-reflection* true)
 
-#?(:clj
-   (defmacro require-reader []
-     (if (System/getenv "__CLOB_USE_SCI_EVAL__")
-       '(require '[clob.zero.sci-reader :refer [read-clojure]])
-       '(do (require 'clojure.tools.reader)
-            (def read-clojure clojure.tools.reader/read)))))
+(defmacro require-reader []
+  (if (System/getenv "__CLOB_USE_SCI_EVAL__")
+    '(require '[clob.zero.sci-reader :refer [read-clojure]])
+    '(do (require 'clojure.tools.reader)
+         (def read-clojure clojure.tools.reader/read))))
 
-#?(:clj (require-reader)
-   :cljs
-   (defn- ^:no-doc read-clojure
-     "This is a verbatim copy of `cljs.tools.reader/read`. We need a copy otherwise re-binding ends up in infinite loop."
-     {:arglists '([] [reader] [opts reader] [reader eof-error? eof-value])}
-     ([reader] (read-clojure reader true nil))
-     ([{eof :eof :as opts :or {eof :eofthrow}} reader] (cljs.tools.reader/read* reader (= eof :eofthrow) eof nil opts (to-array [])))
-     ([reader eof-error? sentinel] (cljs.tools.reader/read* reader eof-error? sentinel nil {} (to-array [])))))
+(require-reader)
 
 (defn whitespace?-custom
   "Customizes `clojure.tools.reader.impl.utils/whitespace?` so that read-token splits token only on whitespace and does not split on comma."
   [ch]
   (and (some? ch)
-       #?(:clj (Character/isWhitespace ^Character ch)
-          :cljs (.test ws-rx ch))))
+       (Character/isWhitespace ^Character ch)))
 
 (defn macro-terminating?
   "Customizes `clojure.tools.reader/macro-terminating?` so that read-token is more permissive. For example it does not stop on curly braces but reads them in so they can be used for brace expansion."
@@ -48,7 +36,7 @@
 (defn ^String read-token*
   "Read in a single logical token from the reader"
   [rdr]
-  (loop [sb #?(:clj (StringBuilder.) :cljs (StringBuffer.)) ch (r/read-char rdr)]
+  (loop [sb (StringBuilder.) ch (r/read-char rdr)]
     (if (or (whitespace?-custom ch)
             (macro-terminating? ch)
             (nil? ch))
@@ -61,16 +49,10 @@
   (if (= \" (r/peek-char rdr))
     (edn/read rdr)
     (let [token (read-token* rdr)]
-      #?(:clj
-         (try
-           (Integer/parseInt token)
-           (catch Exception _
-             (symbol token)))
-         :cljs
-         (let [number (js/Number token)]
-           (if (js/isNaN number)
-             (symbol token)
-             number))))))
+      (try
+        (Integer/parseInt token)
+        (catch Exception _
+          (symbol token))))))
 
 (defn read* [opts reader]
   (loop [coll (transient [])]
@@ -116,8 +98,7 @@
                     (recur (conj! coll token)))))))))
 
 (defn read
-  #?(:clj ([]
-           (read *in*)))
+  ([] (read *in*))
   ([stream]
    (read stream true nil))
   ([stream eof-error? eof-value]
@@ -129,8 +110,8 @@
    (read* opts stream)))
 
 (defn read-all [rdr]
-  (let [eof #()
-        opts {:eof eof :read-cond :allow :features #{#?(:clj :clj :cljs :cljs)}}]
+  (let [eof rdr
+        opts {:eof eof :read-cond :allow :features #{:clj}}]
     (loop [forms (transient [])]
       (let [form (read opts rdr)]
         (if (identical? form eof)

@@ -51,15 +51,6 @@ jobs:
       - name: Check clojure version
         run: clojure -Sdescribe
 
-      # - name: Install shadow-cljs
-      #   run: |
-      #     npm install shadow-cljs
-      #     npm install
-      #
-      # - name: Install npm packages
-      #   run: |
-      #     npm install
-
       - name: Build into uberjar
         run: |
           npm run pkg-java && \
@@ -111,15 +102,6 @@ jobs:
 
       - name: Check clojure version
         run: clojure -Sdescribe
-
-      # - name: Install shadow-cljs
-      #   run: |
-      #     npm install shadow-cljs
-      #     npm install
-      #
-      # - name: Install npm packages
-      #   run: |
-      #     npm install
 
       - name: Build into uberjar
         run: |

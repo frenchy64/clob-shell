@@ -16,7 +16,7 @@
     "tmp": "0.0.33"
   },
   "devDependencies": {
-    "nodemon": "1.18.7",
+    "nodemon": "1.18.7"
   },
   "engines": {
     "node": "9.x"
@@ -32,9 +32,8 @@
     "lint": "clojure -M:lint",
     "lint-fix": "clojure -M:lint:lint/fix",
     "lint-kondo": "clj-kondo --lint src:test",
-    "test": "npm run test-cljs && npm run test-clj && npm run test-clj-sci",
-    "test-auto": "nodemon -e clj,cljs,cljc -x \"npm run test-cljs; npm run test-clj\"",
-    "test-cljs-auto": "nodemon -e clj,cljs,cljc -x \"npm run test-cljs\"",
+    "test": "npm run test-clj && npm run test-clj-sci",
+    "test-auto": "nodemon -e clj,cljc -x \"npm run test-clj\"",
     "test-docker": "npm run docker-build && docker run --rm -it clob npm run test",
     "test-clj": "clojure -Mtest -m clob.test-util.runner",
     "test-clj-sci": "env __CLOB_USE_SCI_EVAL__=true clojure -M:sci:test -m clob.test-util.runner",
@@ -42,7 +41,7 @@
     "test-clj-sci-native": "env __CLOB_USE_SCI_NATIVE__=true __CLOB_USE_SCI_EVAL__=true clojure -M:sci:test -m clob.test-util.runner",
     "test-clj-kaocha": "clojure -M:kaocha -m kaocha.runner",
     "test-clj-kaocha-auto": "clojure -M:kaocha -m kaocha.runner --watch",
-    "test-clj-auto": "nodemon -e clj,cljs,cljc -x \"npm run test-clj\"",
+    "test-clj-auto": "nodemon -e clj,cljc -x \"npm run test-clj\"",
     "rebel": "clojure -M -e \"(set! *warn-on-reflection* true)\" -m clob.zero.frontend.rebel",
     "sci-rebel": "env __CLOB_USE_SCI_EVAL__=true clojure -M:sci -e \"(set! *warn-on-reflection* true)\" -m clob.zero.frontend.sci-rebel",
     "sci-plain": "env __CLOB_USE_SCI_EVAL__=true clojure -M:sci -e \"(set! *warn-on-reflection* true)\" -m clob.zero.frontend.sci",

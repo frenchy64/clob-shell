@@ -88,11 +88,6 @@ cd clob
 npm install
 ```
 
-Run the cljs app
-```
-npm start
-```
-
 Run the clj app
 ```
 clojure -m clob.zero.frontend.rebel

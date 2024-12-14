@@ -89,8 +89,7 @@
 
 (defn chain-> [x & forms]
   `(-> ~x ~@(for [form forms]
-              #?(:clj (list form)
-                 :cljs (list '.then form)))))
+              (list form))))
 
 (comment
   (macroexpand-1 '(chain-> x (first) (second))))
