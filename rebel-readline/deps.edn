@@ -4,10 +4,4 @@
         org.jline/jline-terminal-jansi {:mvn/version "3.5.1"}
         cljfmt/cljfmt {:mvn/version "0.5.7"} ;; depends on tools reader
         compliment/compliment {:mvn/version "0.3.6"}}
- :paths ["src" "target/classes"]
- :deps/prep-lib
- {:ensure "target/classes"
-  :alias :prep
-  :fn compile}
- :aliases {:prep {:extra-deps {io.github.clojure/tools.build {:git/tag "v0.10.6" :git/sha "52cf7d6"}}
-                  :ns-default prep}}}
+ :paths ["src" "classes"]}

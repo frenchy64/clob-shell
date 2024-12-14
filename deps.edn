@@ -8,7 +8,7 @@
   com.bhauman/rebel-readline {:local/root "rebel-readline"
                               :exclusions [rewrite-cljs/rewrite-cljs]}}
 
- :paths ["src/common" "src/jvm" "resources" "target/classes"]
+ :paths ["src/common" "src/jvm" "resources" "classes"]
 
  :aliases
  {:test {:extra-paths ["test"]}

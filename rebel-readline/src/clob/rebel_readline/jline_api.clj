@@ -3,7 +3,7 @@
    [clojure.string :as string]
    [clob.rebel-readline.jline-api.attributed-string :as astring]
    [clob.rebel-readline.utils :refer [log]]
-   clob.rebel-readline.jline-api)
+   clob.rebel-readline.line-reader-class)
   (:import
    [org.jline.keymap KeyMap]
    [org.jline.reader

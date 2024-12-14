@@ -22,8 +22,8 @@ chmod +x clob-zero.jar
 
 It can also run with `clojure` CLI:
 ```sh
-clojure -Sdeps '{:deps {com.ambrosebs/clob.shell {:git/url "https://github.com/frenchy64/clob-shell.git" :sha "cd1579f31dcd2ed5b655a149b177f8cd47aecb5d"}}}' -X:deps prep
-clojure -Sdeps '{:deps {com.ambrosebs/clob.shell {:git/url "https://github.com/frenchy64/clob-shell.git" :sha "cd1579f31dcd2ed5b655a149b177f8cd47aecb5d"}}}' -M -m clob.zero.frontend.rebel
+clojure -Sdeps '{:deps {com.ambrosebs/clob.shell {:git/url "https://github.com/frenchy64/clob-shell.git" :sha "b121f4d2657fb8d31b202d79e3b7cf812e8a31cb"}}}' -X:deps prep
+clojure -Sdeps '{:deps {com.ambrosebs/clob.shell {:git/url "https://github.com/frenchy64/clob-shell.git" :sha "b121f4d2657fb8d31b202d79e3b7cf812e8a31cb"}}}' -M -m clob.zero.frontend.rebel
 ```
 
 ## Quick Start
