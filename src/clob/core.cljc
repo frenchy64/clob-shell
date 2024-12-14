@@ -1,5 +1,6 @@
 (ns clob.core
   (:require [clojure.string :as str]
+            [clojure.java.io :as io]
             [clob.platform.io :refer [glob *stderr*]]
             [clob.platform.process :as process]
             [clob.pipeline :refer [process-value]]
@@ -96,31 +97,28 @@
        (str/replace-first #"[^\s]+" alias)))))
 
 ;; Based on code from clojure.core
-(let [version-string (str/trim (slurp (clojure.java.io/resource "CLOB_VERSION")))
-      [_ major minor incremental qualifier snapshot]
-      (re-matches
-        #"(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9_]+))?(?:-(SNAPSHOT))?"
-        version-string)
-      version {:major       (Integer/valueOf ^String major)
-               :minor       (Integer/valueOf ^String minor)
-               :incremental (Integer/valueOf ^String incremental)
-               :qualifier   (when (not= qualifier "SNAPSHOT") qualifier)}]
-  (def ^:dynamic *clob-version*
-    (cond-> version
-      (.contains version-string "SNAPSHOT")
-      (assoc :interim true))))
+(def -clob-version
+  (delay
+    (let [version-string (str/trim (slurp (io/resource "CLOB_VERSION")))
+          [_ major minor incremental qualifier snapshot]
+          (re-matches
+            #"(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9_]+))?(?:-(SNAPSHOT))?"
+            version-string)
+          version {:major       (Integer/valueOf ^String major)
+                   :minor       (Integer/valueOf ^String minor)
+                   :incremental (Integer/valueOf ^String incremental)
+                   :qualifier   (when (not= qualifier "SNAPSHOT") qualifier)}]
+      (cond-> version
+        (.contains version-string "SNAPSHOT")
+        (assoc :interim true)))))
 
 ;; Based on clojure.core/clojure-version
 (defn clob-version
   "Returns clob version as a printable string."
   {:added "1.0"}
   []
-  (str (:major *clob-version*)
-       "."
-       (:minor *clob-version*)
-       (when-let [i (:incremental *clob-version*)]
-         (str "." i))
-       (when-let [q (:qualifier *clob-version*)]
-         (when (pos? (count q)) (str "-" q)))
-       (when (:interim *clob-version*)
-         "-SNAPSHOT")))
+  (let [{:keys [major minor incremental qualifier interim]} @-clob-version]
+    (str major "." minor
+         (some->> incremental (str "."))
+         (when (pos? (count qualifier)) (str "-" qualifier))
+         (when interim "-SNAPSHOT"))))

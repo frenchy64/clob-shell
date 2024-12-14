@@ -178,7 +178,7 @@
                                         'shx clob-core/shx
                                         'expand-alias clob-core/expand-alias
                                         'expand-abbreviation clob-core/expand-abbreviation
-                                        '*clob-version* clob-core/*clob-version*
+                                        '-clob-version clob-core/-clob-version
                                         'clob-version clob-core/clob-version}
                        'clob.util {'source-shell util/source-shell}
                        'clob.env {'*clob-aliases* env/*clob-aliases*
