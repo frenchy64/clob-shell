@@ -11,6 +11,7 @@
 ;; You must not remove this notice, or any other, from this software.
 
 ;; Dec 2024 - Copied squarepeg.core and renamed clob.squarepeg https://github.com/ericnormand/squarepeg/blob/master/src/squarepeg/core.clj
+;; https://github.com/ericnormand/squarepeg/blob/4a93e9b2cbfd1931e71537900760ef32d6ad9dcf/src/squarepeg/core.clj
 (ns clob.squarepeg)
 
 ;; A rule is a function [input bindings context memo]
