@@ -91,38 +91,34 @@
   [{:keys [cmd cmds]} redir-begin redir-end]
   (let [pipeline (butlast cmds)
         end (last cmds)]
-    (reduce
-     (fn [result [{:keys [op cmd]} redir]]
-       (let [rest (rest cmd)
-             args (cond->> rest
-                    (vector? (ffirst rest))
-                    (apply concat))
-             redirects (into []
-                             (comp (filter #(= (first %) :redirect))
-                                   (mapcat (comp process-redirect second)))
-                             (concat redir args))
-             cmd (process-command cmd redir)
-             fn (pipes op)
-             cmd (if-not (special? (first cmd))
-                   `#(pipeline/redir (~@cmd %) ~redirects)
-                   cmd)]
-         (list fn result cmd)))
-     (process-command cmd redir-begin)
-     (concat
-      (map (fn [cmd] [cmd []]) pipeline)
-      (when end [[end redir-end]])))))
+    (reduce (fn [result [{:keys [op cmd]} redir]]
+              (let [rest (rest cmd)
+                    args (cond->> rest
+                           (vector? (ffirst rest))
+                           (apply concat))
+                    redirects (into [] (comp (filter #(= (first %) :redirect))
+                                             (mapcat (comp process-redirect second)))
+                                    (concat redir args))
+                    cmd (process-command cmd redir)
+                    fn (pipes op)
+                    cmd (if-not (special? (first cmd))
+                          `#(pipeline/redir (~@cmd %) ~redirects)
+                          cmd)]
+                (list fn result cmd)))
+            (process-command cmd redir-begin)
+            (cond-> (mapv (fn [cmd] [cmd []]) pipeline)
+              end (conj [end redir-end])))))
 
 (defn ^:no-doc process-pipeline-interactive
   "Transform conformed pipeline specification in interactive mode. Pipeline by default reads from stdin and writes to stdout."
   [pipeline]
   (list `pipeline/wait-for-pipeline
-        (process-pipeline
-         pipeline
-         (vec (concat [[:redirect {:op '>& :fd 0 :arg :stdin}]
-                       [:redirect {:op '>& :fd 2 :arg :stderr}]]
-                      (when (empty? (:cmds pipeline)) [[:redirect {:op '>& :fd 1 :arg :stdout}]])))
-         [[:redirect {:op '>& :fd 1 :arg :stdout}]
-          [:redirect {:op '>& :fd 2 :arg :stderr}]])))
+        (process-pipeline pipeline
+                          (cond-> [[:redirect {:op '>& :fd 0 :arg :stdin}]
+                                   [:redirect {:op '>& :fd 2 :arg :stderr}]]
+                            (empty? (:cmds pipeline)) (into [[:redirect {:op '>& :fd 1 :arg :stdout}]]))
+                          [[:redirect {:op '>& :fd 1 :arg :stdout}]
+                           [:redirect {:op '>& :fd 2 :arg :stderr}]])))
 
 (defn ^:no-doc process-pipeline-batch
   "Transform conformed pipeline specification in batch mode. "
@@ -134,30 +130,24 @@
   "Transform pipeline for command substitution mode, do not capture stderr."
   [pipeline]
   (list `pipeline/wait-for-pipeline
-        (process-pipeline
-         pipeline
-         []
-         [[:redirect {:op '>& :fd 2 :arg :stderr}]])))
+        (process-pipeline pipeline [] [[:redirect {:op '>& :fd 2 :arg :stderr}]])))
 
 (defn ^:no-doc process-command-clause
   "Transform conformed command clause specification, handle conditional execution."
   [{:keys [pipeline pipelines]} process-pipeline]
   (let [items (reverse (conj (seq pipelines) {:pipeline pipeline}))]
     (:pipeline
-     (reduce
-      (fn [{op :op child :pipeline} pipeline]
-        (let [condition (if (= op '&&) true false)
-              neg (cond-> condition (:not (:pipeline pipeline)) not)
-              pred (if neg `true? `false?)]
-          (assoc pipeline :pipeline
-                 `(let [tmp# (clob.pipeline/wait-for-pipeline ~(process-pipeline (:pipeline pipeline)))]
-                    (if (~pred (clob.pipeline/pipeline-condition tmp#))
-                      ~child
-                      tmp#)))))
-      (-> items
-          (first)
-          (update :pipeline process-pipeline))
-      (rest items)))))
+      (reduce (fn [{op :op child :pipeline} pipeline]
+                (update pipeline :pipeline
+                        (fn [pipeline]
+                          ;;what does :not do?
+                          (let [pred (if (cond-> (= op '&&) (:not pipeline) not) `true? `false?)]
+                            `(let [tmp# (pipeline/wait-for-pipeline ~(process-pipeline pipeline))]
+                               (if (~pred (pipeline/pipeline-condition tmp#))
+                                 ~child
+                                 tmp#))))))
+              (-> items first (update :pipeline process-pipeline))
+              (rest items)))))
 
 ;; TODO: handle rest of commands when job control is implemented
 (defn ^:no-doc process-command-list
