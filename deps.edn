@@ -6,7 +6,6 @@
   org.clojure/tools.cli {:mvn/version "0.4.1"}
   org.clojure/java.jdbc {:mvn/version "0.7.9"}
   org.xerial/sqlite-jdbc {:mvn/version "3.27.2.1"}
-  squarepeg/squarepeg {:mvn/version "0.6.1"}
   com.bhauman/rebel-readline {:mvn/version "0.1.4"
                               :exclusions [rewrite-cljs/rewrite-cljs]}}
 
