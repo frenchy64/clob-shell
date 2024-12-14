@@ -1,26 +1,25 @@
 (ns clob.pipeline
-  (:require [clojure.string]
+  (:refer-clojure :exclude [line-seq])
+  (:require [clojure.string :as str]
             [clob.platform.process :as process :refer [process?]]
-            [clob.platform.io :refer [out-stream in-stream err-stream stream-output pipe-stream line-seq stream-write output-stream input-stream output-stream? input-stream? *stdout* *stderr*]])
-  (:refer-clojure :exclude [line-seq]))
+            [clob.platform.io :refer [out-stream in-stream err-stream stream-output pipe-stream line-seq
+                                      stream-write output-stream input-stream output-stream? input-stream? *stdout* *stderr*]]))
 
-#?(:clj (set! *warn-on-reflection* true))
+(set! *warn-on-reflection* true)
 
 (defn wait-when-process [proc]
-  (if (process? proc)
-    (process/wait proc)
-    proc))
+  (cond-> proc
+    (process? proc) process/wait))
 
 (defn wait-for-pipeline
   "Wait for a pipeline to complete. Standard outputs of a process are piped to stdout and stderr."
   [proc]
   (if (process? proc)
-    (do
-      (when-let [stdout (out-stream proc)]
-        (pipe-stream stdout *stdout*))
-      (when-let [stderr (err-stream proc)]
-        (pipe-stream stderr *stderr*))
-      (process/wait proc))
+    (do (when-let [stdout (out-stream proc)]
+          (pipe-stream stdout *stdout*))
+        (when-let [stderr (err-stream proc)]
+          (pipe-stream stderr *stderr*))
+        (process/wait proc))
     proc))
 
 (defn pipeline-condition
@@ -43,7 +42,7 @@
   "Returns for a process to finish and returns output to be printed out."
   [proc]
   (if (seq? proc)
-    (str (clojure.string/join "\n" proc) "\n")
+    (str (str/join "\n" proc) "\n")
     (pipeline-value proc)))
 
 (defn process-value
@@ -65,62 +64,34 @@
 ; TODO: refactor dispatch to protocols or multimethods
 (defn- pipe-internal
   "Pipes process or value to another process or function."
-  ([from to]
-   (cond
-     (input-stream? from)
-     (cond
-       (process? to)
-       (do
-         (when-let [in (in-stream to)]
-           (pipe-stream from in))
-         to)
-
-       (output-stream? to)
-       (pipe-stream from to)
-
-       :else (to (stream-output from)))
-
-     (process? from)
-     (cond
-       (process? to)
-       (do
-         (when-let [in (in-stream to)]
-           (let [out (out-stream from)]
-             (pipe-stream out in)))
-         to)
-
-       (output-stream? to)
-       (pipe-stream (out-stream from) to)
-
-       :else (to (process-output from)))
-
-     (seq? from)
-     (cond
-       (process? to)
-       (do
-         (pipe-internal from (in-stream to))
-         to)
-
-       (output-stream? to)
-       (let [val (str (clojure.string/join "\n" from) "\n")]
-         (stream-write to val)
-         to)
-
-       :else (to from))
-
-     :else
-     (cond
-       (process? to)
-       (do
-         (pipe-internal from (in-stream to))
-         to)
-
-       (output-stream? to)
-       (do
-         (stream-write to (str from))
-         to)
-
-       :else (to from)))))
+  [from to]
+  (cond
+    (input-stream? from) (cond
+                           (process? to) (do (when-let [in (in-stream to)]
+                                               (pipe-stream from in))
+                                             to)
+                           (output-stream? to) (pipe-stream from to)
+                           :else (to (stream-output from)))
+    (process? from) (cond
+                      (process? to) (do (when-let [in (in-stream to)]
+                                          (let [out (out-stream from)]
+                                            (pipe-stream out in)))
+                                        to)
+                      (output-stream? to) (pipe-stream (out-stream from) to)
+                      :else (to (process-output from)))
+    (seq? from) (cond
+                  (process? to) (do (pipe-internal from (in-stream to))
+                                    to)
+                  (output-stream? to) (let [val (str (str/join "\n" from) "\n")]
+                                        (stream-write to val)
+                                        to)
+                  :else (to from))
+    :else (cond
+            (process? to) (do (pipe-internal from (in-stream to))
+                              to)
+            (output-stream? to) (do (stream-write to (str from))
+                                    to)
+            :else (to from))))
 
 (defn pipe
   [x & xs]
@@ -134,7 +105,7 @@
                              (line-seq stream)
                              (list))
               (sequential? x) x
-              (string? x) (clojure.string/split x #"\n")
+              (string? x) (str/split x #"\n")
               :else (list x))]
     (pipe val f)))
 
@@ -149,26 +120,20 @@
   (pipe-multi proc (partial filter f)))
 
 (defn redir [val redirects]
-  (let [redirects
-        (reduce
-         (fn [redirects [op fd target]]
-           (case op
-             :rw (throw (Exception. "Read/Write redirection is not supported"))
-             (let [redirect (case op
-                              :in (input-stream  target)
-                              :out (output-stream target)
-                              :append (output-stream target :append true)
-                              :set (if (#{:stdin :stdout :stderr} target)
-                                     target
-                                     (get redirects target)))]
-               (if redirect
-                 (assoc redirects fd redirect)
-                 redirects))))
-         {0 :stdin 1 :stdout 2 :stderr}
-         redirects)
-        stdout (get redirects 1)]
-    (if (not= stdout :stdout)
-      (do
-        (pipe val stdout)
-        nil)
-      val)))
+  (let [{stdout 1} (reduce (fn [redirects [op fd target]]
+                             (case op
+                               :rw (throw (Exception. "Read/Write redirection is not supported"))
+                               (let [redirect (case op
+                                                :in (input-stream target)
+                                                :out (output-stream target)
+                                                :append (output-stream target :append true)
+                                                :set (cond-> target
+                                                       (#{:stdin :stdout :stderr} target) redirects))]
+                                 (cond-> redirects
+                                   redirect (assoc fd redirect)))))
+                           {0 :stdin 1 :stdout 2 :stderr}
+                           redirects)]
+    (case stdout
+      :stdout val
+      (do (pipe val stdout)
+          nil))))
