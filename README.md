@@ -118,10 +118,21 @@ This software was written by Eric Normand and is released under the
 
 [Eclipse Public License]: http://opensource.org/licenses/eclipse-1.0.php
 
-### Clob / Closh
+### Rebel Readline
 
-Copyright (c) Ambrose Bonnaire-Sergeant and contributors (2024, 891df28c01db709fe0b4c0bc6fbef4cd351000df ->)
+https://github.com/bhauman/rebel-readline
+
+License
+Copyright © 2018 Bruce Hauman
+
+Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+
+### Closh
 
 Copyright (c) Jakub Dundalek and contributors (2017-2022, accf238dbe099811c64e02e95a61f21e35238a0d -> 2b506c97c7756a5aa877feeee477efb6a6161956)
 
 Distributed under the Eclipse Public License 1.0 (same as Clojure).
+
+### Clob
+
+Copyright (c) Ambrose Bonnaire-Sergeant (2024, 891df28c01db709fe0b4c0bc6fbef4cd351000df ->)
