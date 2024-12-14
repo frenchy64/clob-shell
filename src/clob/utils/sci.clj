@@ -53,7 +53,7 @@
          (into {})))
 
   (defmacro clob-macro-bindings []
-    (with-open [rdr (io/reader "src/common/clob/zero/macros.cljc")]
+    (with-open [rdr (io/reader "src/common/clob/macros.cljc")]
       (let [prdr (PushbackReader. rdr)
             eof (Object.)
             opts {:eof eof :read-cond :allow :features #{:clj}}]

@@ -119,15 +119,13 @@ You can use [datoteka](https://funcool.github.io/datoteka/latest/#reference) lib
 
 Add following into your `~/.clobrc`.
 ```clojure
-#?(:clj
-   (do
-     (require '[cemerick.pomegranate])
-     (cemerick.pomegranate/add-dependencies
-       :coordinates '[[funcool/datoteka "1.1.0"]]
-       :repositories (merge cemerick.pomegranate.aether/maven-central
-                            {"clojars" "https://clojars.org/repo"}))
-     (require '[datoteka.core :as f])))
-
+(do
+ (require '[cemerick.pomegranate])
+ (cemerick.pomegranate/add-dependencies
+   :coordinates '[[funcool/datoteka "1.1.0"]]
+   :repositories (merge cemerick.pomegranate.aether/maven-central
+                        {"clojars" "https://clojars.org/repo"}))
+ (require '[datoteka.core :as f]))
 ```
 
 Then you can use those functions for example like:

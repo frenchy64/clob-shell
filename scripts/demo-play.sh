@@ -22,7 +22,7 @@ date
 (str "Hello " x)
 echo (+ 3 4)
 pwd
-cd src/clob/zero/platform
+cd src/clob/platform
 wc -l *
 wc -l * |> (last)
 ls | wc -l
