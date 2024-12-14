@@ -7,7 +7,7 @@
    [clob.readline.clojure.sexp :as sexp]
    [clob.readline.tools :as tools :refer [color service-dispatch]]
    [clob.readline.utils :as utils :refer [log]]
-   ;; lazy-load
+   ;; should be lazily-loaded, graal incompatibility?
    [cljfmt.core :refer [reformat-string]]
    [clojure.string :as string]
    [clojure.java.io :as io]
@@ -1076,7 +1076,7 @@
   The available options are:
 
   :completer - to override the clojure based completer
-  :highlighter - to override the clojure based systax highlighter
+  :highlighter - to override the clojure based syntax highlighter
   :parser - to override the clojure base word parser"
   [service & [options]]
   (create* api/*terminal* service options))
