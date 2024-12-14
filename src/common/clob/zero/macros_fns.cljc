@@ -1,6 +1,7 @@
 (ns clob.zero.macros-fns
   (:require [clob.zero.parser]
-            [clob.zero.compiler]))
+            [clob.zero.compiler]
+            [clob.zero.platform.process]))
 
 (defn sh
   "Expands tokens in command mode to executable code."
@@ -77,7 +78,7 @@
 (defn defabbr [name value]
   `(do (swap! clob.zero.env/*clob-abbreviations* assoc (str (quote ~name)) ~value)
        ;; Temporary workaround: Treat abbreviations as aliases in the JVM version until proper abbreviation expansion is implemented
-       #?(:clj (defalias ~name ~value))))
+       (defalias ~name ~value)))
 
 (defn defcmd [name & body]
   (if (= 1 (count body))

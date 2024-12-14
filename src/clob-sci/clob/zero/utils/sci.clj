@@ -164,7 +164,8 @@
                                             'process-output pipeline/process-output}
                        'clob.zero.platform.process {'exit-code process/exit-code
                                                     'wait process/wait
-                                                    'cwd process/cwd}
+                                                    'cwd process/cwd
+                                                    'process? process/process?}
                        'clob.zero.core {'expand-variable clob-core/expand-variable
                                         'expand-tilde clob-core/expand-tilde
                                         'expand-filename clob-core/expand-filename
