@@ -3,106 +3,101 @@
             [clob.zero.reader :as reader]))
 
 (deftest test-reader
+  (is (= (list 'ping (symbol "8.8.8.8"))
+         (reader/read-string "ping 8.8.8.8")))
 
-  (are [x y] (= x (reader/read-string y))
+  (is (= (list 'ls (symbol "*.{cljc,clj}"))
+         (reader/read-string "ls *.{cljc,clj}")))
 
-    (list 'ping (symbol "8.8.8.8"))
-    "ping 8.8.8.8"
+  (is (= (list 'vim (symbol "~/.clobrc"))
+         (reader/read-string "vim ~/.clobrc")))
 
-    (list 'ls (symbol "*.{cljc,clj}"))
-    "ls *.{cljc,clj}"
+  (is (= (list 'git 'clone (symbol "git@github.com:frenchy64/clob-shell.git"))
+         (reader/read-string "git clone git@github.com:frenchy64/clob-shell.git")))
 
-    (list 'vim (symbol "~/.clobrc"))
-    "vim ~/.clobrc"
+  (is (= '(echo $USER/$DISPLAY)
+         (reader/read-string "echo $USER/$DISPLAY")))
 
-    (list 'git 'clone (symbol "git@github.com:frenchy64/clob-shell.git"))
-    "git clone git@github.com:frenchy64/clob-shell.git"
+  (is (= '(echo (+ 2 3))
+         (reader/read-string "echo (+ 2 3)")))
 
-    '(echo $USER/$DISPLAY)
-    "echo $USER/$DISPLAY"
+  (is (= '(echo hi | cat)
+         (reader/read-string "echo hi | cat")))
 
-    '(echo (+ 2 3))
-    "echo (+ 2 3)"
+  (is (= '(echo 2 > tmp)
+         (reader/read-string "echo 2 > tmp")))
 
-    '(echo hi | cat)
-    "echo hi | cat"
+  (is (= '(echo "a\nb")
+         (reader/read-string "echo \"a\nb\"")))
 
-    '(echo 2 > tmp)
-    "echo 2 > tmp"
+  (is (= '(echo 3)
+         (reader/read-string "echo 3")))
 
-    '(echo "a\nb")
-    "echo \"a\nb\""
+  ; (list 'echo false)
+  ; "echo false"
+  ;
+  ; (list 'echo nil)
+  ; "echo nil"
 
-    '(echo 3)
-    "echo 3"
+  (is (= '((+ 1 2))
+         (reader/read-string "(+ 1 2)")))
 
-    ; (list 'echo false)
-    ; "echo false"
-    ;
-    ; (list 'echo nil)
-    ; "echo nil"
+  (is (= '((ls)
+           (echo x)
+           ((+ 1 2)))
+         (reader/read-string-all "ls\necho x\n(+ 1 2)")))
 
-    '((+ 1 2))
-    "(+ 1 2)")
+  (is (= '((echo a)
+           (echo b))
+         (reader/read-string-all "echo a\\;echo b")))
 
-  (are [x y] (= x (reader/read-string-all y))
+  (is (= '((echo a)
+           (echo b))
+         (reader/read-string-all "echo a \\;echo b")))
 
-    '((ls)
-      (echo x)
-      ((+ 1 2)))
-    "ls\necho x\n(+ 1 2)"
+  (is (= '((echo a)
+           (echo b))
+         (reader/read-string-all "echo a\\; echo b")))
 
-    '((echo a)
-      (echo b))
-    "echo a\\;echo b"
+  (is (= '((echo a)
+           (echo b))
+         (reader/read-string-all "echo a \\; echo b")))
 
-    '((echo a)
-      (echo b))
-    "echo a \\;echo b"
+  (is (= '((echo a))
+         (reader/read-string-all "echo a ; echo b")))
 
-    '((echo a)
-      (echo b))
-    "echo a\\; echo b"
+  (is (= '((echo a)
+           (echo b))
+         (reader/read-string-all "\\;echo a\\;echo b\\;")))
 
-    '((echo a)
-      (echo b))
-    "echo a \\; echo b"
+  (is (= '((echo a)
+           (b))
+         (reader/read-string-all "echo a \nb")))
 
-    '((echo a))
-    "echo a ; echo b"
+  (is (= '((echo a b))
+         (reader/read-string-all "echo a \\\nb")))
 
-    '((echo a)
-      (echo b))
-    "\\;echo a\\;echo b\\;"
+  (is (= '((echo a | (clojure.string/upper-case)))
+         (reader/read-string-all "echo a \\\n | (clojure.string/upper-case)")))
 
-    '((echo a)
-      (b))
-    "echo a \nb"
+  (is (= '((echo a)
+           (echo b))
+         (reader/read-string-all "\n\necho a\n\n\necho b\n\n")))
 
-    '((echo a b))
-    "echo a \\\nb"
+  ;; (list (list 'ls (symbol "A Filename With Spaces")))
+  ;; "ls A\\ Filename\\ With\\ Spaces"
 
-    '((echo a | (clojure.string/upper-case)))
-    "echo a \\\n | (clojure.string/upper-case)"
-
-    '((echo a)
-      (echo b))
-    "\n\necho a\n\n\necho b\n\n")
-
-    ;; (list (list 'ls (symbol "A Filename With Spaces")))
-    ;; "ls A\\ Filename\\ With\\ Spaces")
-
-    ;; Maybe allow trailing pipe without backslash escape?
-    ;; '((echo a | (clojure.string/upper-case)))
-    ;; "echo a |\n (clojure.string/upper-case)")
+  ;; Maybe allow trailing pipe without backslash escape?
+  ;; '((echo a | (clojure.string/upper-case)))
+  ;; "echo a |\n (clojure.string/upper-case)"
 
   (are [x] (thrown? #?(:clj Exception :cljs js/Error) (reader/read-string x))
 
-    "echo (str 8.8.8)"
+       "echo (str 8.8.8)"
 
-    "echo \""
+       "echo \""
 
-    "echo (+ 1"))
+       "echo (+ 1"))
 
 (deftest test-reader-forms
   (is (= '[(clob.zero.macros/sh (+ 1 2))

@@ -12,6 +12,7 @@ on: [push, pull_request]
 
 jobs:
   build-jar:
+    timeout-minutes: 10
     runs-on: ubuntu-24.04
     steps:
       - name: Git checkout
@@ -65,6 +66,7 @@ jobs:
   # downstream builders.
   build-jar-sci:
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
@@ -117,6 +119,7 @@ jobs:
   native-image-mac:
     needs: [build-jar-sci]
     runs-on: macos-14
+    timeout-minutes: 10
     steps:
       - name: Parse Ref
         id: parse-ref
@@ -182,6 +185,7 @@ jobs:
   native-image-linux:
     needs: [build-jar-sci]
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
       - name: Parse Ref
         id: parse-ref
@@ -248,6 +252,7 @@ jobs:
 
   # releaser:
   #   needs: [native-image-mac]
+  #   timeout-minutes: 10
   #   runs-on: ubuntu-24.04
   #   steps:
   #     - name: Parse Ref
