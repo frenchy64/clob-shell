@@ -27,7 +27,7 @@
    [org.jline.terminal.impl DumbTerminal]
    [java.io Writer]
    [org.jline.utils AttributedStringBuilder AttributedString AttributedStyle]
-   [clob.readline.jline-api RebelLineReaderImpl]))
+   [clob.readline.line_reader_class ClobLineReaderImpl]))
 
 (def ^:dynamic *terminal* nil)
 (def ^:dynamic ^LineReaderImpl *line-reader* nil)
@@ -249,7 +249,7 @@ If you are using `lein` you may need to use `lein trampoline`."
         (.put widget-id (if (fn? widget) (widget *line-reader*) widget)))))
 
 (defn terminal-size []
-  (let [sz (.getSize ^RebelLineReaderImpl *line-reader*)]
+  (let [sz (.getSize ^ClobLineReaderImpl *line-reader*)]
     {:rows (.getRows sz)
      :cols (.getColumns sz)})
   #_(let [size-field (get-accessible-field *line-reader* "size")]
@@ -270,7 +270,7 @@ If you are using `lein` you may need to use `lein trampoline`."
             (Thread/sleep time-ms)))))))
 
 (defn display-message [message]
-  (.setPost ^RebelLineReaderImpl *line-reader* (supplier (fn [] (AttributedString. message))))
+  (.setPost ^ClobLineReaderImpl *line-reader* (supplier (fn [] (AttributedString. message))))
   #_(let [post-field (get-accessible-field *line-reader* "post")]
       (.set post-field *line-reader* (supplier (fn [] (AttributedString. message))))))
 
@@ -280,7 +280,7 @@ If you are using `lein` you may need to use `lein trampoline`."
     (max 0 (- rows buffer-rows))))
 
 (defn reading? [line-reader]
-  (.getReading ^RebelLineReaderImpl line-reader)
+  (.getReading ^ClobLineReaderImpl line-reader)
   #_(let [reading-field (get-accessible-field line-reader "reading")]
       (boolean (.get reading-field line-reader))))
 
@@ -289,7 +289,7 @@ If you are using `lein` you may need to use `lein trampoline`."
 
 (defn create-line-reader [terminal app-name service]
   (let [service-variable-name (str ::service)]
-    (proxy [RebelLineReaderImpl clojure.lang.IDeref clojure.lang.IAtom]
+    (proxy [ClobLineReaderImpl clojure.lang.IDeref clojure.lang.IAtom]
         [terminal
          (or app-name "Rebel Readline")
          (doto (java.util.HashMap.)
@@ -297,7 +297,7 @@ If you are using `lein` you may need to use `lein trampoline`."
       (selfInsert []
         (when-let [hooks (not-empty (:self-insert-hooks @this))]
           (widget-exec this #(doseq [hook hooks] (hook))))
-        (let [^RebelLineReaderImpl this this]
+        (let [^ClobLineReaderImpl this this]
           (proxy-super pubSelfInsert)))
       (deref []
         (deref (.getVariable ^LineReaderImpl this service-variable-name)))

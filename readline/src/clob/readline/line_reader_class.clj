@@ -1,7 +1,7 @@
 (ns clob.readline.line-reader-class)
 
 (gen-class
-  :name "clob.readline.jline-api.RebelLineReaderImpl"
+  :name "clob.readline.line_reader_class.ClobLineReaderImpl"
   :extends org.jline.reader.impl.LineReaderImpl
   :exposes {size {:get getSize}
             reading {:get getReading}

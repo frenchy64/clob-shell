@@ -2,13 +2,14 @@
   (:gen-class)
   (:require [clob.frontend.rebel :as rebel]
             [clob.core :as clob.core]
-            [clob.utils.clojure-main-sci :as clojure-main]))
+            [clob.utils.clojure-main-sci :as clojure-main]
+            [clojure.string :as str]))
 
 (defn help-opt
   "Print help text for main"
   [_ _]
   (println (-> (:doc (meta (var clojure-main/main)))
-               (clojure.string/replace #"java -cp clojure\.jar clojure\.main" "clob-sci"))))
+               (str/replace #"java -cp clojure\.jar clojure\.main" "clob-sci"))))
 
 (defn -main [& args]
   (if (= args '("--version"))
