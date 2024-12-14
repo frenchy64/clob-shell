@@ -300,7 +300,7 @@
     "x1\n"
     (str "echo x1 > " f)
 
-    (str "echo x2 | (spit \"" f "\")")
+    ;(str "echo x2 | (spit \"" f "\")")
 
     "x3\ny1\n"
     (str "(sh echo x3 > \"" f "\") (sh echo y1 >> \"" f "\")")

@@ -14,7 +14,7 @@
 ;; https://github.com/ericnormand/squarepeg/blob/4a93e9b2cbfd1931e71537900760ef32d6ad9dcf/test/squarepeg/test/combinators.clj
 (ns clob.squarepeg-test
   (:use clojure.test)
-  (:use squarepeg.core))
+  (:use clob.squarepeg))
 
 (deftest test-mknot
   (is (failure? ((mknot always) []  {} {} {})) "mknot always always fails")
