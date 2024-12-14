@@ -8,10 +8,11 @@
   {'| `pipeline/pipe
    '|> `pipeline/pipe-multi
    '|? `pipeline/pipe-filter
-   '|& `pipeline/pipe-reduce})
-   ;; '|>> ' pipe-thread-last
-   ;; '|| ' pipe-mapcat
-   ;; '|! 'pipe-foreach
+   '|& `pipeline/pipe-reduce
+   ;; '|>> `pipeline/pipe-thread-last
+   ;; '|| `pipeline/pipe-mapcat
+   ;; '|! `pipeline/pipe-foreach
+   })
 
 (defn ^:no-doc process-arg
   "Transform conformed argument."
@@ -47,39 +48,33 @@
   "Transform conformed command specification."
   ([cmd] (process-command cmd []))
   ([[cmd & rest] redir]
-   (let [args (if (vector? (ffirst rest))
-                (apply concat rest)
-                rest)
+   (let [args (cond->> rest
+                (vector? (ffirst rest)) (apply concat))
          is-function (and (= (first cmd) :arg)
                           (list? (second cmd))
                           (not= 'cmd (first (second cmd))))
-         redirects (->> (concat redir args)
-                        (filter #(= (first %) :redirect))
-                        (mapcat (comp process-redirect second))
-                        (vec))
-         parameters (->> args
-                         (filter #(= (first %) :arg))
-                         (map second))]
+         redirects (into [] (comp (filter #(= (first %) :redirect))
+                                  (mapcat (comp process-redirect second)))
+                         (concat redir args))
+         parameters (into [] (comp (filter #(= (first %) :arg))
+                                   (map second))
+                          args)]
      (if is-function
        (if (seq parameters)
-         (concat
-          (list 'do (second cmd))
-          parameters)
+         (list* 'do (second cmd) parameters)
          (second cmd))
        (let [name (second cmd)
              name-val (if (list? name)
                         (second name) ; when using cmd helper
                         (str name))
-             parameters (map process-arg parameters)]
-         (cond
-           (@*clob-commands* name)
-           (if (empty? parameters)
-             `((@clob.env/*clob-commands* (quote ~name)))
-             `(apply (@clob.env/*clob-commands* (quote ~name)) (concat ~@parameters)))
-
-           :else
+             parameters (mapv process-arg parameters)]
+         (if (@*clob-commands* name)
+           (let [cmd `(@clob.env/*clob-commands* '~name)]
+             (if (empty? parameters)
+               `(~cmd)
+               `(apply ~cmd (concat ~@parameters))))
            `(core/shx (core/expand-command ~name-val)
-                      ~(vec parameters)
+                      ~parameters
                       ~@(when (seq redirects) [{:redir redirects}]))))))))
 
 (defn ^:no-doc special?
