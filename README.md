@@ -114,6 +114,14 @@ Run `npm run pkg-java`. The resulting binary will be in `target/clob-zero.jar`.
 
 ## Copyright & License
 
+### Squarepeg
+
+```
+This software was written by Eric Normand and is released under the Eclipse Public License. You can find it on github.
+```
+
+### Clob / Closh
+
 Copyright (c) Ambrose Bonnaire-Sergeant and contributors (2024, 891df28c01db709fe0b4c0bc6fbef4cd351000df ->)
 
 Copyright (c) Jakub Dundalek and contributors (2017-2022, accf238dbe099811c64e02e95a61f21e35238a0d -> 2b506c97c7756a5aa877feeee477efb6a6161956)
