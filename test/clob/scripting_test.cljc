@@ -3,16 +3,14 @@
             [clob.zero.core :refer [shx]]
             [clob.zero.pipeline :refer [process-output process-value pipe]]))
 
-(def sci? #?(:clj (System/getenv "__CLOB_USE_SCI_EVAL__")
-             :cljs false))
+(def sci? (System/getenv "__CLOB_USE_SCI_EVAL__"))
 
-(def sci-complete? #?(:clj (System/getenv "__CLOB_USE_SCI_COMPLETE__")
-                      :cljs false))
+(def sci-complete? (System/getenv "__CLOB_USE_SCI_COMPLETE__"))
 
 (defn clob [& args]
   (shx "clojure" (concat (if sci?
                            ["-M:sci" "-m" "clob.zero.frontend.sci"]
-                           ["-m" "clob.zero.frontend.rebel"])
+                           ["-M" "-m" "clob.zero.frontend.rebel"])
                          args)))
 
 (deftest scripting-test
