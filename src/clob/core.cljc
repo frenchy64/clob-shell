@@ -1,11 +1,11 @@
 (ns clob.core
-  (:require [clojure.string]
+  (:require [clojure.string :as str]
             [clob.platform.io :refer [glob *stderr*]]
             [clob.platform.process :as process]
             [clob.pipeline :refer [process-value]]
             [clob.env :refer [*clob-aliases* *clob-abbreviations*]]))
 
-#?(:clj (set! *warn-on-reflection* true))
+(set! *warn-on-reflection* true)
 
 (def command-not-found-bin "/usr/lib/command-not-found")
 
@@ -19,7 +19,7 @@
 (defn expand-tilde
   "Expands tilde character to a path to user's home directory."
   [s]
-  (clojure.string/replace-first s #"^~" (process/getenv "HOME")))
+  (str/replace-first s #"^~" (process/getenv "HOME")))
 
 (defn expand-filename
   "Expands filename based on globbing patterns"
@@ -29,9 +29,7 @@
 (defn expand-redirect
   "Expand redirect targets. It does tilde and variable expansion."
   [s]
-  (-> s
-      (expand-tilde)
-      (expand-variable)))
+  (-> s expand-tilde expand-variable))
 
 ; Bash: Partial quote (allows variable and command expansion)
 (defn expand-partial
@@ -48,9 +46,7 @@
   The order of expansions is variable expansion, tilde expansion and filename expansion."
   [s]
   (if-let [x (expand-variable s)]
-    (-> x
-        expand-tilde
-        expand-filename)
+    (-> x expand-tilde expand-filename)
     (list)))
 
 (defn expand-command
@@ -61,78 +57,70 @@
 (defn get-command-suggestion
   "Get suggestion for a missing command using command-not-found utility."
   [cmdname]
-  (try
-    (->
-     (process/shx command-not-found-bin ["--no-failure-msg" cmdname])
-     (process-value)
-     (:stderr))
-    (catch Exception _)))
+  (try (-> (process/shx command-not-found-bin ["--no-failure-msg" cmdname])
+           process-value
+           :stderr)
+       (catch Exception _)))
 
 (defn shx
   "Executes a command as child process."
   ([cmd] (shx cmd []))
   ([cmd args] (shx cmd args {}))
   ([cmd args opts]
-   (try
-     (process/shx cmd args opts)
-     (catch java.io.IOException _e
-       (let [suggestion (get-command-suggestion cmd)]
-         (when-not (clojure.string/blank? suggestion)
-           (.print ^java.io.PrintStream *stderr* suggestion))
-         (.println ^java.io.PrintStream *stderr* (str cmd ": command not found"))
-         #_(println "STACKTRACE:")
-         #_(.printStackTrace e)))
-     (catch Exception ex
-       (.println ^java.io.PrintStream *stderr* (str "Unexpected error:\n" ex))))))
+   (try (process/shx cmd args opts)
+        (catch java.io.IOException _e
+          (let [suggestion (get-command-suggestion cmd)]
+            (when-not (str/blank? suggestion)
+              (.print ^java.io.PrintStream *stderr* suggestion))
+            (.println ^java.io.PrintStream *stderr* (str cmd ": command not found"))
+            #_(println "STACKTRACE:")
+            #_(.printStackTrace e)))
+        (catch Exception ex
+          (.println ^java.io.PrintStream *stderr* (str "Unexpected error:\n" ex))))))
 
 (defn expand-alias
   ([input] (expand-alias @*clob-aliases* input))
   ([aliases input]
    (let [token (re-find #"[^\s]+" input)
          alias (get aliases token)]
-     (if alias
-       (clojure.string/replace-first input #"[^\s]+" alias)
-       input))))
+     (cond-> input 
+       alias (str/replace-first #"[^\s]+" alias)))))
 
 (defn expand-abbreviation
   ([input] (expand-abbreviation @*clob-abbreviations* input))
   ([aliases input]
    (let [token (re-find #"[^\s]+" input)
          alias (get aliases token)]
-     (if (and alias
-              (= (clojure.string/trim input) token))
-       (clojure.string/replace-first input #"[^\s]+" alias)
-       input))))
+     (cond-> input
+       (and alias (= (str/trim input) token))
+       (str/replace-first #"[^\s]+" alias)))))
 
 ;; Based on code from clojure.core
-#?(:clj
-   (let [version-string (clojure.string/trim (slurp (clojure.java.io/resource "CLOB_VERSION")))
-         [_ major minor incremental qualifier snapshot]
-         (re-matches
-          #"(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9_]+))?(?:-(SNAPSHOT))?"
-          version-string)
-         version {:major       (Integer/valueOf ^String major)
-                  :minor       (Integer/valueOf ^String minor)
-                  :incremental (Integer/valueOf ^String incremental)
-                  :qualifier   (if (= qualifier "SNAPSHOT") nil qualifier)}]
-     (def ^:dynamic *clob-version*
-       (if (.contains version-string "SNAPSHOT")
-         (assoc version :interim true)
-         version))))
+(let [version-string (str/trim (slurp (clojure.java.io/resource "CLOB_VERSION")))
+      [_ major minor incremental qualifier snapshot]
+      (re-matches
+        #"(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9_]+))?(?:-(SNAPSHOT))?"
+        version-string)
+      version {:major       (Integer/valueOf ^String major)
+               :minor       (Integer/valueOf ^String minor)
+               :incremental (Integer/valueOf ^String incremental)
+               :qualifier   (when (not= qualifier "SNAPSHOT") qualifier)}]
+  (def ^:dynamic *clob-version*
+    (cond-> version
+      (.contains version-string "SNAPSHOT")
+      (assoc :interim true))))
 
 ;; Based on clojure.core/clojure-version
-#?(:clj
-   (defn
-     clob-version
-     "Returns clob version as a printable string."
-     {:added "1.0"}
-     []
-     (str (:major *clob-version*)
-          "."
-          (:minor *clob-version*)
-          (when-let [i (:incremental *clob-version*)]
-            (str "." i))
-          (when-let [q (:qualifier *clob-version*)]
-            (when (pos? (count q)) (str "-" q)))
-          (when (:interim *clob-version*)
-            "-SNAPSHOT"))))
+(defn clob-version
+  "Returns clob version as a printable string."
+  {:added "1.0"}
+  []
+  (str (:major *clob-version*)
+       "."
+       (:minor *clob-version*)
+       (when-let [i (:incremental *clob-version*)]
+         (str "." i))
+       (when-let [q (:qualifier *clob-version*)]
+         (when (pos? (count q)) (str "-" q)))
+       (when (:interim *clob-version*)
+         "-SNAPSHOT")))
