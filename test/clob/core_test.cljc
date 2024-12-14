@@ -2,17 +2,17 @@
   (:require [clojure.test :refer [deftest is are]]
             [clob.test-util.util :refer [null-file with-tempfile with-tempfile-content create-fake-writer get-fake-writer str-fake-writer]]
             [clojure.string :as str]
-            [clob.zero.reader :as reader]
-            [clob.zero.builtin :refer [getenv setenv]]
-            [clob.zero.env]
-            [clob.zero.compiler]
-            [clob.zero.parser]
-            [clob.zero.platform.io]
-            [clob.zero.platform.process :as process]
-            [clob.zero.pipeline :as pipeline :refer [process-output process-value]]
-            [clob.zero.core :refer [shx expand]]
-            ;;[clob.zero.macros :refer [sh sh-str defalias defabbr]]
-            [clob.zero.platform.eval :as eval]))
+            [clob.reader :as reader]
+            [clob.builtin :refer [getenv setenv]]
+            [clob.env]
+            [clob.compiler]
+            [clob.parser]
+            [clob.platform.io]
+            [clob.platform.process :as process]
+            [clob.pipeline :as pipeline :refer [process-output process-value]]
+            [clob.core :refer [shx expand]]
+            ;;[clob.macros :refer [sh sh-str defalias defabbr]]
+            [clob.platform.eval :as eval]))
 
 (def user-namespace (create-ns 'user))
 (binding [*ns* user-namespace]
@@ -24,25 +24,25 @@
 (defn clob-spawn-helper [cmd]
   (pipeline/process-value
     (cond (and (process/getenv "__CLOB_USE_SCI_NATIVE__") (process/getenv "CI_ENV"))
-          (shx "./clob-zero-sci" "-e" [cmd])
+          (shx "./clob-sci" "-e" [cmd])
 
           (process/getenv "__CLOB_USE_SCI_NATIVE__")
-          (shx "java" ["-jar" "target/clob-zero-sci.jar" "-e" cmd])
+          (shx "java" ["-jar" "target/clob-sci.jar" "-e" cmd])
 
           (process/getenv "__CLOB_USE_SCI_EVAL__")
-          (shx "clojure" ["-M:sci" "-m" "clob.zero.frontend.sci" "-e" cmd])
+          (shx "clojure" ["-M:sci" "-m" "clob.frontend.sci" "-e" cmd])
 
           :else
-          (shx "clojure" ["-M" "-m" "clob.zero.frontend.rebel" "-e" cmd]))))
+          (shx "clojure" ["-M" "-m" "clob.frontend.rebel" "-e" cmd]))))
 
 (defn clob-spawn-in-process [cmd]
   (let [out (create-fake-writer)
         err (create-fake-writer)]
-    (binding [clob.zero.platform.io/*stdout* (get-fake-writer out)
-              clob.zero.platform.io/*stderr* (get-fake-writer err)]
+    (binding [clob.platform.io/*stdout* (get-fake-writer out)
+              clob.platform.io/*stderr* (get-fake-writer err)]
       (let [code (reader/read (reader/string-reader cmd))
-            proc (eval/eval `(-> ~(clob.zero.compiler/compile-batch (clob.zero.parser/parse code))
-                                 (clob.zero.pipeline/wait-for-pipeline)))]
+            proc (eval/eval `(-> ~(clob.compiler/compile-batch (clob.parser/parse code))
+                                 (clob.pipeline/wait-for-pipeline)))]
         (if (process/process? proc)
           (do
             (process/wait proc)
@@ -55,10 +55,10 @@
              :code code}))))))
 
 (defn clob-run [cmd]
-  (let [code (clob.zero.compiler/compile-batch
-               (clob.zero.parser/parse (reader/read (reader/string-reader cmd))))]
+  (let [code (clob.compiler/compile-batch
+               (clob.parser/parse (reader/read (reader/string-reader cmd))))]
     (binding [*ns* user-namespace]
-      (clob.zero.pipeline/process-value (eval/eval code)))))
+      (clob.pipeline/process-value (eval/eval code)))))
 
 (def clob-spawn
   ;; Run proper spawn helper on CI, for local machine use in-process runner for faster iteration
@@ -88,7 +88,7 @@
              (clojure.string/trimr)
              (clojure.string/split-lines)
              (seq))
-         (clob.zero.platform.io/line-seq
+         (clob.platform.io/line-seq
           (java.io.FileInputStream. "package.json"))))
 
   (are [x y] (= x (:stdout (clob y)))

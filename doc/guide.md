@@ -214,7 +214,7 @@ The prompt can be customized by defining `clob-prompt` function in `~/.clobrc` f
 For example you can use [powerline](https://github.com/banga/powerline-shell) prompt like this:
 
 ```clojure
-(require-macros '[clob.zero.core :refer [sh-str]])
+(require-macros '[clob.core :refer [sh-str]])
 
 (defn clob-prompt []
   (sh-str powerline-shell --shell bare))
@@ -223,7 +223,7 @@ For example you can use [powerline](https://github.com/banga/powerline-shell) pr
 Or you can reuse existing prompt from [fish](http://fishshell.com/) shell:
 
 ```clojure
-(require-macros '[clob.zero.core :refer [sh-str]])
+(require-macros '[clob.core :refer [sh-str]])
 
 (defn clob-prompt []
   (sh-str fish -c fish_prompt))

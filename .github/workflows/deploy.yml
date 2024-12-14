@@ -55,12 +55,12 @@ jobs:
       - name: Build into uberjar
         run: |
           npm run pkg-java && \
-          mv target/clob-zero.jar clob-zero.jar
+          mv target/clob.jar clob.jar
 
       - uses: actions/upload-artifact@v4
         with:
-          path: clob-zero.jar
-          name: clob-zero-jar
+          path: clob.jar
+          name: clob-jar
 
   # Initial task to compile a JAR, store as a pipeline artifact to be used by
   # downstream builders.
@@ -108,12 +108,12 @@ jobs:
       - name: Build into uberjar
         run: |
           scripts/compile-sci-uberjar && \
-          mv target/clob-zero-sci.jar clob-zero-sci.jar
+          mv target/clob-sci.jar clob-sci.jar
 
       - uses: actions/upload-artifact@v4
         with:
-          path: clob-zero-sci.jar
-          name: clob-zero-sci-jar
+          path: clob-sci.jar
+          name: clob-sci-jar
 
   # Use GraalVM on macOS to convert JAR to a native macOS binary
   native-image-mac:
@@ -152,7 +152,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: clob-zero-sci-jar
+          name: clob-sci-jar
           path: .
 
       - name: Prepare GraalVM
@@ -167,12 +167,12 @@ jobs:
           which native-image
 
       - name: Build macOS native image
-        run: scripts/compile-native-image clob-zero-sci.jar
+        run: scripts/compile-native-image clob-sci.jar
 
       - uses: actions/upload-artifact@v4
         with:
-          path: clob-zero-sci
-          name: clob-zero-sci-macos
+          path: clob-sci
+          name: clob-sci-macos
 
       - run: brew install expect
 
@@ -218,7 +218,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: clob-zero-sci-jar
+          name: clob-sci-jar
           path: .
 
       - name: Prepare GraalVM
@@ -233,12 +233,12 @@ jobs:
           which native-image
 
       - name: Build Linux native image
-        run: scripts/compile-native-image clob-zero-sci.jar
+        run: scripts/compile-native-image clob-sci.jar
 
       - uses: actions/upload-artifact@v4
         with:
-          path: clob-zero-sci
-          name: clob-zero-sci-linux
+          path: clob-sci
+          name: clob-sci-linux
 
       - run: sudo apt-get install -y expect
 
@@ -262,7 +262,7 @@ jobs:
 
   #     - uses: actions/download-artifact@v4
   #       with:
-  #         name: clob-zero-sci
+  #         name: clob-sci
   #         path: .
 
   #     - name: Create Release
@@ -283,6 +283,6 @@ jobs:
   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #       with:
   #         upload_url: ${{ steps.create-release.outputs.upload_url }}
-  #         asset_path: ./clob-zero-sci.tgz
-  #         asset_name: clob-zero-sci.tgz
+  #         asset_path: ./clob-sci.tgz
+  #         asset_name: clob-sci.tgz
   #         asset_content_type: application/tar+gzip

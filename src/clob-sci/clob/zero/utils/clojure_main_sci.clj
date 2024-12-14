@@ -10,13 +10,13 @@
 
 (ns ^{:doc "Top-level main function for Clojure REPL and scripts."
        :author "Stephen C. Gilardi and Rich Hickey"}
-  clob.zero.utils.clojure-main-sci
+  clob.utils.clojure-main-sci
   (:refer-clojure :exclude [with-bindings eval read load-reader read+string])
   (:require #_[clojure.spec.alpha :as spec]
             [fipp.edn :refer [pprint]]
-            [clob.zero.platform.clojure-platform :refer [eval read read+string load-reader compiler-load-file rt-load-resource-script]]
-            [clob.zero.reader :as reader]
-            [clob.zero.utils.sci :refer [repl-print]])
+            [clob.platform.clojure-platform :refer [eval read read+string load-reader compiler-load-file rt-load-resource-script]]
+            [clob.reader :as reader]
+            [clob.utils.sci :refer [repl-print]])
   (:import (java.io StringReader BufferedWriter FileWriter)
            (java.nio.file Files)
            (java.nio.file.attribute FileAttribute)

@@ -2,8 +2,8 @@
 
 set -x
 
-CLOB_CMD=./clob-zero-sci
-#CLOB_CMD="java -jar target/clob-zero-sci.jar"
+CLOB_CMD=./clob-sci
+#CLOB_CMD="java -jar target/clob-sci.jar"
 
 $CLOB_CMD --version
 $CLOB_CMD -e "(+ 1 2)"

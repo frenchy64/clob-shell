@@ -1,15 +1,15 @@
-(ns clob.zero.frontend.sci
+(ns clob.frontend.sci
   (:gen-class)
   (:require
-   ; [clob.zero.compiler]
-   ; [clob.zero.parser :as parser]
-   ; [clob.zero.pipeline]
-   ; [clob.zero.platform.eval :as eval]
-   ; [clob.zero.platform.process :as process]
-   ; [clob.zero.env :as env]
-   ; [clob.zero.reader :as reader]
-   [clob.zero.core :as clob.core]
-   [clob.zero.utils.clojure-main-sci :refer [main]]))
+   ; [clob.compiler]
+   ; [clob.parser :as parser]
+   ; [clob.pipeline]
+   ; [clob.platform.eval :as eval]
+   ; [clob.platform.process :as process]
+   ; [clob.env :as env]
+   ; [clob.reader :as reader]
+   [clob.core :as clob.core]
+   [clob.utils.clojure-main-sci :refer [main]]))
 
 #_(defn repl-print
     [result]
@@ -27,11 +27,11 @@
     (let [cmd (or (first args) "echo hello clojure")]
       (repl-print
        (eval/eval
-        `(-> ~(clob.zero.compiler/compile-interactive
-               (clob.zero.parser/parse
+        `(-> ~(clob.compiler/compile-interactive
+               (clob.parser/parse
                 (reader/read-string cmd)
                 #_(edamame/parse-string-all cmd {:all true})))
-             (clob.zero.pipeline/wait-for-pipeline))))))
+             (clob.pipeline/wait-for-pipeline))))))
 
 (defn -main [& args]
   (if (= args '("--version"))

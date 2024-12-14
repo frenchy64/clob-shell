@@ -1,4 +1,4 @@
-(ns clob.zero.reader
+(ns clob.reader
   (:refer-clojure :exclude [read read-string])
   (:require [clojure.tools.reader.reader-types :as r]
             [clojure.tools.reader.edn :as edn]
@@ -8,7 +8,7 @@
 
 (defmacro require-reader []
   (if (System/getenv "__CLOB_USE_SCI_EVAL__")
-    '(require '[clob.zero.sci-reader :refer [read-clojure]])
+    '(require '[clob.sci-reader :refer [read-clojure]])
     '(do (require 'clojure.tools.reader)
          (def read-clojure clojure.tools.reader/read))))
 
@@ -138,7 +138,7 @@
    (let [value (read opts reader)]
      (if (and (contains? opts :eof) (identical? value (:eof opts)))
        value
-       (cons 'clob.zero.macros/sh value)))))
+       (cons 'clob.macros/sh value)))))
 
 (defn read-sh-value
   "Read input in command mode, wrap it in `sh-value` symbol."
@@ -148,7 +148,7 @@
    (let [value (read opts reader)]
      (if (and (contains? opts :eof) (identical? value (:eof opts)))
        value
-       (cons 'clob.zero.macros/sh-value value)))))
+       (cons 'clob.macros/sh-value value)))))
 
 (defn read-string [s]
   (read (string-reader s)))

@@ -1,9 +1,9 @@
-(ns clob.zero.core
+(ns clob.core
   (:require [clojure.string]
-            [clob.zero.platform.io :refer [glob *stderr*]]
-            [clob.zero.platform.process :as process]
-            [clob.zero.pipeline :refer [process-value]]
-            [clob.zero.env :refer [*clob-aliases* *clob-abbreviations*]]))
+            [clob.platform.io :refer [glob *stderr*]]
+            [clob.platform.process :as process]
+            [clob.pipeline :refer [process-value]]
+            [clob.env :refer [*clob-aliases* *clob-abbreviations*]]))
 
 #?(:clj (set! *warn-on-reflection* true))
 

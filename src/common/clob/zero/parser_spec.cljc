@@ -1,4 +1,4 @@
-(ns clob.zero.parser-spec
+(ns clob.parser-spec
   (:require [clojure.set]
             [clojure.spec.alpha :as s]))
 

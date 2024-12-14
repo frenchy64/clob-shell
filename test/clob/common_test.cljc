@@ -1,9 +1,9 @@
 (ns clob.common-test
   (:require [clojure.test :refer [deftest testing is are]]
-            [clob.zero.builtin :refer [getenv setenv]]
-            [clob.zero.env]
-            [clob.zero.core :refer [expand expand-alias expand-abbreviation]]
-            [clob.zero.macros :refer [defalias defabbr]]))
+            [clob.builtin :refer [getenv setenv]]
+            [clob.env]
+            [clob.core :refer [expand expand-alias expand-abbreviation]]
+            [clob.macros :refer [defalias defabbr]]))
 
 (deftest test-getenv-setenv
   (is (= {"A" "Test A" "B" "B Testing"}

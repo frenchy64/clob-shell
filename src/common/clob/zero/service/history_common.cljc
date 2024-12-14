@@ -1,7 +1,7 @@
-(ns clob.zero.service.history-common
+(ns clob.service.history-common
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [clob.zero.platform.process :as process])
+            [clob.platform.process :as process])
   #?(:clj (:import (java.io File))))
 
 (def ^:no-doc table-history

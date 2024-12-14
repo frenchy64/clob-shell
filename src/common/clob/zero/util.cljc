@@ -1,7 +1,7 @@
-(ns clob.zero.util
+(ns clob.util
   (:require [clojure.data :refer [diff]]
-            [clob.zero.platform.process :refer [shx setenv getenv unsetenv]]
-            [clob.zero.pipeline :refer [process-value]]
+            [clob.platform.process :refer [shx setenv getenv unsetenv]]
+            [clob.pipeline :refer [process-value]]
             [clojure.data.json :as json]))
 
 (def ignore-env-vars #{"_" "OLDPWD" "PWD" "SHELLOPTS" "SHLVL"})

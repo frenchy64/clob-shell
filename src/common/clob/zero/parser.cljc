@@ -1,4 +1,4 @@
-(ns clob.zero.parser
-  (:require [clob.zero.parser-squarepeg :as parser]))
+(ns clob.parser
+  (:require [clob.parser-squarepeg :as parser]))
 
 (def parse parser/parse)

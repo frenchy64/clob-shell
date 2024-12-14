@@ -1,8 +1,8 @@
-(ns clob.zero.builtin
+(ns clob.builtin
   (:require [clojure.string]
-            [clob.zero.platform.process :as process]
-            [clob.zero.env :as env]
-            [clob.zero.macros :refer [defcmd]]))
+            [clob.platform.process :as process]
+            [clob.env :as env]
+            [clob.macros :refer [defcmd]]))
 
 (defcmd exit
   "Exits the process using optional first argument as exit code."

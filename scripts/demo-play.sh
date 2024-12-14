@@ -16,7 +16,7 @@
 # ls |> (map extension) | (frequencies)
 
 echo "> clob"
-(sleep 6; while read line; do echo "$line" | randtype -t 8,40000; sleep 0.5; done << END) | unbuffer -p clojure -m clob.zero.frontend.rebel
+(sleep 6; while read line; do echo "$line" | randtype -t 8,40000; sleep 0.5; done << END) | unbuffer -p clojure -m clob.frontend.rebel
 date
 (def x "Clojure")
 (str "Hello " x)

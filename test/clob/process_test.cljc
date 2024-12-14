@@ -1,8 +1,8 @@
 (ns clob.process-test
   (:require [clojure.test :refer [deftest is]]
             [clob.test-util.util :refer [null-file]]
-            [clob.zero.platform.process :as process :refer [shx process? cwd chdir]]
-            [clob.zero.pipeline :refer [process-output]])
+            [clob.platform.process :as process :refer [shx process? cwd chdir]]
+            [clob.pipeline :refer [process-output]])
   #?(:clj (:import [java.io File])))
 
 (defn get-tmpfile []

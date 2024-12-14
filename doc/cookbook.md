@@ -87,8 +87,8 @@ popd
 Possible solution in clob with a macro:
 ```clojure
 (defmacro with-cwd [dir & body]
-  `(binding [clob.zero.platform.process/*cwd*
-             (atom (clob.zero.platform.process/resolve-path ~dir))]
+  `(binding [clob.platform.process/*cwd*
+             (atom (clob.platform.process/resolve-path ~dir))]
      (sh ~@body)))
 ```
 

@@ -1,4 +1,4 @@
-(ns clob.zero.utils.sci
+(ns clob.utils.sci
   (:refer-clojure :exclude [eval load-file])
   (:require [sci.core :as sci]
             [sci.impl.interpreter :as interpreter]
@@ -6,31 +6,31 @@
             ; [clojure.repl]
             ; [clojure.java.javadoc]
             [fipp.edn]
-            [clob.zero.pipeline :as pipeline]
-            [clob.zero.core :as clob-core]
-            [clob.zero.compiler]
-            [clob.zero.parser]
-            [clob.zero.platform.process :as process]
-            [clob.zero.builtin :as builtin]
-            [clob.zero.env :as env]
-            [clob.zero.util :as util]
-            [clob.zero.macros-fns :as macros-fns]
+            [clob.pipeline :as pipeline]
+            [clob.core :as clob-core]
+            [clob.compiler]
+            [clob.parser]
+            [clob.platform.process :as process]
+            [clob.builtin :as builtin]
+            [clob.env :as env]
+            [clob.util :as util]
+            [clob.macros-fns :as macros-fns]
             [clojure.java.io :as jio]
             [clojure.java.javadoc :as javadoc]
             [clojure.repl :as repl]
-            [clob.zero.platform.clojure-compiler :as clojure-compiler]))
+            [clob.platform.clojure-compiler :as clojure-compiler]))
 
 (set! *warn-on-reflection* true)
 
 (comment
   (defmacro clob-requires []
-    clob.zero.env/*clob-environment-requires*)
+    clob.env/*clob-environment-requires*)
 
   (defmacro clob-bindings []
-    (->> clob.zero.env/*clob-environment-requires*
+    (->> clob.env/*clob-environment-requires*
          (drop 1)
          (mapcat (fn [[_ [namespace & opts]]]
-                   (when (not= namespace 'clob.zero.macros)
+                   (when (not= namespace 'clob.macros)
                      (let [{:keys [as refer]} (apply hash-map opts)]
                        (concat
                         (for [x refer]
@@ -68,7 +68,7 @@
                                    {:sci/macro true})]
                     (recur (assoc bindings
                                   (list 'quote name) fn-form
-                                  (list 'quote (symbol "clob.zero.macros" (str name))) fn-form)))
+                                  (list 'quote (symbol "clob.macros" (str name))) fn-form)))
 
                   :else (recur bindings)))))))
 
@@ -148,7 +148,7 @@
                     ;; TODO pp macro
 
 (def ctx {:bindings (merge bindings repl-requires macro-bindings)
-          :namespaces {'clob.zero.macros macro-bindings
+          :namespaces {'clob.macros macro-bindings
                        'clojure.core {'println println
                                       'print print
                                       'pr pr
@@ -156,18 +156,18 @@
                                       'pr-str pr-str}
                        'clojure.java.io {'file jio/file
                                          'reader jio/reader}
-                       'clob.zero.pipeline {'pipe pipeline/pipe
+                       'clob.pipeline {'pipe pipeline/pipe
                                             'redir pipeline/redir
                                             'wait-for-pipeline pipeline/wait-for-pipeline
                                             'pipeline-condition pipeline/pipeline-condition
                                             'pipe-multi pipeline/pipe-multi
                                             'process-output pipeline/process-output
                                             'pipe-filter pipeline/pipe-filter}
-                       'clob.zero.platform.process {'exit-code process/exit-code
+                       'clob.platform.process {'exit-code process/exit-code
                                                     'wait process/wait
                                                     'cwd process/cwd
                                                     'process? process/process?}
-                       'clob.zero.core {'expand-variable clob-core/expand-variable
+                       'clob.core {'expand-variable clob-core/expand-variable
                                         'expand-tilde clob-core/expand-tilde
                                         'expand-filename clob-core/expand-filename
                                         'expand-redirect clob-core/expand-redirect
@@ -180,11 +180,11 @@
                                         'expand-abbreviation clob-core/expand-abbreviation
                                         '*clob-version* clob-core/*clob-version*
                                         'clob-version clob-core/clob-version}
-                       'clob.zero.util {'source-shell util/source-shell}
-                       'clob.zero.env {'*clob-aliases* env/*clob-aliases*
+                       'clob.util {'source-shell util/source-shell}
+                       'clob.env {'*clob-aliases* env/*clob-aliases*
                                        '*clob-commands* env/*clob-commands*
                                        '*clob-abbreviations* env/*clob-commands*}
-                       'clob.zero.macros-fns macro-bindings}
+                       'clob.macros-fns macro-bindings}
           :classes {'java.util.UUID java.util.UUID
                     'java.lang.Thread java.lang.Thread
                     'java.lang.System java.lang.System}
@@ -198,8 +198,8 @@
 
 (defn eval [form]
   (sci-eval
-   (clob.zero.compiler/compile-interactive
-    (clob.zero.parser/parse form))))
+   (clob.compiler/compile-interactive
+    (clob.parser/parse form))))
 
 (defn repl-print? [val]
   (not (or (nil? val)

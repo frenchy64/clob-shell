@@ -1,12 +1,12 @@
 (ns clob.test-util.spawn-helper
   (:require [clojure.string]
-            [clob.zero.parser]
-            [clob.zero.compiler]
-            [clob.zero.builtin]
-            [clob.zero.env]
-            [clob.zero.reader :as reader]
-            [clob.zero.platform.eval :as eval]
-            [clob.zero.platform.process :as process]))
+            [clob.parser]
+            [clob.compiler]
+            [clob.builtin]
+            [clob.env]
+            [clob.reader :as reader]
+            [clob.platform.eval :as eval]
+            [clob.platform.process :as process]))
 
 (defn -main [cmd]
   (eval/eval-clob-requires)

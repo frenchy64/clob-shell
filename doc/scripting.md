@@ -1,23 +1,23 @@
 
 # Shell scripting
 
-The `clob-zero.jar` binary accepts same arguments as [clojure.main CLI](https://clojure.org/guides/deps_and_cli). That includes all features like aliases and deps. You can refer to the options with help:
+The `clob.jar` binary accepts same arguments as [clojure.main CLI](https://clojure.org/guides/deps_and_cli). That includes all features like aliases and deps. You can refer to the options with help:
 
 ```sh
-clob-zero.jar --help
+clob.jar --help
 ```
 
 ## Running scripts
 
 The most common way is running a one-off script by passing it as a command line argument like:
 ```sh
-clob-zero.jar my-script.clj
+clob.jar my-script.clj
 ```
 
 Another common way is using the shebang:
 
 ```clojure
-#!/usr/bin/env clob-zero.jar
+#!/usr/bin/env clob.jar
 
 ls (first *args*)
 ```
@@ -33,7 +33,7 @@ chmod +x my-script.clj
 
 Top-level commands can be written using the shell syntax:
 ```clojure
-#!/usr/bin/env clob-zero.jar
+#!/usr/bin/env clob.jar
 
 echo "Working..."
 sleep (rand-int 5)
@@ -43,7 +43,7 @@ echo "Done"
 When you need to need to use the commands inside conditionals or functions, wrap them in a `sh` macro. Individual commands need to be separated with `\;`.
 
 ```clojure
-#!/usr/bin/env clob-zero.jar
+#!/usr/bin/env clob.jar
 
 (defcmd do-work [interval]
   (sh echo "Working..." \;
@@ -58,7 +58,7 @@ do-work (rand-int 5)
 To use CLI arguments you can use the `*args*` alias, which is a sequence of arguments passed by user.
 
 ```clojure
-#!/usr/bin/env clob-zero.jar
+#!/usr/bin/env clob.jar
 
 echo "Number of arguments:" (count *args*)
 ```

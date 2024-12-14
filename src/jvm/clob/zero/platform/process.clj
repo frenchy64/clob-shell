@@ -1,7 +1,7 @@
-(ns clob.zero.platform.process
+(ns clob.platform.process
   (:require [clojure.java.io :as io :refer [default-streams-impl make-input-stream make-output-stream IOFactory]]
             [clojure.string :as str]
-            [clob.zero.platform.io :refer [*stdout* *stderr*]])
+            [clob.platform.io :refer [*stdout* *stderr*]])
   (:import (java.io File)
            (java.net URL MalformedURLException)))
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env clob-zero.jar
+#!/usr/bin/env clob.jar
 ;; -*- clojure -*-
 
 
@@ -9,7 +9,7 @@
 ;;   - hash in README
 ;; - Automate Github release by using Github API
 ;;   - Create release and copy changelog contents
-;;   - Upload clob-zero.jar artifact
+;;   - Upload clob.jar artifact
 
 (defcmd wait-for-enter []
   (print "Press Enter to continue: ")
@@ -51,7 +51,7 @@ echo
 
 echo Draft a release on Github - copy the notes from Changelog
 echo Visit "https://github.com/frenchy64/clob-shell/releases/new"
-echo Upload clob-zero.jar to Github release
+echo Upload clob.jar to Github release
 wait-for-enter
 
 echo Pushing branch and tag...

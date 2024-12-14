@@ -1,8 +1,8 @@
 (ns clob.history-test
   (:require [clojure.test :refer [deftest is testing]]
             [clob.test-util.util :refer [with-tempfile]]
-            [clob.zero.macros :refer [chain->]]
-            [clob.zero.frontend.jline-history :as jhistory]))
+            [clob.macros :refer [chain->]]
+            [clob.frontend.jline-history :as jhistory]))
 
 (defn iter->seq [iter]
   (loop [coll []]

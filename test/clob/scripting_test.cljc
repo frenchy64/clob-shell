@@ -1,7 +1,7 @@
 (ns clob.scripting-test
   (:require [clojure.test :refer [deftest are]]
-            [clob.zero.core :refer [shx]]
-            [clob.zero.pipeline :refer [process-output process-value pipe]]))
+            [clob.core :refer [shx]]
+            [clob.pipeline :refer [process-output process-value pipe]]))
 
 (def sci? (System/getenv "__CLOB_USE_SCI_EVAL__"))
 
@@ -9,8 +9,8 @@
 
 (defn clob [& args]
   (shx "clojure" (concat (if sci?
-                           ["-M:sci" "-m" "clob.zero.frontend.sci"]
-                           ["-M" "-m" "clob.zero.frontend.rebel"])
+                           ["-M:sci" "-m" "clob.frontend.sci"]
+                           ["-M" "-m" "clob.frontend.rebel"])
                          args)))
 
 (deftest scripting-test

@@ -1,11 +1,11 @@
-(ns clob.zero.service.completion
+(ns clob.service.completion
   (:require [clojure.string]
             [clojure.java.io :as io]
-            [clob.zero.pipeline :as pipeline]
-            [clob.zero.builtin :refer [getenv]]
-            [clob.zero.platform.io :refer [out-stream]]
-            [clob.zero.platform.process :refer [shx]]
-            [clob.zero.macros :refer [chain->]]))
+            [clob.pipeline :as pipeline]
+            [clob.builtin :refer [getenv]]
+            [clob.platform.io :refer [out-stream]]
+            [clob.platform.process :refer [shx]]
+            [clob.macros :refer [chain->]]))
 
 (defn escape-fish-string [s]
   (-> s
@@ -25,7 +25,7 @@
                  (shx (str (getenv "CLOB_SOURCES_PATH") "/resources/" cmd) args)))
         stream (out-stream proc)]
     (chain->
-     @(clob.zero.platform.io/stream-output stream)
+     @(clob.platform.io/stream-output stream)
      (fn [stdout]
        (if (clojure.string/blank? stdout)
          []

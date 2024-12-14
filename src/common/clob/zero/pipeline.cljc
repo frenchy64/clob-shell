@@ -1,7 +1,7 @@
-(ns clob.zero.pipeline
+(ns clob.pipeline
   (:require [clojure.string]
-            [clob.zero.platform.process :as process :refer [process?]]
-            [clob.zero.platform.io :refer [out-stream in-stream err-stream stream-output pipe-stream line-seq stream-write output-stream input-stream output-stream? input-stream? *stdout* *stderr*]])
+            [clob.platform.process :as process :refer [process?]]
+            [clob.platform.io :refer [out-stream in-stream err-stream stream-output pipe-stream line-seq stream-write output-stream input-stream output-stream? input-stream? *stdout* *stderr*]])
   (:refer-clojure :exclude [line-seq]))
 
 #?(:clj (set! *warn-on-reflection* true))
@@ -24,7 +24,7 @@
     proc))
 
 (defn pipeline-condition
-  "Get status of a finished pipeline. Returns true if a process exited with non-zero code or a value is truthy."
+  "Get status of a finished pipeline. Returns true if a process exited with non code or a value is truthy."
   [proc]
   (if (process? proc)
     (zero? (process/exit-code proc))

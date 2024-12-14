@@ -17,7 +17,7 @@ if [ -z "$NATIVE_IMAGE" ]; then
   fi
 fi
 
-jar=${1:-target/clob-zero-sci.jar}
+jar=${1:-target/clob-sci.jar}
 
 case "$OSTYPE" in
   darwin*)  SQLITE_RESOURCES="org/sqlite/native/Mac/x86_64/libsqlitejdbc.jnilib" ;;
@@ -29,7 +29,7 @@ export __CLOB_USE_SCI_EVAL__=true
 
 "$NATIVE_IMAGE" \
   -jar "$jar" \
-  -H:Name=clob-zero-sci \
+  -H:Name=clob-sci \
   -H:+ReportExceptionStackTraces \
   -J-Dclojure.spec.skip-macros=true \
   -J-Dclojure.compiler.direct-linking=true \

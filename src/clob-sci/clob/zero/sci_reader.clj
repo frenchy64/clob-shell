@@ -1,4 +1,4 @@
-(ns clob.zero.sci-reader
+(ns clob.sci-reader
   (:require [edamame.impl.parser :as parser]
             [clojure.tools.reader.reader-types :as r]))
 

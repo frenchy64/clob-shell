@@ -1,7 +1,7 @@
-(ns clob.zero.compiler
-  (:require [clob.zero.env :refer [*clob-commands*]]
-            [clob.zero.core :as core]
-            [clob.zero.pipeline :as pipeline]))
+(ns clob.compiler
+  (:require [clob.env :refer [*clob-commands*]]
+            [clob.core :as core]
+            [clob.pipeline :as pipeline]))
 
 (def ^:no-doc pipes
   "Maps shorthand symbols of pipe functions to full name"
@@ -74,8 +74,8 @@
          (cond
            (@*clob-commands* name)
            (if (empty? parameters)
-             `((@clob.zero.env/*clob-commands* (quote ~name)))
-             `(apply (@clob.zero.env/*clob-commands* (quote ~name)) (concat ~@parameters)))
+             `((@clob.env/*clob-commands* (quote ~name)))
+             `(apply (@clob.env/*clob-commands* (quote ~name)) (concat ~@parameters)))
 
            :else
            `(core/shx (core/expand-command ~name-val)
@@ -158,8 +158,8 @@
               pred (if neg 'true? 'false?)
               tmp (gensym)]
           (assoc pipeline :pipeline
-                 `(let [~tmp (clob.zero.pipeline/wait-for-pipeline ~(process-pipeline (:pipeline pipeline)))]
-                    (if (~pred (clob.zero.pipeline/pipeline-condition ~tmp))
+                 `(let [~tmp (clob.pipeline/wait-for-pipeline ~(process-pipeline (:pipeline pipeline)))]
+                    (if (~pred (clob.pipeline/pipeline-condition ~tmp))
                       ~child
                       ~tmp)))))
       (-> items

@@ -1,4 +1,4 @@
-(ns clob.zero.frontend.rebel
+(ns clob.frontend.rebel
   (:gen-class)
   (:require [clob.rebel-readline.clojure.line-reader :as clj-line-reader]
             [clob.rebel-readline.clojure.main :refer [syntax-highlight-prn]]
@@ -7,15 +7,15 @@
             [clob.rebel-readline.jline-api :as api]
             [clojure.string :as string]
             [clojure.java.io :as jio]
-            [clob.zero.env :as env]
-            [clob.zero.reader]
-            [clob.zero.core :as clob.core]
-            [clob.zero.platform.process :refer [process?]]
-            [clob.zero.platform.eval :as eval]
-            [clob.zero.frontend.main :as main]
-            [clob.zero.service.completion :refer [complete-shell]]
-            [clob.zero.utils.clojure-main :refer [repl-requires] :as clojure-main]
-            [clob.zero.frontend.jline-history :as jline-history])
+            [clob.env :as env]
+            [clob.reader]
+            [clob.core :as clob.core]
+            [clob.platform.process :refer [process?]]
+            [clob.platform.eval :as eval]
+            [clob.frontend.main :as main]
+            [clob.service.completion :refer [complete-shell]]
+            [clob.utils.clojure-main :refer [repl-requires] :as clojure-main]
+            [clob.frontend.jline-history :as jline-history])
   (:import [org.jline.reader Completer ParsedLine LineReader]
            (org.jline.reader.impl LineReaderImpl)))
 
@@ -55,7 +55,7 @@
    (fn [s] (clojure.lang.LineNumberingPushbackReader.
             (java.io.StringReader. s)))
    core/has-remaining?
-   clob.zero.frontend.main/repl-read))
+   clob.frontend.main/repl-read))
 
 (defn repl-print
   [& args]

@@ -11,18 +11,18 @@ Clob is experimental and has no releases.
 ```sh
 npm run pkg-java
 cd target
-java -jar clob-zero.jar
+java -jar clob.jar
 ```
 
 The jar file also contains a special header, so once you make it executable you can run it directly:
 ```sh
-chmod +x clob-zero.jar
-./clob-zero.jar
+chmod +x clob.jar
+./clob.jar
 ```
 
 It can also run with `clojure` CLI:
 ```sh
-clojure -Sdeps '{:deps {com.ambrosebs/clob.shell {:git/url "https://github.com/frenchy64/clob-shell.git" :sha "d98c1d90d3b8ad6fad669b8fd662cddbc2f40a59"}}}' -M -m clob.zero.frontend.rebel
+clojure -Sdeps '{:deps {com.ambrosebs/clob.shell {:git/url "https://github.com/frenchy64/clob-shell.git" :sha "d98c1d90d3b8ad6fad669b8fd662cddbc2f40a59"}}}' -M -m clob.frontend.rebel
 ```
 
 ## Quick Start
@@ -90,7 +90,7 @@ npm install
 
 Run the clj app
 ```
-clojure -m clob.zero.frontend.rebel
+clojure -m clob.frontend.rebel
 ```
 
 Run tests once
@@ -105,7 +105,7 @@ npm run test-auto
 
 ### Manual Java builds
 
-Run `npm run pkg-java`. The resulting binary will be in `target/clob-zero.jar`.
+Run `npm run pkg-java`. The resulting binary will be in `target/clob.jar`.
 
 ## Copyright & License
 

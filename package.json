@@ -26,8 +26,8 @@
     "dev": "nodemon --config .nodemon.json",
     "docker-build": "docker build . -t clob",
     "docker-start": "npm run docker-build && docker run --rm -it clob",
-    "pkg-java": "npm run compile-uberjar && scripts/wrap-jar.sh target/clob-zero.jar",
-    "compile-uberjar": "clojure -M:depstar -m hf.depstar.uberjar --compile -m clob.zero.frontend.rebel target/clob-zero.jar --verbose",
+    "pkg-java": "npm run compile-uberjar && scripts/wrap-jar.sh target/clob.jar",
+    "compile-uberjar": "clojure -M:depstar -m hf.depstar.uberjar --compile -m clob.frontend.rebel target/clob.jar --verbose",
     "lint": "clojure -M:lint",
     "lint-fix": "clojure -M:lint:lint/fix",
     "lint-kondo": "clj-kondo --lint src:test",
@@ -41,10 +41,10 @@
     "test-clj-kaocha": "clojure -M:kaocha -m kaocha.runner",
     "test-clj-kaocha-auto": "clojure -M:kaocha -m kaocha.runner --watch",
     "test-clj-auto": "nodemon -e clj,cljc -x \"npm run test-clj\"",
-    "rebel": "clojure -M -e \"(set! *warn-on-reflection* true)\" -m clob.zero.frontend.rebel",
-    "sci-rebel": "env __CLOB_USE_SCI_EVAL__=true clojure -M:sci -e \"(set! *warn-on-reflection* true)\" -m clob.zero.frontend.sci-rebel",
-    "sci-plain": "env __CLOB_USE_SCI_EVAL__=true clojure -M:sci -e \"(set! *warn-on-reflection* true)\" -m clob.zero.frontend.sci",
-    "repl": "clj -m clob.zero.frontend.clojure-main-repl"
+    "rebel": "clojure -M -e \"(set! *warn-on-reflection* true)\" -m clob.frontend.rebel",
+    "sci-rebel": "env __CLOB_USE_SCI_EVAL__=true clojure -M:sci -e \"(set! *warn-on-reflection* true)\" -m clob.frontend.sci-rebel",
+    "sci-plain": "env __CLOB_USE_SCI_EVAL__=true clojure -M:sci -e \"(set! *warn-on-reflection* true)\" -m clob.frontend.sci",
+    "repl": "clj -m clob.frontend.clojure-main-repl"
   },
   "repository": {
     "type": "git",

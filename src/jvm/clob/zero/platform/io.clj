@@ -1,4 +1,4 @@
-(ns clob.zero.platform.io
+(ns clob.platform.io
   (:require [clojure.string :as str]
             [clojure.java.io :as io])
   (:refer-clojure :exclude [line-seq])

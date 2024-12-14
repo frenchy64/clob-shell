@@ -1,6 +1,6 @@
 (ns clob.reader-test
   (:require [clojure.test :refer [deftest is are]]
-            [clob.zero.reader :as reader]))
+            [clob.reader :as reader]))
 
 (deftest test-reader
   (is (= (list 'ping (symbol "8.8.8.8"))
@@ -106,22 +106,22 @@
        "echo (+ 1"))
 
 (deftest test-reader-forms
-  (is (= '[(clob.zero.macros/sh (+ 1 2))
-           (clob.zero.macros/sh (* 3 4))]
+  (is (= '[(clob.macros/sh (+ 1 2))
+           (clob.macros/sh (* 3 4))]
          (let [in (reader/string-reader "(+ 1 2)\n(* 3 4)")]
            [(reader/read-sh in)
             (reader/read-sh in)])))
 
-  (is (= '[(clob.zero.macros/sh echo a b)
-           (clob.zero.macros/sh ls)]
+  (is (= '[(clob.macros/sh echo a b)
+           (clob.macros/sh ls)]
          (let [in (reader/string-reader "echo a b\nls")]
            [(reader/read-sh in)
             (reader/read-sh in)])))
 
-  (is (= '[(clob.zero.macros/sh (+ 1 2))]
+  (is (= '[(clob.macros/sh (+ 1 2))]
          (let [in (reader/string-reader "(+ 1 2)\n")]
            [(reader/read-sh in)])))
 
-  (is (= '[(clob.zero.macros/sh (+ 1 2))]
+  (is (= '[(clob.macros/sh (+ 1 2))]
          (let [in (reader/string-reader "(+ 1 2)")]
            [(reader/read-sh in)]))))
