@@ -1,0 +1,2 @@
+#!/bin/sh
+__CLOB_USE_SCI_EVAL__=1 clojure -M:sci -m clob.zero.frontend.rebel
