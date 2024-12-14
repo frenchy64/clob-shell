@@ -93,7 +93,7 @@
 
     ; seqable to sequence
     '[1 2 3]
-    ; "(identity [1 2 3] |> (identity)"
+    ; "(identity [1 2 3]) |> (identity)"
     (pipe-multi [1 2 3] identity)
 
     ; non-seqable to seqable - wrap in list

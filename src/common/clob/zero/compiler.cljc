@@ -102,16 +102,16 @@
              args (if (vector? (ffirst rest))
                     (apply concat rest)
                     rest)
-             redirects (->> (concat redir args)
-                            (filter #(= (first %) :redirect))
-                            (mapcat (comp process-redirect second))
-                            (vec))
+             redirects (into []
+                             (comp (filter #(= (first %) :redirect))
+                                   (mapcat (comp process-redirect second)))
+                             (concat redir args))
              cmd (process-command cmd redir)
              fn (pipes op)
              cmd (if (not (special? (first cmd)))
                    (let [x (gensym)]
                      `(fn [~x]
-                        (clob.zero.pipeline/redir ~(concat cmd [x]) ~redirects)))
+                        (pipeline/redir ~(concat cmd [x]) ~redirects)))
                    cmd)]
          (list fn result cmd)))
      (process-command cmd redir-begin)
