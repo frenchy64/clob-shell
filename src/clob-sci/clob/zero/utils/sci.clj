@@ -161,7 +161,8 @@
                                             'wait-for-pipeline pipeline/wait-for-pipeline
                                             'pipeline-condition pipeline/pipeline-condition
                                             'pipe-multi pipeline/pipe-multi
-                                            'process-output pipeline/process-output}
+                                            'process-output pipeline/process-output
+                                            'pipe-filter pipeline/pipe-filter}
                        'clob.zero.platform.process {'exit-code process/exit-code
                                                     'wait process/wait
                                                     'cwd process/cwd
