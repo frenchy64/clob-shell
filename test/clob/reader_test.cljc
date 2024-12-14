@@ -15,8 +15,8 @@
     (list 'vim (symbol "~/.clobrc"))
     "vim ~/.clobrc"
 
-    (list 'git 'clone (symbol "git@github.com:dundalek/closh.git"))
-    "git clone git@github.com:dundalek/closh.git"
+    (list 'git 'clone (symbol "git@github.com:frenchy64/clob-shell.git"))
+    "git clone git@github.com:frenchy64/clob-shell.git"
 
     '(echo $USER/$DISPLAY)
     "echo $USER/$DISPLAY"

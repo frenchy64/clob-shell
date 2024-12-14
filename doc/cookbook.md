@@ -1,5 +1,5 @@
 
-Take a look at example [config files](https://github.com/dundalek/dotfiles/tree/master/clob). Also get inspired by [community configs](https://github.com/search?q=in%3Apath+clobrc&type=Code).
+Take a look at example [config files](https://github.com/dundalek/dotfiles/tree/master/closh). Also get inspired by [community configs](https://github.com/search?q=in%3Apath+closh&type=Code).
 
 ## Running nREPL server
 
@@ -40,7 +40,7 @@ $ (sh-value ls *.txt)
 
 ## Autojump
 
-To enable [Autojump](https://github.com/wting/autojump) refer to a following [configuration](https://github.com/dundalek/dotfiles/blob/master/clob/.clob_autojump.cljc).
+To enable [Autojump](https://github.com/wting/autojump) refer to a following [configuration](https://github.com/dundalek/dotfiles/blob/master/closh/.closh_autojump.cljc).
 
 ## Direnv
 
@@ -82,7 +82,7 @@ To use [conda](https://anaconda.org/) put the following into your `~/.clobrc`:
 
 ## Integration with text editors
 
-[Liquid](https://github.com/mogenslund/liquid) is a text editor written in Clojure inspired by Emacs and Vim. There is a [plugin](https://github.com/mogenslund/clobapp) that integrates Clob with Liquid. One cool feature is that command output is written into a text buffer and can be later edited and manipulated within the text editor.
+[Liquid](https://github.com/mogenslund/liquid) is a text editor written in Clojure inspired by Emacs and Vim. There is a [plugin](https://github.com/mogenslund/closhapp) that integrates Clob with Liquid. One cool feature is that command output is written into a text buffer and can be later edited and manipulated within the text editor.
 
 ## Using Google Closure Library
 

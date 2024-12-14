@@ -67,4 +67,4 @@ For parsing command line arguments [tools.cli](https://github.com/clojure/tools.
 
 ## Examples
 
-As an example I ported [gifgen](https://github.com/lukechilds/gifgen) utility to clob. Compare the original [bash version](https://github.com/lukechilds/gifgen/blob/master/gifgen) with the [clob version](https://github.com/dundalek/dotfiles/blob/master/clob/bin/gifgen.clj).
+As an example I ported [gifgen](https://github.com/lukechilds/gifgen) utility to clob. Compare the original [bash version](https://github.com/lukechilds/gifgen/blob/master/gifgen) with the [clob version](https://github.com/dundalek/dotfiles/blob/master/closh/bin/gifgen.clj).
