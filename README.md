@@ -136,3 +136,5 @@ Distributed under the Eclipse Public License 1.0 (same as Clojure).
 ### Clob
 
 Copyright (c) Ambrose Bonnaire-Sergeant (2024, 891df28c01db709fe0b4c0bc6fbef4cd351000df ->)
+
+Distributed under the Eclipse Public License 1.0 (same as Clojure).
