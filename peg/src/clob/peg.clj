@@ -10,9 +10,9 @@
 ;;
 ;; You must not remove this notice, or any other, from this software.
 
-;; Dec 2024 - Copied squarepeg.core and renamed clob.squarepeg https://github.com/ericnormand/squarepeg/blob/master/src/squarepeg/core.clj
+;; Dec 2024 - Copied squarepeg.core and renamed clob.peg https://github.com/ericnormand/squarepeg/blob/master/src/squarepeg/core.clj
 ;; https://github.com/ericnormand/squarepeg/blob/4a93e9b2cbfd1931e71537900760ef32d6ad9dcf/src/squarepeg/core.clj
-(ns clob.squarepeg)
+(ns clob.peg)
 
 ;; A rule is a function [input bindings context memo]
 ;; -> {:i seq :b {symbol vec} :r value :s seqvalue :m memo}
@@ -558,7 +558,7 @@ Example:
      (list 'def
            (with-meta name
              {:arglists ''([input] [input context] [input bindings context memo])
-              :doc (str name " is a squarepeg parser rule. Call with a
+              :doc (str name " is a clob.peg parser rule. Call with a
         seq of input or use it as a rule (4 arguments).")})
            `(mkfn (mkscope (mkmemo ~(apply transbody body)))))))
 

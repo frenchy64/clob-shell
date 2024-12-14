@@ -57,6 +57,16 @@ jobs:
           npm run pkg-java && \
           mv target/clob.jar clob.jar
 
+      - name: clob.peg tests
+        run: |
+          cd peg
+          ./script/test
+
+      - name: clob.readline tests
+        run: |
+          cd rebel-readline
+          ./script/test
+
       - uses: actions/upload-artifact@v4
         with:
           path: clob.jar

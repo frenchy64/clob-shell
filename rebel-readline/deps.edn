@@ -4,4 +4,9 @@
         org.jline/jline-terminal-jansi {:mvn/version "3.5.1"}
         cljfmt/cljfmt {:mvn/version "0.5.7"} ;; depends on tools reader
         compliment/compliment {:mvn/version "0.3.6"}}
- :paths ["src" "classes"]}
+ :aliases
+ {:test {:extra-paths ["test"]}
+  :test-runner {:main-opts ["-m" "cognitect.test-runner"]
+                :extra-deps {com.cognitect/test-runner
+                             {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                              :sha "3f288f1f16d167723ad87cc35b1dfee3c1681e10"}}}}}

@@ -10,11 +10,11 @@
 ;;
 ;; You must not remove this notice, or any other, from this software.
 
-;; Dec 2024 - Copied squarepeg.test.combinators and renamed clob.squarepeg-test 
+;; Dec 2024 - Copied squarepeg.test.combinators and renamed clob.peg-test 
 ;; https://github.com/ericnormand/squarepeg/blob/4a93e9b2cbfd1931e71537900760ef32d6ad9dcf/test/squarepeg/test/combinators.clj
-(ns clob.squarepeg-test
+(ns clob.peg-test
   (:use clojure.test)
-  (:use clob.squarepeg))
+  (:use clob.peg))
 
 (deftest test-mknot
   (is (failure? ((mknot always) []  {} {} {})) "mknot always always fails")

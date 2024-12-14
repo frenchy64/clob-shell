@@ -1,6 +1,6 @@
 (ns clob.parser-squarepeg
   (:require [clojure.set]
-            [clob.squarepeg :as g]))
+            [clob.peg :as g]))
 
 (def ^:no-doc redirect-op
   "Set of symbols of redirection operators"

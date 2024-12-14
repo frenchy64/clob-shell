@@ -1,2 +1,2 @@
 {:lint-as {clob.macros/defcmd clojure.core/def
-           clob.squarepeg/defrule clojure.core/def}}
+           clob.peg/defrule clojure.core/def}}
