@@ -1,7 +1,7 @@
-(ns clob.rebel-readline.clojure.service.simple
+(ns clob.readline.clojure.service.simple
   (:require
-   [clob.rebel-readline.clojure.line-reader :as lr]
-   [clob.rebel-readline.tools :as tools]))
+   [clob.readline.clojure.line-reader :as lr]
+   [clob.readline.tools :as tools]))
 
 (defn create
   "A very simple service that you can use to get rebel readline

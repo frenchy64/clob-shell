@@ -1,9 +1,9 @@
-(ns clob.rebel-readline.clojure.line-reader-test
+(ns clob.readline.clojure.line-reader-test
   (:require
-   [clob.rebel-readline.clojure.line-reader :as core :refer [indent-proxy-str]]
+   [clob.readline.clojure.line-reader :as core :refer [indent-proxy-str]]
    [clojure.test :refer [deftest is are testing]]))
 
-#_ (remove-ns 'clob.rebel-readline.clojure.line-reader-test)
+#_ (remove-ns 'clob.readline.clojure.line-reader-test)
 
 (deftest default-accept-line-test
   (is (core/default-accept-line "()" 0))

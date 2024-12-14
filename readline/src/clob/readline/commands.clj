@@ -1,10 +1,10 @@
-(ns clob.rebel-readline.commands
+(ns clob.readline.commands
   (:require
    [clojure.pprint :refer [pprint]]
    [clojure.string :as string]
-   [clob.rebel-readline.jline-api :as api]
-   [clob.rebel-readline.jline-api.attributed-string :as astring]
-   [clob.rebel-readline.tools :as tools :refer [color]])
+   [clob.readline.jline-api :as api]
+   [clob.readline.jline-api.attributed-string :as astring]
+   [clob.readline.tools :as tools :refer [color]])
   (:import
    [org.jline.utils AttributedStringBuilder AttributedString AttributedStyle]
    [org.jline.reader LineReader EndOfFileException]))

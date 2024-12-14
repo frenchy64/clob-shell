@@ -1,6 +1,6 @@
 # clob.rebel-readline
 
-A fork of [Rebel Readline](https://github.com/bhauman/rebel-readline).
+A fork of [rebel-readline](https://github.com/bhauman/rebel-readline).
 
 A terminal readline library for Clojure Dialects
 
@@ -36,7 +36,7 @@ If you want to try this really quickly
 and then invoke this:
 
 ```shell
-clojure -Sdeps "{:deps {com.ambrosebs/clob.readline {:git/url \"https://github.com/frenchy64/clob-shell.git\" :git/root \"rebel-readline\" :git/sha \"de2ec77482261f9d7d7a194088e8f18fb3bc3c36\"}}}" -m clob.rebel-readline.main
+clojure -Sdeps "{:deps {com.ambrosebs/clob.readline {:git/url \"https://github.com/frenchy64/clob-shell.git\" :git/root \"readline\" :git/sha \"de2ec77482261f9d7d7a194088e8f18fb3bc3c36\"}}}" -m clob.readline.main
 ```
 
 That should start a Clojure REPL that takes its input from the Rebel readline editor.
@@ -49,28 +49,28 @@ Alternatively you can specify an alias in your `$HOME/.clojure/deps.edn`
 ```clojure
 {
  ...
- :aliases {:rebel {:extra-deps {com.ambrosebs/clob.rebel-readline {...}}
-                   :main-opts  ["-m" "clob.rebel-readline.main"]}}
+ :aliases {:clob.readline {:extra-deps {com.ambrosebs/clob.readline {...}}
+                           :main-opts  ["-m" "clob.readline.main"]}}
 }
 ```
 
 And then run with a simpler:
 
 ```shell
-$ clojure -M:rebel
+$ clojure -M:clob.readline
 ```
 
 #### Clone repo
 
-Clone this repo and then from the `clob.rebel-readline` sub-directory
-typing `clojure -M -m clob.rebel-readline.main` will get you into
+Clone this repo and then from the `clob.readline` sub-directory
+typing `clojure -M -m clob.readline.main` will get you into
 a Clojure REPL with the readline editor working.
 
-Note that `lein run -m clob.rebel-readline.main` will not work! See above.
+Note that `lein run -m clob.readline.main` will not work! See above.
 
 ## How do I default to vi bindings?
 
-In `~/.clojure/rebel_readline.edn` put
+In `~/.clojure/clob_readline.edn` put
 
 ```
 {:key-map :viins}
@@ -78,7 +78,7 @@ In `~/.clojure/rebel_readline.edn` put
 
 ## Config
 
-In `~/.clojure/rebel_readline.edn` you can provide a map with the
+In `~/.clojure/clob_readline.edn` you can provide a map with the
 following options:
 
 ```
@@ -131,15 +131,15 @@ characters you shouldn't be surprised if it doesn't work.
 
 ## Quick Lay of the land
 
-You should look at `clob.rebel-readline.clojure.main` and `clob.rebel-readline.core`
+You should look at `clob.readline.clojure.main` and `clob.readline.core`
 to give you top level usage information.
 
 The core of the functionality is in
-`clob.rebel-readline.clojure.line-reader` everything else is just support.
+`clob.readline.clojure.line-reader` everything else is just support.
 
 ## Quick Usage
 
-These are some quick examples demonstrating how to use the clob.rebel-readline
+These are some quick examples demonstrating how to use the clob.readline
 API.
 
 The main way to utilize this readline editor is to replace the
@@ -153,22 +153,22 @@ REPL loop is reading.
 Example:
 
 ```clojure
-(clob.rebel-readline.core/with-line-reader
-  (clob.rebel-readline.clojure.line-reader/create
-    (clob.rebel-readline.clojure.service.local/create))
+(clob.readline.core/with-line-reader
+  (clob.readline.clojure.line-reader/create
+    (clob.readline.clojure.service.local/create))
   (clojure.main/repl
      :prompt (fn []) ;; prompt is handled by line-reader
-     :read (clob.rebel-readline.clojure.main/create-repl-read)))
+     :read (clob.readline.clojure.main/create-repl-read)))
 ```
 
 Another option is to just wrap a call you your REPL with
-`clob.rebel-readline.core/with-readline-in` this will bind `*in*` to an
+`clob.readline.core/with-readline-in` this will bind `*in*` to an
 input-stream that is supplied by the line reader.
 
 ```clojure
-(clob.rebel-readline.core/with-readline-in
-  (clob.rebel-readline.clojure.line-reader/create
-    (clob.rebel-readline.clojure.service.local/create))
+(clob.readline.core/with-readline-in
+  (clob.readline.clojure.line-reader/create
+    (clob.readline.clojure.service.local/create))
   (clojure.main/repl :prompt (fn[])))
 ```
 
@@ -176,12 +176,12 @@ Or with a fallback:
 
 ```clojure
 (try
-  (clob.rebel-readline.core/with-readline-in
-    (clob.rebel-readline.clojure.line-reader/create
-      (clob.rebel-readline.clojure.service.local/create))
+  (clob.readline.core/with-readline-in
+    (clob.readline.clojure.line-reader/create
+      (clob.readline.clojure.service.local/create))
     (clojure.main/repl :prompt (fn[])))
   (catch clojure.lang.ExceptionInfo e
-    (if (-> e ex-data :type (= :clob.rebel-readline.jline-api/bad-terminal))
+    (if (-> e ex-data :type (= :clob.readline.jline-api/bad-terminal))
       (do (println (.getMessage e))
         (clojure.main/repl))
       (throw e))))
@@ -193,22 +193,22 @@ The line reader provides features like completion, documentation,
 source, apropos, eval and more. The line reader needs a Service to
 provide this functionality.
 
-When you create a `clob.rebel-readline.clojure.line-reader`
+When you create a `clob.readline.clojure.line-reader`
 you need to supply this service.
 
 The more common service is the
-`clob.rebel-readline.services.clojure.local` which uses the
+`clob.readline.services.clojure.local` which uses the
 local clojure process to provide this functionality and its a good
 example of how a service works.
 
-https://github.com/bhauman/clob.rebel-readline/blob/master/clob.rebel-readline/src/rebel_readline/clojure/service/local.clj
+https://github.com/frenchy64/clob-shell/blob/main/readline/src/clob/readline/clojure/service/local.clj
 
 In general, it's much better if the service is querying the Clojure process
 where the eventual REPL eval takes place.
 
 However, the service doesn't necessarily have to query the same
 environment that the REPL is using for evaluation. All the editing
-functionality that rebel readline provides works without an
+functionality that clob.readline provides works without an
 environment to query. And the apropos, doc and completion functionality is
 still sensible when you provide those abilities from the local clojure process.
 
@@ -243,19 +243,15 @@ keyword then the line-reader will attempt to interpret it as a command.
 Type `:repl/help` or `:repl` TAB to see a list of available commands.
 
 You can add new commands by adding methods to the
-`clob.rebel-readline.commands/command` multimethod. You can add
+`clob.readline.commands/command` multimethod. You can add
 documentation for the command by adding a method to the
-`clob.rebel-readline.commands/command-doc` multimethod.
-
-## CLJS
-
-See https://github.com/bhauman/clob.rebel-readline/tree/master/clob.rebel-readline-cljs
+`clob.readline.commands/command-doc` multimethod.
 
 ## nREPL, SocketREPL, pREPL?
 
 Services have not been written for these REPLs yet!!
 
-But you can use the `clob.rebel-readline.clojure.service.simple` service in the meantime.
+But you can use the `clob.readline.clojure.service.simple` service in the meantime.
 
 ## Contributing
 
@@ -276,7 +272,7 @@ If you do contribute:
   exploration of an idea
 
 I'm going to be more open to repairing current behavior than I will be
-to increasing the scope of clob.rebel-readline.
+to increasing the scope of clob.readline.
 
 I will have a preference for creating hooks so that additional functionality
 can be layered on with libraries.

@@ -1,12 +1,12 @@
-(ns clob.rebel-readline.clojure.line-reader
+(ns clob.readline.clojure.line-reader
   (:require
-   [clob.rebel-readline.commands :as commands]
-   [clob.rebel-readline.jline-api :as api :refer :all]
-   [clob.rebel-readline.jline-api.attributed-string :as astring]
-   [clob.rebel-readline.clojure.tokenizer :as tokenize]
-   [clob.rebel-readline.clojure.sexp :as sexp]
-   [clob.rebel-readline.tools :as tools :refer [color service-dispatch]]
-   [clob.rebel-readline.utils :as utils :refer [log]]
+   [clob.readline.commands :as commands]
+   [clob.readline.jline-api :as api :refer :all]
+   [clob.readline.jline-api.attributed-string :as astring]
+   [clob.readline.clojure.tokenizer :as tokenize]
+   [clob.readline.clojure.sexp :as sexp]
+   [clob.readline.tools :as tools :refer [color service-dispatch]]
+   [clob.readline.utils :as utils :refer [log]]
    ;; lazy-load
    [cljfmt.core :refer [reformat-string]]
    [clojure.string :as string]
@@ -1052,7 +1052,7 @@
     (.unsetOpt LineReader$Option/INSERT_TAB)
     (.setVariable LineReader/SECONDARY_PROMPT_PATTERN "%P #_=> ")
     ;; history
-    (.setVariable LineReader/HISTORY_FILE (str (io/file ".rebel_readline_history")))
+    (.setVariable LineReader/HISTORY_FILE (str (io/file ".clob_readline_history")))
     (.setOpt LineReader$Option/HISTORY_REDUCE_BLANKS)
     (.setOpt LineReader$Option/HISTORY_IGNORE_DUPS)
     (.setOpt LineReader$Option/HISTORY_INCREMENTAL)
@@ -1064,12 +1064,12 @@
 (defn create
   "Creates a line reader takes a service as an argument.
 
-  A service implements the multimethods found in `clob.rebel-readline.service`
+  A service implements the multimethods found in `clob.readline.service`
 
   Example:
-    (create (clob.rebel-readline.clojure.service.local/create))
+    (create (clob.readline.clojure.service.local/create))
   Or:
-    (create (clob.rebel-readline.clojure.service.simple/create))
+    (create (clob.readline.clojure.service.simple/create))
 
   This function also takes an optional options map.
 

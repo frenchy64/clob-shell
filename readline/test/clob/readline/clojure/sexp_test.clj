@@ -1,7 +1,7 @@
-(ns clob.rebel-readline.clojure.sexp-test
+(ns clob.readline.clojure.sexp-test
   (:require
-   [clob.rebel-readline.clojure.tokenizer :as tokenize]
-   [clob.rebel-readline.clojure.sexp :refer :all]
+   [clob.readline.clojure.tokenizer :as tokenize]
+   [clob.readline.clojure.sexp :refer :all]
    [clojure.test :refer [deftest is are testing]]))
 
 (defn find-open [sexp pos]

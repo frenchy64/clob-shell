@@ -1,7 +1,7 @@
-(ns clob.rebel-readline.clojure.sexp
+(ns clob.readline.clojure.sexp
   (:require
    [clojure.string :as string]
-   [clob.rebel-readline.clojure.tokenizer :as tokenize])
+   [clob.readline.clojure.tokenizer :as tokenize])
   (:import
    [java.util.regex Pattern]))
 

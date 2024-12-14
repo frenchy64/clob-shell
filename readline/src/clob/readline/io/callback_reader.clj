@@ -1,4 +1,4 @@
-(ns clob.rebel-readline.io.callback-reader
+(ns clob.readline.io.callback-reader
   (:import
    [java.nio CharBuffer]))
 

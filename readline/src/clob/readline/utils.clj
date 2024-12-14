@@ -1,4 +1,4 @@
-(ns clob.rebel-readline.utils
+(ns clob.readline.utils
   (:require
    [clojure.java.io :as io]
    [clojure.string  :as string]
@@ -8,7 +8,7 @@
 
 (defn log [& args]
   (when *debug-log*
-    (spit "clob.rebel-readline-debug-log"
+    (spit "clob.readline-debug-log"
           (string/join ""
                        (map #(if (string? %)
                                (str % "\n")

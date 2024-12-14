@@ -1,10 +1,10 @@
-(ns clob.rebel-readline.clojure.main
+(ns clob.readline.clojure.main
   (:require
-   [clob.rebel-readline.core :as core]
-   [clob.rebel-readline.clojure.line-reader :as clj-line-reader]
-   [clob.rebel-readline.jline-api :as api]
-   [clob.rebel-readline.tools :as tools]
-   [clob.rebel-readline.clojure.service.local :as clj-service]
+   [clob.readline.core :as core]
+   [clob.readline.clojure.line-reader :as clj-line-reader]
+   [clob.readline.jline-api :as api]
+   [clob.readline.tools :as tools]
+   [clob.readline.clojure.service.local :as clj-service]
    [clojure.main]))
 
 (defn syntax-highlight-prn
@@ -13,11 +13,11 @@
   This printer respects the current color settings set in the
   service.
 
-  The `clob.rebel-readline.jline-api/*line-reader*` and
-  `clob.rebel-readline.jline-api/*service*` dynamic vars have to be set for
+  The `clob.readline.jline-api/*line-reader*` and
+  `clob.readline.jline-api/*service*` dynamic vars have to be set for
   this to work.
 
-  See `clob.rebel-readline.main` for an example of how this function is normally used"
+  See `clob.readline.main` for an example of how this function is normally used"
   [x]
   (binding [*out* (.. api/*line-reader* getTerminal writer)]
     (try
@@ -40,7 +40,7 @@
    :prompt (fn []) ;; prompt is handled by line-reader
    :read (clj-repl-read
            (line-reader
-             (clob.rebel-readline.clojure.service.local/create))))
+             (clob.readline.clojure.service.local/create))))
 
   Or catch a bad terminal error and fall back to clojure.main/repl-read:
 
@@ -49,9 +49,9 @@
    :read (try
           (clj-repl-read
            (line-reader
-             (clob.rebel-readline.clojure.service.local/create)))
+             (clob.readline.clojure.service.local/create)))
           (catch clojure.lang.ExceptionInfo e
-             (if (-> e ex-data :type (= :clob.rebel-readline.jline-api/bad-terminal))
+             (if (-> e ex-data :type (= :clob.readline.jline-api/bad-terminal))
                 (do (println (.getMessage e))
                     clojure.main/repl-read)
                 (throw e)))))"

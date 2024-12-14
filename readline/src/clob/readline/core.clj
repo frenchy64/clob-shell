@@ -1,12 +1,12 @@
-(ns clob.rebel-readline.core
+(ns clob.readline.core
   (:refer-clojure :exclude [read-line])
   (:require
    [clojure.string :as string]
-   [clob.rebel-readline.commands :as commands]
-   [clob.rebel-readline.io.callback-reader]
-   [clob.rebel-readline.jline-api :as api]
-   [clob.rebel-readline.tools :as tools]
-   [clob.rebel-readline.utils :as utils])
+   [clob.readline.commands :as commands]
+   [clob.readline.io.callback-reader]
+   [clob.readline.jline-api :as api]
+   [clob.readline.tools :as tools]
+   [clob.readline.utils :as utils])
   (:import
    [org.jline.reader
     UserInterruptException
@@ -14,11 +14,11 @@
    [java.io PushbackReader]))
 
 (defmacro ensure-terminal
-  "Bind the clob.rebel-readline.jline-api/*terminal* var to a new Jline
+  "Bind the clob.readline.jline-api/*terminal* var to a new Jline
   terminal if needed, otherwise use the currently bound one.
 
   Will throw a clojure.lang.ExceptionInfo with a data payload of
-  `{:type :clob.rebel-readline.jline-api/bad-terminal}` if JVM wasn't
+  `{:type :clob.readline.jline-api/bad-terminal}` if JVM wasn't
   launched from a terminal process.
 
   There should really only be one instance of a Jline terminal as it
@@ -47,34 +47,34 @@
   every effort to be compatible with a wide array of terminals. It is
   entirely possible that your terminal is not well supported."
   [& body]
-  `(binding [clob.rebel-readline.jline-api/*terminal*
-             (or clob.rebel-readline.jline-api/*terminal* (clob.rebel-readline.jline-api/create-terminal))]
+  `(binding [clob.readline.jline-api/*terminal*
+             (or clob.readline.jline-api/*terminal* (clob.readline.jline-api/create-terminal))]
      ~@body))
 
 (defmacro with-line-reader
   "This macro take a line-reader and binds it.  It is one of the
   primary ways to utilize this library. You can think of the
-  clob.rebel-readline.jline-api/*line-reader* binding as an alternative in
-  source that the clob.rebel-readline.core/read-line function reads from.
+  clob.readline.jline-api/*line-reader* binding as an alternative in
+  source that the clob.readline.core/read-line function reads from.
 
   Example:
-  (require '[clob.rebel-readline.core :as rebel])
+  (require '[clob.readline.core :as rebel])
 
   (rebel/with-line-reader
-    (clob.rebel-readline.clojure.line-reader/create
-      (clob.rebel-readline.clojure.service.local/create))
+    (clob.readline.clojure.line-reader/create
+      (clob.readline.clojure.service.local/create))
     ;; optionally bind the output directly to the jline terminal
     ;; in such a way so that output won't corrupt the terminal
     ;; this is optional
-    (binding [*out* (clob.rebel-readline.jline-api/safe-terminal-writer)]
+    (binding [*out* (clob.readline.jline-api/safe-terminal-writer)]
       (clojure.main/repl
         ;; this will create a fn that reads from the *line-reader*
-        :read (clob.rebel-readline.clojure.main/create-repl-read)
+        :read (clob.readline.clojure.main/create-repl-read)
        :prompt (fn []))))"
   [line-reader & body]
   `(ensure-terminal
-    #_(clob.rebel-readline.utils/load-slow-deps!)
-    (binding [clob.rebel-readline.jline-api/*line-reader* ~line-reader]
+    #_(clob.readline.utils/load-slow-deps!)
+    (binding [clob.readline.jline-api/*line-reader* ~line-reader]
       ~@body)))
 
 (defn help-message
@@ -93,7 +93,7 @@
    :mask 
      Should be set to a single character used by jline to bit-mask.  
      Characters will not be echoed if they mask to 0
-     Might do crazy stuff with clob.rebel-readline, use with caution.
+     Might do crazy stuff with clob.readline, use with caution.
      defaults to nil (no mask)
    :command-executed
      sentinal value to be returned when a repl command is executed, otherwise a 
@@ -131,7 +131,7 @@
 
 (defn read-line
   "Reads a line from the currently bound
-  clob.rebel-readline.jline-api/*line-reader*. If you supply the optional
+  clob.readline.jline-api/*line-reader*. If you supply the optional
   `command-executed` sentinal value, it will be returned when a repl
   command is executed, otherwise a blank string will be returned when
   a repl command is executed.
@@ -217,13 +217,13 @@
   This function returns `nil` if it is end of the supplied readlines
   parent input stream or if a process exit is requested.
 
-  This function was designed to be supplied to a `clob.rebel-readline.io.calback-reader`
+  This function was designed to be supplied to a `clob.readline.io.calback-reader`
 
   Example:
 
   ;; this will create an input stream to be read from by a Clojure/Script REPL
 
-  (clob.rebel-readline.io.calback-reader/callback-reader #(stream-read-line))"
+  (clob.readline.io.calback-reader/callback-reader #(stream-read-line))"
   []
   (let [request-prompt (Object.)
         request-exit   (Object.)
@@ -249,13 +249,13 @@
   Examples:
 
   (with-readline-in
-    (clob.rebel-readline.clojure.line-reader/create
-      (clob.rebel-readline.clojure.service.local/create {:prompt clojure.main/repl-prompt} ))
+    (clob.readline.clojure.line-reader/create
+      (clob.readline.clojure.service.local/create {:prompt clojure.main/repl-prompt} ))
    (clojure.main/repl :prompt (fn[])))"
   [line-reader & body]
   `(with-line-reader ~line-reader
      (binding [*in* (clojure.lang.LineNumberingPushbackReader.
-                     (clob.rebel-readline.io.callback-reader/callback-reader
+                     (clob.readline.io.callback-reader/callback-reader
                       stream-read-line))]
        ~@body)))
 

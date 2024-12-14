@@ -8,7 +8,7 @@ package-lock.json
 /doc/api
 .cpcache
 .idea
-.rebel_readline_history
+.clob_readline_history
 clob.iml
 yarn-error.log
 /hs_err_*

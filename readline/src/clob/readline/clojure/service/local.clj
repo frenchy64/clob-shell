@@ -1,9 +1,9 @@
-(ns clob.rebel-readline.clojure.service.local
+(ns clob.readline.clojure.service.local
   (:require
-   [clob.rebel-readline.clojure.line-reader :as clj-reader]
-   [clob.rebel-readline.clojure.utils :as clj-utils]
-   [clob.rebel-readline.tools :as tools]
-   [clob.rebel-readline.utils :as utils]
+   [clob.readline.clojure.line-reader :as clj-reader]
+   [clob.readline.clojure.utils :as clj-utils]
+   [clob.readline.tools :as tools]
+   [clob.readline.utils :as utils]
    ;; lazy-load
    [compliment.core :as compliment]
    [clojure.repl]))
@@ -116,4 +116,4 @@
    (merge clj-reader/default-config
           (tools/user-config)
           options
-          {:clob.rebel-readline.service/type ::service})))
+          {:clob.readline.service/type ::service})))

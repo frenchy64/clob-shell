@@ -1,12 +1,12 @@
 (ns rebel-dev.main
   (:require
-   [clob.rebel-readline.core :as core]
-   [clob.rebel-readline.clojure.main :as main]
-   [clob.rebel-readline.jline-api :as api]
-   [clob.rebel-readline.clojure.line-reader :as clj-line-reader]
-   [clob.rebel-readline.clojure.service.local :as clj-service]
-   [clob.rebel-readline.clojure.service.simple :as simple-service]
-   [clob.rebel-readline.utils :refer [*debug-log*]]
+   [clob.readline.core :as core]
+   [clob.readline.clojure.main :as main]
+   [clob.readline.jline-api :as api]
+   [clob.readline.clojure.line-reader :as clj-line-reader]
+   [clob.readline.clojure.service.local :as clj-service]
+   [clob.readline.clojure.service.simple :as simple-service]
+   [clob.readline.utils :refer [*debug-log*]]
    [clojure.main]))
 
 ;; TODO refactor this like the cljs dev repl with a "stream" and "one-line" options

@@ -1,4 +1,4 @@
-(ns clob.rebel-readline.clojure.tokenizer
+(ns clob.readline.clojure.tokenizer
   (:require
    [clojure.string :as string]
    [clojure.repl])

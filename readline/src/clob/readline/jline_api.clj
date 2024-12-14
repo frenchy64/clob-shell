@@ -1,9 +1,9 @@
-(ns clob.rebel-readline.jline-api
+(ns clob.readline.jline-api
   (:require
    [clojure.string :as string]
-   [clob.rebel-readline.jline-api.attributed-string :as astring]
-   [clob.rebel-readline.utils :refer [log]]
-   clob.rebel-readline.line-reader-class)
+   [clob.readline.jline-api.attributed-string :as astring]
+   [clob.readline.utils :refer [log]]
+   clob.readline.line-reader-class)
   (:import
    [org.jline.keymap KeyMap]
    [org.jline.reader
@@ -27,7 +27,7 @@
    [org.jline.terminal.impl DumbTerminal]
    [java.io Writer]
    [org.jline.utils AttributedStringBuilder AttributedString AttributedStyle]
-   [clob.rebel-readline.jline-api RebelLineReaderImpl]))
+   [clob.readline.jline-api RebelLineReaderImpl]))
 
 (def ^:dynamic *terminal* nil)
 (def ^:dynamic ^LineReaderImpl *line-reader* nil)
@@ -43,9 +43,9 @@
 
 ;; helper for development
 #_(defmacro with-buffer [b & body]
-  `(binding [clob.rebel-readline.jline-api/*buffer* ~b
-             clob.rebel-readline.service/*service*
-             (clob.rebel-readline.service.local-clojure/create)]
+  `(binding [clob.readline.jline-api/*buffer* ~b
+             clob.readline.service/*service*
+             (clob.readline.service.local-clojure/create)]
      ~@body))
 
 ;; ----------------------------------------

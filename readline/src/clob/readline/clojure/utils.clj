@@ -1,4 +1,4 @@
-(ns clob.rebel-readline.clojure.utils
+(ns clob.readline.clojure.utils
   (:require
    [clojure.string :as string]))
 

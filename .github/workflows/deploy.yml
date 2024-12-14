@@ -64,7 +64,7 @@ jobs:
 
       - name: clob.readline tests
         run: |
-          cd rebel-readline
+          cd readline
           ./script/test
 
       - uses: actions/upload-artifact@v4

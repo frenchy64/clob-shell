@@ -1,4 +1,4 @@
-(ns clob.rebel-readline.jline-api.attributed-string
+(ns clob.readline.jline-api.attributed-string
   (:refer-clojure :exclude [partition-all])
   (:import
    [org.jline.utils AttributedStringBuilder AttributedString AttributedStyle]))

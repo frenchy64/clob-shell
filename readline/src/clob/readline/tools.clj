@@ -1,7 +1,7 @@
-(ns clob.rebel-readline.tools
+(ns clob.readline.tools
   (:require
-   [clob.rebel-readline.jline-api :as api]
-   [clob.rebel-readline.utils :refer [log]]
+   [clob.readline.jline-api :as api]
+   [clob.readline.utils :refer [log]]
    [clojure.java.io :as io]
    [clojure.edn :as edn])
   (:import
@@ -70,7 +70,7 @@
         (io/file (System/getProperty "user.home")
                  ".clojure")]
        (keep identity)
-       (map #(io/file % "rebel_readline.edn"))
+       (map #(io/file % "clob_readline.edn"))
        (filter #(.exists ^File %))
        first))
 
@@ -119,7 +119,7 @@
                           fn-name)
                   {})))
 
-(defn service-dispatch [a & args] (:clob.rebel-readline.service/type a))
+(defn service-dispatch [a & args] (:clob.readline.service/type a))
 
 ;; Prompt
 ;; ----------------------------------------------
