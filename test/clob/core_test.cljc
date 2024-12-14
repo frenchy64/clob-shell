@@ -406,44 +406,39 @@
                         result)
                       "/out/1")))
 
+(defn clob-out [cmd]
+  (let [fut (future (:stdout (clob (pr-str cmd))))
+        res (deref fut 1000 fut)]
+    (if (identical? res fut)
+      (do (future-cancel fut)
+          (throw (ex-info (str "Too long: " (pr-str cmd)) {:cmd cmd})))
+      res)))
+
 (deftest commands
-  (are [x y] (= x (:stdout (clob (pr-str y))))
-
-    "abcX" '(do (defcmd cmd-x [s] (str s "X"))
-                (sh cmd-x "abc"))
-
-    "abcX" '(do (defcmd cmd-x [s] (str s "X"))
-                (cmd-x "abc"))
-
-    "abcY" '(do (defcmd cmd-y (fn [s] (str s "Y")))
-                (sh cmd-y abc))
-
-    "original fn" '(do (defn cmd-y [_] "original fn")
-                       (defcmd cmd-y (fn [s] (str s "Y")))
-                       (cmd-y "abc"))
-
-    "abcZ" '(do (defn fn-z [s] (str s "Z"))
-                (defcmd cmd-z fn-z)
-                (sh cmd-z abc))
-
-    "ABC" '(do (defcmd cmd-upper clojure.string/upper-case)
-               (sh echo -n abc | cmd-upper))
-
-    "ABC" '(do (defcmd cmd-upper clojure.string/upper-case)
-               (sh-str echo -n abc | cmd-upper | cat))
-
-    "ABC" '(do (defcmd cmd-upper clojure.string/upper-case)
-               (sh (str "abc") | cmd-upper))
-
-    "hi" '(do (defcmd cmd-hello [] "hi")
-              (sh cmd-hello))
-
-    "HI" '(do (defcmd cmd-hello [] "hi")
-              (sh cmd-hello | (clojure.string/upper-case)))
-
-    "HI" '(do (defcmd cmd-hello [] "hi")
-              (sh-str cmd-hello | tr "[:lower:]" "[:upper:]")))
-
+  (is (= "abcX" (clob-out '(do (defcmd cmd-x [s] (str s "X"))
+                               (sh cmd-x "abc")))))
+  (is (= "abcX" (clob-out '(do (defcmd cmd-x [s] (str s "X"))
+                               (cmd-x "abc")))))
+  (is (= "abcY" (clob-out '(do (defcmd cmd-y (fn [s] (str s "Y")))
+                               (sh cmd-y abc)))))
+  (is (= "original fn" (clob-out '(do (defn cmd-y [_] "original fn")
+                                      (defcmd cmd-y (fn [s] (str s "Y")))
+                                      (cmd-y "abc")))))
+  (is (= "abcZ" (clob-out '(do (defn fn-z [s] (str s "Z"))
+                               (defcmd cmd-z fn-z)
+                               (sh cmd-z abc)))))
+  (is (= "ABC" (clob-out '(do (defcmd cmd-upper clojure.string/upper-case)
+                              (sh echo -n abc | cmd-upper)))))
+  (is (= "ABC" (clob-out '(do (defcmd cmd-upper clojure.string/upper-case)
+                              (sh-str echo -n abc | cmd-upper | cat)))))
+  (is (= "ABC" (clob-out '(do (defcmd cmd-upper str/upper-case)
+                              (sh (str "abc") | cmd-upper)))))
+  (is (= "hi" (clob-out '(do (defcmd cmd-hello [] "hi")
+                             (sh cmd-hello)))))
+  (is (= "HI" (clob-out '(do (defcmd cmd-hello [] "hi")
+                             (sh cmd-hello | (str/upper-case))))))
+  (is (= "HI" (clob-out '(do (defcmd cmd-hello [] "hi")
+                             (sh-str cmd-hello | tr "[:lower:]" "[:upper:]")))))
   (is (= "ABC" (with-tempfile-content
                  (fn [f] (clob (str
                                  "(do"

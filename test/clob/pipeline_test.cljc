@@ -22,7 +22,7 @@
 
   (is (= (list 1 3) (-> (list 1 2 3 4) (pipe-filter odd?))))
 
-  '(echo hi 1 >& 2 | wc -l)
+  ;'(echo hi 1 >& 2 | wc -l)
   (is (= "0\n" (-> (shx "echo" ["hix"] {:redir [[:out 2 null-file]
                                                 [:set 1 2]]})
                    (pipe (shx "awk" ["END {print NR}"]))
