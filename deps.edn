@@ -6,14 +6,9 @@
   org.clojure/java.jdbc {:mvn/version "0.7.12"}
   org.xerial/sqlite-jdbc {:mvn/version "3.47.1.0"}
   com.bhauman/rebel-readline {:local/root "rebel-readline"
-                              :exclusions [rewrite-cljs/rewrite-cljs]}
-  #_#_
-  com.bhauman/rebel-readline {:git/url "https://github.com/dundalek/rebel-readline.git"
-                              :sha "123be27a75de902233356e11ac66ac53cc5edc08"
-                              :deps/root "rebel-readline"
                               :exclusions [rewrite-cljs/rewrite-cljs]}}
 
- :paths ["src/common" "src/jvm" "resources" "classes"]
+ :paths ["src/common" "src/jvm" "resources" "target/classes"]
 
  :aliases
  {:test {:extra-paths ["test"]}
@@ -28,9 +23,7 @@
   :sci {:extra-paths ["src/clob-sci"]
         :extra-deps {fipp/fipp {:mvn/version "0.6.27"}
                      org.babashka/sci {:mvn/version "0.9.44"}
-                     borkdude/edamame {:mvn/version "1.4.27"}
-                     com.bhauman/rebel-readline {:local/root "rebel-readline"
-                                                 :exclusions [rewrite-cljs/rewrite-cljs]}}}
+                     borkdude/edamame {:mvn/version "1.4.27"}}}
 
   :lint {:extra-deps {cljfmt/cljfmt {:mvn/version "0.7.0"}}
          :main-opts ["-m" "cljfmt.main" "--file-pattern" "(?<!clojure_main_sci)\\.clj[csx]?$" "check"]}

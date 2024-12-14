@@ -1,7 +1,6 @@
 # clob.rebel-readline
 
-[![Clojars Project](https://img.shields.io/clojars/v/com.bhauman/clob.rebel-readline.svg)](https://clojars.org)
-[![Clojars Project](https://img.shields.io/clojars/v/com.bhauman/clob.rebel-readline-cljs.svg)](https://clojars.org/com.bhauman/clob.rebel-readline-cljs)
+A fork of [Rebel Readline](https://github.com/bhauman/rebel-readline).
 
 A terminal readline library for Clojure Dialects
 
@@ -9,7 +8,7 @@ A terminal readline library for Clojure Dialects
 
 ## Why create a terminal readline library?
 
-https://github.com/bhauman/clob.rebel-readline/blob/master/clob.rebel-readline/doc/intro.md
+[Intro](doc/intro.md)
 
 ## Important note!!!
 
@@ -37,7 +36,7 @@ If you want to try this really quickly
 and then invoke this:
 
 ```shell
-clojure -Sdeps "{:deps {com.bhauman/clob.rebel-readline {:mvn/version \"0.1.4\"}}}" -m clob.rebel-readline.main
+clojure -Sdeps "{:deps {com.ambrosebs/clob.readline {:git/url \"https://github.com/frenchy64/clob-shell.git\" :git/root \"rebel-readline\" :git/sha \"de2ec77482261f9d7d7a194088e8f18fb3bc3c36\"}}}" -m clob.rebel-readline.main
 ```
 
 That should start a Clojure REPL that takes its input from the Rebel readline editor.
@@ -50,7 +49,7 @@ Alternatively you can specify an alias in your `$HOME/.clojure/deps.edn`
 ```clojure
 {
  ...
- :aliases {:rebel {:extra-deps {com.bhauman/clob.rebel-readline {:mvn/version "0.1.4"}}
+ :aliases {:rebel {:extra-deps {com.ambrosebs/clob.rebel-readline {...}}
                    :main-opts  ["-m" "clob.rebel-readline.main"]}}
 }
 ```
@@ -58,63 +57,13 @@ Alternatively you can specify an alias in your `$HOME/.clojure/deps.edn`
 And then run with a simpler:
 
 ```shell
-$ clojure -A:rebel
-```
-
-#### Leiningen
-
-Add `[com.bhauman/clob.rebel-readline "0.1.4"]` to the dependencies in your
-`project.clj` then start a REPL like this:
-
-```shell
-lein trampoline run -m clob.rebel-readline.main
-```
-
-Alternatively, you can add clob.rebel-readline globally to `$HOME/.lein/profiles.clj`
-
-```clojure
-{
- ...
- :user {:dependencies [[com.bhauman/clob.rebel-readline "0.1.4"]]}
-}
-```
-
-Then you can call
-
-```shell
-lein trampoline run -m clob.rebel-readline.main
-```
-
-To make this less verbose you can use an alias in your `project.clj`:
-
-```clojure
-{
- ...
- :aliases {"rebl" ["trampoline" "run" "-m" "clob.rebel-readline.main"]}
-}
-```
-
-Alternatively, you can do this globally in `$HOME/.lein/profiles.clj`:
-
-```clojure
-{
- ...
- :user {:aliases {"rebl" ["trampoline" "run" "-m" "clob.rebel-readline.main"]}}
-}
-```
-
-Now you can start a clob.rebel-readline REPL with `lein rebl`.
-
-#### Boot
-
-```
-boot -d com.bhauman/clob.rebel-readline call -f clob.rebel-readline.main/-main
+$ clojure -M:rebel
 ```
 
 #### Clone repo
 
 Clone this repo and then from the `clob.rebel-readline` sub-directory
-typing `lein trampoline run -m clob.rebel-readline.main` will get you into
+typing `clojure -M -m clob.rebel-readline.main` will get you into
 a Clojure REPL with the readline editor working.
 
 Note that `lein run -m clob.rebel-readline.main` will not work! See above.
