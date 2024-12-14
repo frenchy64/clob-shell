@@ -1,0 +1,2 @@
+#!/bin/sh
+clojure -M -m clob.zero.frontend.rebel

@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "description": "Bash-like shell based on Clojure",
   "bin": {
-    "clob": "./bin/clob.sh"
+    "clob": "./clob"
   },
   "directories": {
     "doc": "doc",
@@ -24,7 +24,7 @@
     "node": "9.x"
   },
   "scripts": {
-    "start": "./bin/clob.sh",
+    "start": "./clob",
     "preinstall": "node scripts/check-requirements",
     "dev": "nodemon --config .nodemon.json",
     "docker-build": "docker build . -t clob",
