@@ -253,6 +253,9 @@
     "ls -a | grep \"^\\.\""
     "ls -a |> (filter #(re-find #\"^\\.\" %)) | cat"
 
+    "ls -a | grep \"^\\.\""
+    "ls -a |? (re-find #\"^\\.\") | cat"
+
     "ls | ls | awk 'NR%2==1'"
     "ls |> (keep-indexed #(when (odd? (inc %1)) %2)) | cat"
 
@@ -443,8 +446,5 @@
   (is (= "HI" (clob-out '(do (defcmd cmd-hello [] "hi")
                              (sh-str cmd-hello | tr "[:lower:]" "[:upper:]")))))
   (is (= "ABC" (with-tempfile-content
-                 (fn [f] (clob (str
-                                 "(do"
-                                 (pr-str '(defcmd cmd-upper clojure.string/upper-case))
-                                 "(sh echo -n abc | cmd-upper > \"" f "\")"
-                                 ")")))))))
+                 (fn [f] (clob (format "(do (defcmd cmd-upper clojure.string/upper-case) (sh echo -n abc | cmd-upper > \"%s\"))"
+                                       f)))))))

@@ -97,27 +97,27 @@
        (str/replace-first #"[^\s]+" alias)))))
 
 ;; Based on code from clojure.core
-(def -clob-version
-  (delay
-    (let [version-string (str/trim (slurp (io/resource "CLOB_VERSION")))
-          [_ major minor incremental qualifier snapshot]
-          (re-matches
-            #"(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9_]+))?(?:-(SNAPSHOT))?"
-            version-string)
-          version {:major       (Integer/valueOf ^String major)
-                   :minor       (Integer/valueOf ^String minor)
-                   :incremental (Integer/valueOf ^String incremental)
-                   :qualifier   (when (not= qualifier "SNAPSHOT") qualifier)}]
-      (cond-> version
-        (.contains version-string "SNAPSHOT")
-        (assoc :interim true)))))
+(let [d (delay
+          (let [version-string (str/trim (slurp (io/resource "CLOB_VERSION")))
+                [_ major minor incremental qualifier snapshot]
+                (re-matches
+                  #"(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9_]+))?(?:-(SNAPSHOT))?"
+                  version-string)
+                version {:major       (Integer/valueOf ^String major)
+                         :minor       (Integer/valueOf ^String minor)
+                         :incremental (Integer/valueOf ^String incremental)
+                         :qualifier   (when (not= qualifier "SNAPSHOT") qualifier)}]
+            (cond-> version
+              (.contains version-string "SNAPSHOT")
+              (assoc :interim true))))]
+  (defn -clob-version [] @d))
 
 ;; Based on clojure.core/clojure-version
 (defn clob-version
   "Returns clob version as a printable string."
   {:added "1.0"}
   []
-  (let [{:keys [major minor incremental qualifier interim]} @-clob-version]
+  (let [{:keys [major minor incremental qualifier interim]} (-clob-version)]
     (str major "." minor
          (some->> incremental (str "."))
          (when (pos? (count qualifier)) (str "-" qualifier))

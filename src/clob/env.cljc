@@ -12,7 +12,7 @@
             '[clob.reader]
             '[clob.compiler]
             '[clob.parser]
-            '[clob.core :refer [shx expand *clob-version* clob-version]]
+            '[clob.core :refer [shx expand -clob-version clob-version]]
             '[clob.builtin :refer [cd exit quit getenv setenv unsetenv]]
             '[clob.platform.process]
             '[clob.pipeline]
