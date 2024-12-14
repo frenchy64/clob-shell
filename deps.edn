@@ -41,4 +41,5 @@
              :main-opts ["-m" "cljfmt.main" "--file-pattern" "(?<!clojure_main_sci)\\.clj[csx]?$" "fix"]}
 
   :kaocha {:extra-paths ["test"]
-           :extra-deps {lambdaisland/kaocha {:mvn/version "0.0-409"}}}}}
+           :main-opts ["-m" "kaocha.runner"]
+           :extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}}}}
