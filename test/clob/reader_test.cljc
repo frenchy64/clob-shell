@@ -66,6 +66,12 @@
   (is (= '((echo a))
          (reader/read-string-all "echo a ; echo b")))
 
+  (is (= '((echo a))
+         (reader/read-string-all "echo a ;; echo b")))
+
+  (is (= '((echo a) (echo b))
+         (reader/read-string-all "echo a \\;;;\n echo b")))
+
   (is (= '((echo a)
            (echo b))
          (reader/read-string-all "\\;echo a\\;echo b\\;")))

@@ -1,7 +1,8 @@
 (ns clob.zero.reader
   (:refer-clojure :exclude [read read-string])
   (:require [clojure.tools.reader.reader-types :as r]
-            [clojure.tools.reader.edn :as edn]))
+            [clojure.tools.reader.edn :as edn]
+            [clojure.tools.reader.impl.commons :refer [skip-line]]))
 
 (set! *warn-on-reflection* true)
 
@@ -75,7 +76,12 @@
           (r/read-char reader)
           (recur coll))
 
-        (or (= ch \newline))
+        (= ch \;)
+        (do
+          (skip-line reader)
+          (recur coll))
+
+        (= ch \newline)
         (if-let [result (seq (persistent! coll))]
           (do
             ;; we need to put the newline back for clojure main repl to work
@@ -90,7 +96,7 @@
                 (let [token (if (token-start? ch)
                               (read-token reader)
                               (read-clojure opts reader))]
-                  (if (and (:eof opts)
+                  (if (and (contains? opts :eof)
                            (identical? token (:eof opts)))
                     (if-let [result (seq (persistent! coll))]
                       result
@@ -130,7 +136,7 @@
    (read-sh {} reader))
   ([opts reader]
    (let [value (read opts reader)]
-     (if (and (:eof opts) (identical? value (:eof opts)))
+     (if (and (contains? opts :eof) (identical? value (:eof opts)))
        value
        (cons 'clob.zero.macros/sh value)))))
 
@@ -140,7 +146,7 @@
    (read-sh {} reader))
   ([opts reader]
    (let [value (read opts reader)]
-     (if (and (:eof opts) (identical? value (:eof opts)))
+     (if (and (contains? opts :eof) (identical? value (:eof opts)))
        value
        (cons 'clob.zero.macros/sh-value value)))))
 
