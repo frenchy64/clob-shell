@@ -1,4 +1,2 @@
 #!/bin/sh
-set -e
-clojure -X:deps prep
 clojure -M -m clob.zero.frontend.rebel
