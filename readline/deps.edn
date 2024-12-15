@@ -3,7 +3,7 @@
         org.jline/jline-terminal {:mvn/version "3.24.1"}
         org.jline/jline-terminal-jansi {:mvn/version "3.24.1"}
         cljfmt/cljfmt {:mvn/version "0.5.7"} ;; depends on tools reader
-        compliment/compliment {:mvn/version "0.6.0"}}
+        compliment/compliment {:mvn/version "0.3.6"}}
  :paths ["src" "classes"]
  :deps/prep-lib
  {:ensure "classes/clob/readline/line_reader_class/ClobLineReaderImpl.class"

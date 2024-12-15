@@ -1,5 +1,5 @@
 (ns clob.service.completion
-  (:require [clojure.string]
+  (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [clob.pipeline :as pipeline]
             [clob.builtin :refer [getenv]]
@@ -9,8 +9,8 @@
 
 (defn escape-fish-string [s]
   (-> s
-      (clojure.string/replace #"\\" "\\\\\\\\")
-      (clojure.string/replace #"'" "\\\\'")
+      (str/replace #"\\" "\\\\\\\\")
+      (str/replace #"'" "\\\\'")
       (#(str "'" % "'"))))
 
 (defn get-completions-spawn
@@ -27,16 +27,16 @@
     (chain->
      @(clob.platform.io/stream-output stream)
      (fn [stdout]
-       (if (clojure.string/blank? stdout)
+       (if (str/blank? stdout)
          []
-         (clojure.string/split (clojure.string/trim stdout) #"\n"))))))
+         (str/split (str/trim stdout) #"\n"))))))
 
 (defn complete-fish
   "Get completions from a fish shell. Spawns a process."
   [line]
   (try
     (chain-> (get-completions-spawn "fish" "completion/completion.fish" [line])
-             (fn [completions] (map #(first (clojure.string/split % #"\t")) completions))) ; discard the tab-separated description
+             (fn [completions] (map #(first (str/split % #"\t")) completions))) ; discard the tab-separated description
     (catch Exception _)))
 
 (defn complete-bash
@@ -55,19 +55,19 @@
 
 (defn sanitize-completion [s]
   (-> s
-      (clojure.string/trim)
-      (clojure.string/replace #"\\ " " ")))
+      (str/trim)
+      (str/replace #"\\ " " ")))
 
 (defn append-completion
   "Appends completion to a line, discards the common part from in between."
   [line completion]
-  (let [line-lower (clojure.string/lower-case line)
-        completion-lower (clojure.string/lower-case completion)]
+  (let [line-lower (str/lower-case line)
+        completion-lower (str/lower-case completion)]
     (loop [i (count completion-lower)]
       (if (zero? i)
         (str line completion)
         (let [sub (subs completion-lower 0 i)]
-          (if (clojure.string/ends-with? line-lower sub)
+          (if (str/ends-with? line-lower sub)
             (str (subs line 0 (- (count line) i)) completion)
             (recur (dec i))))))))
 
@@ -76,11 +76,11 @@
   [line completions]
   (->> completions
        (map #(append-completion line %))
-       (filter #(not= line %))
+       (remove #(= line %))
        (distinct))) ; bash seems to return duplicates sometimes
 
 (defn complete-shell [line]
   (chain-> (complete-fish line)
-           #(if (seq %) % (complete-zsh line))
-           #(if (seq %) % (complete-bash line))
+           #(or (not-empty %) (complete-zsh line))
+           #(or (not-empty %) (complete-bash line))
            #(map sanitize-completion %)))

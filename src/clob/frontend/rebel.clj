@@ -69,31 +69,33 @@
   (proxy [Completer] []
     (complete [^LineReader reader ^ParsedLine line ^java.util.List candidates]
       (let [word (.word line)]
-        (when (and
-               (:completion @api/*line-reader*)
-               (not (string/blank? word))
-               (pos? (count word)))
+        (when (and (:completion @api/*line-reader*)
+                   (not (string/blank? word))
+                   (pos? (count word)))
           (let [options (let [ns' (clj-line-reader/current-ns)
                               context (clj-line-reader/complete-context line)]
                           (cond-> {}
                             ns'     (assoc :ns ns')
                             context (assoc :context context)))
-                {:keys [cursor word-cursor line]} (meta line)
-                paren-begin (= \( (get line (- cursor word-cursor 1)))
-                shell-completions (->> (complete-shell (subs line 0 cursor))
-                                       (map (fn [candidate] {:candidate candidate})))
-                clj-completions (clj-line-reader/completions word options)]
-            (->>
-             (if paren-begin
-               (concat
-                clj-completions
-                shell-completions)
-               (concat
-                shell-completions
-                clj-completions))
-             (map #(clj-line-reader/candidate %))
-             (take 10)
-             (.addAll candidates))))))))
+                {:keys [cursor word-cursor line]} (meta line)]
+            ;; not sure how to unit test this, but sometimes these are nil and triggers NPE
+            ;; $ (let [foo 1] f<space>
+            (when (and cursor word-cursor line)
+              (let [paren-begin (= \( (get line (- cursor word-cursor 1)))
+                    shell-completions (->> (complete-shell (subs line 0 cursor))
+                                           (map (fn [candidate] {:candidate candidate})))
+                    clj-completions (clj-line-reader/completions word options)]
+                (->>
+                  (if paren-begin
+                    (concat
+                      clj-completions
+                      shell-completions)
+                    (concat
+                      shell-completions
+                      clj-completions))
+                  (map #(clj-line-reader/candidate %))
+                  (take 10)
+                  (.addAll candidates))))))))))
 
 (defn load-init-file
   "Loads init file."
