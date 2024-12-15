@@ -2,7 +2,7 @@
         org.jline/jline-reader {:mvn/version "3.24.1"}
         org.jline/jline-terminal {:mvn/version "3.24.1"}
         org.jline/jline-terminal-jansi {:mvn/version "3.24.1"}
-        cljfmt/cljfmt {:mvn/version "0.5.7"} ;; depends on tools reader
+        io.github.weavejester/cljfmt {:git/tag "0.13.0" :git/sha "f0230c3358fa0c30d29528ee21d2dc024ff6ddda"}
         compliment/compliment {:mvn/version "0.6.0"}}
  :paths ["src" "classes"]
  :deps/prep-lib
