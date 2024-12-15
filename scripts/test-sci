@@ -1,2 +1,2 @@
 #!/bin/sh
-__CLOB_USE_SCI_EVAL__=1 clojure -M:test:sci:test-runner "$@"
+__CLOB_USE_SCI_EVAL__=1 clojure -M:jansi:test:test-runner "$@"

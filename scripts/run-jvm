@@ -1,2 +1,2 @@
 #!/bin/sh
-clojure -M -m clob.frontend.rebel
+clojure -M:jansi -m clob.frontend.rebel

@@ -1,2 +1,2 @@
 #!/bin/sh
-clojure -M:test:test-runner "$@"
+clojure -M:jansi:test:test-runner "$@"

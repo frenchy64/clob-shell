@@ -30,7 +30,7 @@
           (shx "java" ["-jar" "target/clob-sci.jar" "-e" cmd])
 
           (process/getenv "__CLOB_USE_SCI_EVAL__")
-          (shx "clojure" ["-M:sci" "-m" "clob.frontend.sci" "-e" cmd])
+          (shx "clojure" ["-M:jansi" "-m" "clob.frontend.sci" "-e" cmd])
 
           :else
           (shx "clojure" ["-M" "-m" "clob.frontend.rebel" "-e" cmd]))))

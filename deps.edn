@@ -15,7 +15,8 @@
  :paths ["src" "resources" "classes"]
 
  :aliases
- {:test {:extra-paths ["test"]}
+ {:jansi {:jvm-opts ["-Dorg.jline.terminal.disableDeprecatedProviderWarning=true"]}
+  :test {:extra-paths ["test"]}
 
   :test-runner {:main-opts ["-m" "cognitect.test-runner"]
                 :extra-deps {com.cognitect/test-runner

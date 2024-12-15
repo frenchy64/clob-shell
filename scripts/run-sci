@@ -1,2 +1,2 @@
 #!/bin/sh
-__CLOB_USE_SCI_EVAL__=1 clojure -M -m clob.frontend.rebel
+__CLOB_USE_SCI_EVAL__=1 clojure -M:jansi -m clob.frontend.rebel

@@ -9,8 +9,8 @@
 
 (defn clob [& args]
   (shx "clojure" (concat (if sci?
-                           ["-M:sci" "-m" "clob.frontend.sci"]
-                           ["-M" "-m" "clob.frontend.rebel"])
+                           ["-M:jansi" "-m" "clob.frontend.sci"]
+                           ["-M:jansi" "-m" "clob.frontend.rebel"])
                          args)))
 
 (deftest scripting-test
