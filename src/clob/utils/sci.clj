@@ -3,8 +3,6 @@
   (:require [sci.core :as sci]
             [sci.impl.interpreter :as interpreter]
             [sci.impl.opts :as opts]
-            ; [clojure.repl]
-            ; [clojure.java.javadoc]
             [fipp.edn]
             [clob.pipeline :as pipeline]
             [clob.core :as clob-core]
@@ -157,33 +155,33 @@
                        'clojure.java.io {'file jio/file
                                          'reader jio/reader}
                        'clob.pipeline {'pipe pipeline/pipe
-                                            'redir pipeline/redir
-                                            'wait-for-pipeline pipeline/wait-for-pipeline
-                                            'pipeline-condition pipeline/pipeline-condition
-                                            'pipe-multi pipeline/pipe-multi
-                                            'process-output pipeline/process-output
-                                            'pipe-filter pipeline/pipe-filter}
+                                       'redir pipeline/redir
+                                       'wait-for-pipeline pipeline/wait-for-pipeline
+                                       'pipeline-condition pipeline/pipeline-condition
+                                       'pipe-multi pipeline/pipe-multi
+                                       'process-output pipeline/process-output
+                                       'pipe-filter pipeline/pipe-filter}
                        'clob.platform.process {'exit-code process/exit-code
-                                                    'wait process/wait
-                                                    'cwd process/cwd
-                                                    'process? process/process?}
+                                               'wait process/wait
+                                               'cwd process/cwd
+                                               'process? process/process?}
                        'clob.core {'expand-variable clob-core/expand-variable
-                                        'expand-tilde clob-core/expand-tilde
-                                        'expand-filename clob-core/expand-filename
-                                        'expand-redirect clob-core/expand-redirect
-                                        'expand-partial clob-core/expand-partial
-                                        'expand clob-core/expand
-                                        'expand-command clob-core/expand-command
-                                        'get-command-suggestion clob-core/get-command-suggestion
-                                        'shx clob-core/shx
-                                        'expand-alias clob-core/expand-alias
-                                        'expand-abbreviation clob-core/expand-abbreviation
-                                        '-clob-version clob-core/-clob-version
-                                        'clob-version clob-core/clob-version}
+                                   'expand-tilde clob-core/expand-tilde
+                                   'expand-filename clob-core/expand-filename
+                                   'expand-redirect clob-core/expand-redirect
+                                   'expand-partial clob-core/expand-partial
+                                   'expand clob-core/expand
+                                   'expand-command clob-core/expand-command
+                                   'get-command-suggestion clob-core/get-command-suggestion
+                                   'shx clob-core/shx
+                                   'expand-alias clob-core/expand-alias
+                                   'expand-abbreviation clob-core/expand-abbreviation
+                                   '-clob-version clob-core/-clob-version
+                                   'clob-version clob-core/clob-version}
                        'clob.util {'source-shell util/source-shell}
                        'clob.env {'*clob-aliases* env/*clob-aliases*
-                                       '*clob-commands* env/*clob-commands*
-                                       '*clob-abbreviations* env/*clob-commands*}
+                                  '*clob-commands* env/*clob-commands*
+                                  '*clob-abbreviations* env/*clob-commands*}
                        'clob.macros-fns macro-bindings}
           :classes {'java.util.UUID java.util.UUID
                     'java.lang.Thread java.lang.Thread
