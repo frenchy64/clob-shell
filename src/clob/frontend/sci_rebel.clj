@@ -1,7 +1,7 @@
 (ns clob.frontend.sci-rebel
   (:gen-class)
   (:require [clob.frontend.rebel :as rebel]
-            [clob.core :as clob.core]
+            [clob.core]
             [clob.utils.clojure-main-sci :as clojure-main]
             [clojure.string :as str]))
 
