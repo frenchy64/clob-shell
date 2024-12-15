@@ -1,5 +1,5 @@
 (ns clob.completion-test
-  (:require [clojure.test :refer [deftest is are]]
+  (:require [clojure.test :refer [deftest is]]
             [clob.service.completion :refer [append-completion]]))
 
 (deftest test-append-commpletion
