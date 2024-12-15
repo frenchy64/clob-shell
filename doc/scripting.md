@@ -1,4 +1,3 @@
-
 # Shell scripting
 
 The `clob.jar` binary accepts same arguments as [clojure.main CLI](https://clojure.org/guides/deps_and_cli). That includes all features like aliases and deps. You can refer to the options with help:
@@ -23,10 +22,10 @@ ls (first *args*)
 ```
 
 Then you can make the script executable and run it like:
+
 ```sh
 chmod +x my-script.clj
 ./myscript.clj
-
 ```
 
 ## Writing scripts

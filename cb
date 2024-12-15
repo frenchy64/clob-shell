@@ -1,0 +1,7 @@
+#!/bin/sh
+if test -f clob-sci;
+then
+  ./clob-sci "$@"
+else
+  ./clob "$@"
+fi

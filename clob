@@ -1,2 +1,2 @@
 #!/bin/sh
-./scripts/run-sci
+./scripts/run-sci "$@"

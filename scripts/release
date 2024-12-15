@@ -1,4 +1,4 @@
-#!/usr/bin/env clob.jar
+#!./clob-sci
 ;; -*- clojure -*-
 
 
@@ -24,7 +24,7 @@
 ;         echo Exiting... \;
 ;         exit 1)))
 
-echo Runing tests...
+echo Running tests...
 npm run test || echo Tests failed - Exiting && exit 1
 echo
 
@@ -45,7 +45,7 @@ echo Update hash in readme to the tagged commit with this hash:
 git rev-parse HEAD
 wait-for-enter
 
-echo Bulding the JAR...
+echo Building the JAR...
 npm run pkg-java
 echo
 

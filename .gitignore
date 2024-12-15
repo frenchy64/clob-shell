@@ -20,3 +20,4 @@ reports
 /*.iml
 **/.lsp/*.db
 /clob-sci
+/tmp
