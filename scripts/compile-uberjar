@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+jar=${1:-target/clob-uber.jar}
+
+rm -rf classes
+mkdir classes
+clojure -X:deps prep
+# TODO superseded by prep?
+clojure -M:jansi -e "(compile 'clob.readline.line-reader-class)"
+clojure -A:jansi -Spom
+clojure -M:jansi:depstar -m hf.depstar.uberjar --compile -m clob.frontend.rebel "$jar" # --verbose
