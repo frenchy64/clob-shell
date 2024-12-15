@@ -1,9 +1,10 @@
 (ns clob.platform.process
-  (:require [clojure.java.io :as io :refer [default-streams-impl make-input-stream make-output-stream IOFactory]]
+  (:require #?(:bb [clojure.java.io :as io]
+               :default [clojure.java.io :as io :refer [default-streams-impl make-input-stream make-output-stream IOFactory]])
             [clojure.string :as str]
             [clob.platform.io :refer [*stdout* *stderr*]])
   (:import (java.io File)
-           (java.net URL MalformedURLException)))
+           (java.net URL #?@(:bb [] :default [MalformedURLException]))))
 
 (set! *warn-on-reflection* true)
 
@@ -143,16 +144,18 @@
          process)))))
 
 ;; Extend protocols to make IO functions aware of the CWD, e.g. for slurp
-(extend String
-  IOFactory
-  (assoc default-streams-impl
-         :make-input-stream (fn [^String x opts]
-                              (try
-                                (make-input-stream (URL. x) opts)
-                                (catch MalformedURLException _e
-                                  (make-input-stream (resolve-file x) opts))))
-         :make-output-stream (fn [^String x opts]
-                               (try
-                                 (make-output-stream (URL. x) opts)
-                                 (catch MalformedURLException _err
-                                   (make-output-stream (resolve-file x) opts))))))
+#?(:bb (do ::TODO nil)
+   :default
+   (extend String
+     IOFactory
+     (assoc default-streams-impl
+            :make-input-stream (fn [^String x opts]
+                                 (try
+                                   (make-input-stream (URL. x) opts)
+                                   (catch MalformedURLException _e
+                                     (make-input-stream (resolve-file x) opts))))
+            :make-output-stream (fn [^String x opts]
+                                  (try
+                                    (make-output-stream (URL. x) opts)
+                                    (catch MalformedURLException _err
+                                      (make-output-stream (resolve-file x) opts)))))))
