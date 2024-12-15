@@ -33,7 +33,7 @@
                      (repeat (dec columns) " "))))
 
 (defn make-custom-reader [rdr]
-  (let [eof (Object.)
+  (let [eof rdr
         opts {:eof eof :read-cond :allow :features #{:clj}}
         rdr (LineNumberingPushbackReader. rdr)
         writer (PipedWriter.)
@@ -52,7 +52,7 @@
                     (doseq [c (str "\n" (apply str (repeat (dec (.getColumnNumber rdr)) " ")))]
                       (.write writer (int c))))
                   (let [form (clob.reader/read opts rdr)]
-                    (if (= form eof)
+                    (if (identical? form eof)
                       (.close writer)
                       (binding [*print-meta* true]
                         (doseq [c (pr-str (conj form 'clob.macros/sh-wrapper))]
@@ -137,12 +137,12 @@
 (defn eval-opt
   "Evals expressions in str, prints each non-nil result using prn"
   [str]
-  (let [eof (Object.)
-        reader (make-custom-reader (StringReader. str))]
+  (let [reader (make-custom-reader (StringReader. str))
+        eof reader]
     (loop [input (with-read-known (read reader false eof))]
-      (when-not (= input eof)
+      (when-not (identical? input eof)
         (let [value (eval/eval input)]
-          (when-not (nil? value)
+          (when (some? value)
             (prn value))
           (recur (with-read-known (read reader false eof))))))))
 
