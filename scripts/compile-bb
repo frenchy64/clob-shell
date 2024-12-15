@@ -6,3 +6,5 @@ export BABASHKA_JAR=clob
 ./script/uberjar
 ./script/compile
 ./clob --describe
+# this doesn't seem to work
+#./clob -m clob.frontend.rebel
