@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+cd babashka/
+export BABASHKA_FEATURE_CLOB=true
+export BABASHKA_JAR=clob
+./script/uberjar
+./script/compile
+./clob --describe
