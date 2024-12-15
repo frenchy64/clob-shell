@@ -12,8 +12,7 @@
        :author "Stephen C. Gilardi and Rich Hickey"}
   clob.utils.clojure-main-sci
   (:refer-clojure :exclude [with-bindings eval read load-reader read+string])
-  (:require #_[clojure.spec.alpha :as spec]
-            [fipp.edn :refer [pprint]]
+  (:require [fipp.edn :refer [pprint]]
             [clob.platform.clojure-platform :refer [eval read read+string load-reader compiler-load-file rt-load-resource-script]]
             [clob.reader :as reader]
             [clob.utils.sci :refer [repl-print]])
@@ -292,11 +291,6 @@
               loc
               (if spec
                 (with-out-str
-                  #_(spec/explain-out
-                      (if (= spec/*explain-out* spec/explain-printer)
-                        (update spec :clojure.spec.alpha/problems
-                                (fn [probs] (map #(dissoc % :in) probs)))
-                        spec))
                   (pprint spec))
                 (format "%s%n" cause)))
 
@@ -333,11 +327,6 @@
                 symbol
                 loc
                 (with-out-str
-                  #_(spec/explain-out
-                      (if (= spec/*explain-out* spec/explain-printer)
-                        (update spec :clojure.spec.alpha/problems
-                                (fn [probs] (map #(dissoc % :in) probs)))
-                        spec))
                   (pprint spec)))
         (format "Execution error%s at %s(%s).%n%s%n"
                 cause-type
