@@ -2,6 +2,8 @@
  {org.clojure/clojure {:mvn/version "1.12.0"}
   org.clojure/tools.reader {:mvn/version "1.5.0"}
   org.clojure/data.json {:mvn/version "2.5.1"}
+  borkdude/deps.clj {:mvn/version "1.12.0.1488"}
+  io.github.babashka/babashka {:local/root "babashka"}
   org.clojure/tools.cli {:mvn/version "1.1.230"}
   org.clojure/java.jdbc {:mvn/version "0.7.12"}
   org.xerial/sqlite-jdbc {:mvn/version "3.47.1.0"}
@@ -25,10 +27,10 @@
 
   :depstar {:extra-deps {seancorfield/depstar {:mvn/version "1.1.117"}}}
 
-  :lint {:extra-deps {cljfmt/cljfmt {:mvn/version "0.7.0"}}
+  :lint {:extra-deps {cljfmt/cljfmt {:mvn/version "0.13.0"}}
          :main-opts ["-m" "cljfmt.main" "--file-pattern" "(?<!clojure_main_sci)\\.clj[csx]?$" "check"]}
 
-  :lint/fix {:extra-deps {cljfmt/cljfmt {:mvn/version "0.7.0"}}
+  :lint/fix {:extra-deps {cljfmt/cljfmt {:mvn/version "0.13.0"}}
              :main-opts ["-m" "cljfmt.main" "--file-pattern" "(?<!clojure_main_sci)\\.clj[csx]?$" "fix"]}
 
   :kaocha {:extra-paths ["test"]

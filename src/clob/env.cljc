@@ -18,7 +18,8 @@
             '[clob.pipeline]
             '[clojure.string :as str]
             '[clob.macros :refer [sh sh-str sh-code sh-ok sh-seq sh-lines sh-value defalias defabbr defcmd]]
-            '[clob.util :refer [source-shell]]))
+            '[clob.util :refer [source-shell]]
+            '[babashka.deps :refer [add-deps]]))
 
 (def ^:dynamic *clob-environment-init*
   '(do

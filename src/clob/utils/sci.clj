@@ -4,6 +4,8 @@
             [sci.impl.interpreter :as interpreter]
             [sci.impl.opts :as opts]
             [fipp.edn]
+            [babashka.impl.deps :as bdeps]
+            [clojure.repl.deps :as repl-deps]
             [clob.pipeline :as pipeline]
             [clob.core :as clob-core]
             [clob.compiler]
@@ -16,6 +18,7 @@
             [clojure.java.io :as jio]
             [clojure.java.javadoc :as javadoc]
             [clojure.repl :as repl]
+            [sci.impl.unrestrict :refer [*unrestricted*]]
             [clob.platform.clojure-compiler :as clojure-compiler]))
 
 (set! *warn-on-reflection* true)
@@ -108,6 +111,7 @@
                'print print
                'println println
                'load-file load-file
+               'add-deps bdeps/add-deps
                'Math/sqrt #(Math/sqrt %)
                'clojure.repl/set-break-handler! repl/set-break-handler!
                '*clob-commands* env/*clob-commands*
@@ -178,21 +182,28 @@
                                    'expand-abbreviation clob-core/expand-abbreviation
                                    '-clob-version clob-core/-clob-version
                                    'clob-version clob-core/clob-version}
+                       'babashka.deps {'add-deps bdeps/add-deps}
                        'clob.util {'source-shell util/source-shell}
                        'clob.env {'*clob-aliases* env/*clob-aliases*
                                   '*clob-commands* env/*clob-commands*
                                   '*clob-abbreviations* env/*clob-commands*}
                        'clob.macros-fns macro-bindings}
-          :classes {'java.util.UUID java.util.UUID
-                    'java.lang.Thread java.lang.Thread
-                    'java.lang.System java.lang.System}
+          :classes {:allow :all}
           :env sci-env})
 
 (defn sci-eval [form]
   ;; (prn "EVAL FORM" form)
   ;; (sci/eval-string (pr-str form) ctx)
-  (let [ctx (opts/init ctx)]
-    (interpreter/eval-form ctx form)))
+  (binding [*unrestricted* true]
+    (let [ctx (opts/init ctx)]
+      (interpreter/eval-form ctx form))))
+
+(comment
+  (sci-eval 1)
+  (sci-eval '(+ 1 2))
+  (sci-eval '(add-deps
+               '{:deps {org.clojure/data.xml {:mvn/version "0.0.8"}}}))
+  )
 
 (defn eval [form]
   (sci-eval
