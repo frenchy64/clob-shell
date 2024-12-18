@@ -9,7 +9,5 @@ export __CLOB_USE_SCI_EVAL__=true
 rm -rf classes
 mkdir classes
 clojure -X:deps prep
-# TODO superceded by prep?
-clojure -M:jansi -e "(compile 'clob.readline.line-reader-class)"
 clojure -A:jansi -Spom
 clojure -M:jansi:depstar -m hf.depstar.uberjar --compile -m clob.frontend.sci-rebel "$jar" # --verbose

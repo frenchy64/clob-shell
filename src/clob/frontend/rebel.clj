@@ -1,10 +1,10 @@
 (ns clob.frontend.rebel
   (:gen-class)
-  (:require [clob.readline.clojure.line-reader :as clj-line-reader]
-            [clob.readline.clojure.main :refer [syntax-highlight-prn]]
-            [clob.readline.clojure.service.local :as clj-service]
-            [clob.readline.core :as core]
-            [clob.readline.jline-api :as api]
+  (:require [rebel-readline.clojure.line-reader :as clj-line-reader]
+            [rebel-readline.clojure.main :refer [syntax-highlight-prn]]
+            [rebel-readline.clojure.service.local :as clj-service]
+            [rebel-readline.core :as core]
+            [rebel-readline.jline-api :as api]
             [clojure.string :as string]
             [clojure.java.io :as jio]
             [clob.env :as env]
@@ -49,7 +49,7 @@
 
 (def opts {:prompt repl-prompt})
 
-; clob.readline.clojure.main/create-repl-read
+; rebel-readline.clojure.main/create-repl-read
 (def create-repl-read
   (core/create-buffered-repl-reader-fn
    (fn [s] (clojure.lang.LineNumberingPushbackReader.
@@ -64,7 +64,7 @@
                 (process? (first args)))
     (apply syntax-highlight-prn args)))
 
-; clob.readline.clojure.line-reader/clojure-completer
+; rebel-readline.clojure.line-reader/clojure-completer
 (defn clojure-completer []
   (proxy [Completer] []
     (complete [^LineReader reader ^ParsedLine line ^java.util.List candidates]

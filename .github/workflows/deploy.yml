@@ -62,11 +62,6 @@ jobs:
           cd peg
           ./script/test
 
-      - name: clob.readline tests
-        run: |
-          cd readline
-          ./script/test
-
       - uses: actions/upload-artifact@v4
         with:
           path: clob.jar
